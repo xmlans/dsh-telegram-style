@@ -1,7 +1,6 @@
 /**
  * A segmented control's highlight sits exactly under the chosen segment — the
- * one assistive technology reports as checked — at the page's own scale and
- * under the reader's page zoom alike.
+ * one assistive technology reports as checked.
  *
  * @capability segmented-control
  * @features permissions, shared
@@ -45,18 +44,5 @@ module.exports = spec({ page: 'automode-hero' }, ({ test }) => {
   test('the highlight sits under the checked choice', async (t) => {
     const group = t.page.getByRole('radiogroup')
     sameBox(t, await highlightBox(group), await checkedBox(t.page), 'the highlight covers the checked segment')
-  })
-
-  test('under page zoom the highlight still sits under the checked choice', async (t) => {
-    await t.prefs({ pageZoom: '1.5' })
-    // The zoom is what the two readings below are about, so it is judged too:
-    // a preference that never reached the page would leave both readings at
-    // 100% and the comparison would pass over a capability nothing exercised.
-    t.expectThat.equal(await t.read.attribute('body', t.surface.attribute('skin.page-zoom')), '1.5', 'the page is drawn at 150%')
-    const group = t.page.getByRole('radiogroup')
-    sameBox(t, await highlightBox(group), await checkedBox(t.page), 'the highlight covers the checked segment at 150%')
-    await t.prefs({ pageZoom: '0.8' })
-    t.expectThat.equal(await t.read.attribute('body', t.surface.attribute('skin.page-zoom')), '0.8', 'the page is drawn at 80%')
-    sameBox(t, await highlightBox(group), await checkedBox(t.page), 'the highlight covers the checked segment at 80%')
   })
 })

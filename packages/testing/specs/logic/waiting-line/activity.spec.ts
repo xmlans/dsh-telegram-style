@@ -5,12 +5,11 @@
  *
  * @capability waiting-line
  * @features chat-wait, shared
- * @risk The line under a running answer claims the model is writing while it thinks, names a file from another turn, or shows the host's word under the Claude brand.
+ * @risk The line under a running answer claims the model is writing while it thinks, names a file from another turn, or shows the host's word under the Telegram skin.
  */
 import { expect, test } from 'vitest'
-import { ACTIVITY_THINKING, activityWords, openTurn, waitStart, waitingWord } from '@dsh-claude-style/client/pure'
-import { BRAND_CLAUDE, BRAND_DEEPSEEK } from '@dsh-claude-style/contracts/prefs'
-import type { HostChatSnapshot, HostTurn } from '@dsh-claude-style/contracts/services'
+import { ACTIVITY_THINKING, activityWords, openTurn, waitStart } from '@dsh-telegram-style/client/pure'
+import type { HostChatSnapshot, HostTurn } from '@dsh-telegram-style/contracts/services'
 
 function step(status: string, blocks: (string | { kind: string, text: string })[]) {
   const assistant = { status, blocks: blocks.map(block => typeof block === 'string' ? { kind: block } : block) }
@@ -87,13 +86,4 @@ test('the running row speaks for the newest open turn', () => {
   const open = turn(2, 'open', [])
   expect(openTurn(snapshot([closed, open]))).toBe(open)
   expect(openTurn(snapshot([closed]))).toBeUndefined()
-})
-
-test('the one word a wait stands on is the brand\'s own, whichever word the host would have said', () => {
-  // Claude: the skin's own word, so a wait does not change places when its state stops being readable.
-  expect(waitingWord(BRAND_CLAUDE, 'Deep diving', 'Thinking…')).toBe('Thinking…')
-  expect(waitingWord(BRAND_CLAUDE, '深度求索中', 'Thinking…')).toBe('Thinking…')
-  // DeepSeek: the host's own word, in the host's own language.
-  expect(waitingWord(BRAND_DEEPSEEK, 'Deep diving', 'Thinking…')).toBe('Deep diving')
-  expect(waitingWord(BRAND_DEEPSEEK, '深度求索中', 'Thinking…')).toBe('深度求索中')
 })

@@ -1,16 +1,16 @@
 import { QUIET_ATTR } from '../../constants'
-import { buildElement, writeTextInPlace } from '@dsh-claude-style/engine/dom'
-import { findComposerCard, findComposerStats } from '@dsh-claude-style/engine/host'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { buildElement, writeTextInPlace } from '@dsh-telegram-style/engine/dom'
+import { findComposerCard, findComposerStats } from '@dsh-telegram-style/engine/host'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { formatCompactTokens } from '../../shared/format'
 import { inPageBox, inPagePixels } from '../../shared/page-zoom'
 import { createStatsCount } from './stats-count'
 import { CACHE_HIT_STOPS, rampPosition, writeRamp } from './stats-ramp'
 import { sessionStatsCacheHit, sessionStatsGrouped, sessionStatsSpeed } from './stats-format'
-import { formatMoneyMicro, CURRENCY_SYMBOL } from '@dsh-claude-style/contracts/prices'
-import type { Currency } from '@dsh-claude-style/contracts/prices'
-import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-claude-style/contracts/services'
-import type { HostText } from '@dsh-claude-style/engine/host'
+import { formatMoneyMicro, CURRENCY_SYMBOL } from '@dsh-telegram-style/contracts/prices'
+import type { Currency } from '@dsh-telegram-style/contracts/prices'
+import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-telegram-style/contracts/services'
+import type { HostText } from '@dsh-telegram-style/engine/host'
 import type { StatsReading } from './stats-count'
 
 /**
@@ -37,14 +37,14 @@ import type { StatsReading } from './stats-count'
  */
 
 /** The mark on the line itself. */
-export const INLINE_STATS_ATTR = 'data-dsh-claude-inline-stats'
+export const INLINE_STATS_ATTR = 'data-dsh-tg-inline-stats'
 /** On the line's measuring twin, which a fit lays out of flow for one reading. */
-export const INLINE_PROBE_ATTR = 'data-dsh-claude-inline-probe'
+export const INLINE_PROBE_ATTR = 'data-dsh-tg-inline-probe'
 /**
  * On the meter while the line has given up its own reading: the ring stands,
  * the number beside it goes (the ladder's third step).
  */
-export const METER_TIGHT_ATTR = 'data-dsh-claude-meter-tight'
+export const METER_TIGHT_ATTR = 'data-dsh-tg-meter-tight'
 /** Stands in for one number while a template is split into its words. */
 const MARK = '\u0001'
 /** The last step of the ladder. */
@@ -90,14 +90,14 @@ interface Line {
 function figure(className: string) {
   const group = buildFigure()
   const tail = document.createTextNode('')
-  const wrap = buildElement('span', `dsh-claude-inline-figure ${className}`)
+  const wrap = buildElement('span', `dsh-tg-inline-figure ${className}`)
   wrap.append(group, tail)
   return { wrap, group, tail }
 }
 
 /** One figure's element: plain text a count rewrites in place. */
 function buildFigure() {
-  return buildElement('span', 'dsh-claude-digit-group')
+  return buildElement('span', 'dsh-tg-digit-group')
 }
 
 /**
@@ -105,7 +105,7 @@ function buildFigure() {
  * stands beside, so the glyph is decorative for a reader.
  */
 function arrowSpan(glyph: string) {
-  const span = buildElement('span', 'dsh-claude-inline-arrow', glyph)
+  const span = buildElement('span', 'dsh-tg-inline-arrow', glyph)
   span.setAttribute('aria-hidden', 'true')
   return span
 }
@@ -166,11 +166,11 @@ export function createInlineStats(read: () => StatsReading, chatText: () => Host
 
   /** Build the line once, in the order its segments appear. */
   function buildLine(): Line {
-    const root = buildElement('span', 'dsh-claude-inline-stats')
+    const root = buildElement('span', 'dsh-tg-inline-stats')
     root.setAttribute(INLINE_STATS_ATTR, '')
     /** One segment: the group of figures the ladder shows or gives up whole. */
     const segment = (): Segment => {
-      const wrap = buildElement('span', 'dsh-claude-inline-seg')
+      const wrap = buildElement('span', 'dsh-tg-inline-seg')
       root.appendChild(wrap)
       return { wrap }
     }
@@ -185,11 +185,11 @@ export function createInlineStats(read: () => StatsReading, chatText: () => Host
 
     // The output speed, then the tokens read into the prompt beside it.
     const speed = segment()
-    const speedFigure = figure('dsh-claude-inline-speed')
+    const speedFigure = figure('dsh-tg-inline-speed')
     speed.wrap.appendChild(speedFigure.wrap)
     const input = segment()
     input.wrap.append(arrowSpan('↑'))
-    const inputFigure = figure('dsh-claude-inline-input')
+    const inputFigure = figure('dsh-tg-inline-input')
     input.wrap.appendChild(inputFigure.wrap)
 
     // The tokens written back, then what they have cost so far, then — for the
@@ -197,21 +197,21 @@ export function createInlineStats(read: () => StatsReading, chatText: () => Host
     // the cache share.
     const output = segment()
     output.wrap.append(arrowSpan('↓'))
-    const outputFigure = figure('dsh-claude-inline-output')
+    const outputFigure = figure('dsh-tg-inline-output')
     output.wrap.appendChild(outputFigure.wrap)
     const cost = segment()
-    const costFigure = buildElement('span', 'dsh-claude-inline-cost')
+    const costFigure = buildElement('span', 'dsh-tg-inline-cost')
     cost.wrap.appendChild(costFigure)
     const total = segment()
-    const totalFigure = figure('dsh-claude-inline-total')
+    const totalFigure = figure('dsh-tg-inline-total')
     total.wrap.appendChild(totalFigure.wrap)
     const cache = segment()
-    const cacheHead = buildElement('span', 'dsh-claude-inline-label')
+    const cacheHead = buildElement('span', 'dsh-tg-inline-label')
     const cacheFigure = buildFigure()
     // The words the template puts after the number (a percent sign) are an
     // element so the figure's own band can reach them; the label before the
     // number stays on the line's tone.
-    const cacheTail = buildElement('span', 'dsh-claude-inline-tail')
+    const cacheTail = buildElement('span', 'dsh-tg-inline-tail')
     cache.wrap.append(cacheHead, cacheFigure, cacheTail)
 
     return {

@@ -1,6 +1,6 @@
-import { UNTAGGED_SHEET_SELECTOR } from '@dsh-claude-style/contracts/dom'
-import { mountStylesheet as mountSheet, parkForeignSheets as parkSheets } from '@dsh-claude-style/engine/stylesheet'
-import { STYLESHEET } from 'virtual:dsh-claude-style/generated'
+import { UNTAGGED_SHEET_SELECTOR } from '@dsh-telegram-style/contracts/dom'
+import { mountStylesheet as mountSheet, parkForeignSheets as parkSheets, unparkForeignSheets as unparkSheets } from '@dsh-telegram-style/engine/stylesheet'
+import { STYLESHEET } from 'virtual:dsh-telegram-style/generated'
 import { FOREIGN_SHEET_TAG, PACKAGE_NAME, STYLE_ID, STYLE_PLUGIN_CSS } from '../constants'
 
 /**
@@ -21,9 +21,14 @@ export function parkForeignSheets() {
   parkSheets(UNTAGGED_SHEET_SELECTOR, STYLE_ID, FOREIGN_SHEET_TAG)
 }
 
+/** Hand the parked sheets back untagged when this package's last generation ends. */
+export function unparkForeignSheets() {
+  unparkSheets(FOREIGN_SHEET_TAG)
+}
+
 /**
  * Mount one of the skin's stylesheets, once per generation: the theme's own by
- * default, or the surface sheets under their own id (D74).
+ * default.
  *
  * @param id - the `<style>` element's id.
  * @param text - the sheet.

@@ -1,7 +1,7 @@
 /**
- * The model menu and the peak rate meter on its rows: the host's model seat is
+ * The model menu: the host's model seat is
  * put on the page, the picker's trigger is pressed, and both levels are read
- * back — what each row carries and where the meter stands in it.
+ * back — what each row carries.
  *
  * The page's model directory puts the model in force in a provider level 1 does
  * not list, so the picker appends the seat's own row at the bottom of that
@@ -23,19 +23,15 @@
       document.body.appendChild(card)
       await sleep(400)
 
-      /** Every row one card holds, with the meter's own place in it. */
+      /** Every row one card holds. */
       var readRows = function (card) {
         var rows = []
         if (card === null) return rows
-        var options = card.querySelectorAll('.dsh-claude-model-option')
+        var options = card.querySelectorAll('.dsh-tg-model-option')
         for (var i = 0; i < options.length; i++) {
           var option = options[i]
-          var meter = option.querySelector('.dsh-claude-peakrate')
-          var check = option.querySelector('.dsh-claude-popover-check')
-          var name = option.querySelector('.dsh-claude-model-name')
-          var desc = option.querySelector('.dsh-claude-model-desc')
-          var value = meter === null ? null : meter.querySelector('.dsh-claude-peakrate-value')
-          var countdown = meter === null ? null : meter.querySelector('.dsh-claude-peakrate-countdown')
+          var name = option.querySelector('.dsh-tg-model-name')
+          var desc = option.querySelector('.dsh-tg-model-desc')
           var box = option.getBoundingClientRect()
           var style = getComputedStyle(option)
           rows.push({
@@ -50,23 +46,15 @@
               radius: style.borderRadius,
               display: style.display,
             },
-            meter: meter === null ? null : {
-              period: meter.getAttribute('data-period'),
-              value: value === null ? '' : value.textContent,
-              countdown: countdown === null ? '' : countdown.textContent,
-              beforeCheck: meter.nextElementSibling === check,
-              title: meter.getAttribute('title'),
-              icon: meter.querySelector('svg') !== null,
-            },
           })
         }
         return rows
       }
 
-      var trigger = document.querySelector('.dsh-claude-model-btn')
+      var trigger = document.querySelector('.dsh-tg-model-btn')
       if (trigger !== null) trigger.click()
       await sleep(400)
-      var levelOne = readRows(document.querySelector('.dsh-claude-model-popover:not(.dsh-claude-model-popover-sub)'))
+      var levelOne = readRows(document.querySelector('.dsh-tg-model-popover:not(.dsh-tg-model-popover-sub)'))
       // The dwell opens the card on the real page, and the reader's hand then
       // presses the trigger: the card stays up
       // (shared/popover.ts::pressKeepsPopoverOpen). The pointer is dispatched
@@ -76,17 +64,17 @@
         trigger.dispatchEvent(new MouseEvent('mouseleave'))
         trigger.dispatchEvent(new MouseEvent('mouseenter'))
         await sleep(250)
-        triggerOpen = document.querySelector('.dsh-claude-model-popover[data-open="true"]') !== null
+        triggerOpen = document.querySelector('.dsh-tg-model-popover[data-open="true"]') !== null
         trigger.click()
         await sleep(150)
       }
       r.modelPress = {
         opened: triggerOpen,
-        kept: document.querySelector('.dsh-claude-model-popover:not(.dsh-claude-model-popover-sub)[data-open="true"]') !== null,
+        kept: document.querySelector('.dsh-tg-model-popover:not(.dsh-tg-model-popover-sub)[data-open="true"]') !== null,
       }
 
       // The More-models cell opens the second level, beside the first.
-      var cell = document.querySelector('.dsh-claude-model-cell')
+      var cell = document.querySelector('.dsh-tg-model-cell')
       if (cell !== null) cell.click()
       await sleep(300)
 
@@ -96,7 +84,7 @@
         // The last row of level 1 is the seat's own: a provider level 1 does
         // not list, so the picker adds that row under the list.
         currentRow: levelOne.length === 0 ? null : levelOne[levelOne.length - 1],
-        levelTwo: readRows(document.querySelector('.dsh-claude-model-popover-sub')),
+        levelTwo: readRows(document.querySelector('.dsh-tg-model-popover-sub')),
       }
       // The description line has a switch of its own under the picker's row, and
       // the card repaints on a preference change: the same page reads its rows
@@ -106,8 +94,8 @@
       }
       window.__pushForm({ modelDescriptions: false })
       await sleep(250)
-      var bareLevelOne = readRows(document.querySelector('.dsh-claude-model-popover:not(.dsh-claude-model-popover-sub)'))
-      var bareLevelTwo = readRows(document.querySelector('.dsh-claude-model-popover-sub'))
+      var bareLevelOne = readRows(document.querySelector('.dsh-tg-model-popover:not(.dsh-tg-model-popover-sub)'))
+      var bareLevelTwo = readRows(document.querySelector('.dsh-tg-model-popover-sub'))
       window.__pushForm({ modelDescriptions: true })
       await sleep(250)
       r.modelDescriptions = {
@@ -123,16 +111,16 @@
       window.__pushForm({ modelPicker: false })
       await sleep(400)
       var pickerOff = {
-        trigger: document.querySelector('.dsh-claude-model-btn') !== null,
-        hostMarked: document.querySelector('[data-dsh-claude-model-host]') !== null,
+        trigger: document.querySelector('.dsh-tg-model-btn') !== null,
+        hostMarked: document.querySelector('[data-dsh-tg-model-host]') !== null,
       }
       window.__pushForm({ modelPicker: true })
       await sleep(500)
       r.modelPicker = {
         off: pickerOff,
         back: {
-          trigger: document.querySelector('.dsh-claude-model-btn') !== null,
-          hostMarked: document.querySelector('[data-dsh-claude-model-host]') !== null,
+          trigger: document.querySelector('.dsh-tg-model-btn') !== null,
+          hostMarked: document.querySelector('[data-dsh-tg-model-host]') !== null,
         },
       }
       card.remove()

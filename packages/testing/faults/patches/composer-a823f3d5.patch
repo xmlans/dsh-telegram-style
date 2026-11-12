@@ -2,7 +2,7 @@ diff --git a/packages/client/src/features/composer/inline-bar.css b/packages/cli
 index 75f4437..01772bb 100644
 --- a/packages/client/src/features/composer/inline-bar.css
 +++ b/packages/client/src/features/composer/inline-bar.css
-@@ -441,25 +441,19 @@ body[data-dsh-claude-style] .dsh-claude-context-stats-skeleton-value {
+@@ -441,25 +441,19 @@ body[data-dsh-telegram-style] .dsh-tg-context-stats-skeleton-value {
  }
  
  /* ---------- a phone-width composer ---------- */
@@ -33,19 +33,19 @@ index 75f4437..01772bb 100644
 +   The trailing cluster's own shrink is not a phone rule: it carries the model
 +   name's compression at every width (inline.css). */
  @media (max-width: 480px) {
--  body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] [data-dsh-claude-part~="row"] > [data-dsh-claude-part~="trailing"] {
+-  body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] [data-dsh-tg-part~="row"] > [data-dsh-tg-part~="trailing"] {
 -    flex: 0 1 auto;
 -    min-width: 0;
 -  }
-   body[data-dsh-claude-style] [data-dsh-claude-context-meter] button > span {
+   body[data-dsh-telegram-style] [data-dsh-tg-context-meter] button > span {
      display: none;
    }
 diff --git a/packages/client/src/features/composer/inline.css b/packages/client/src/features/composer/inline.css
 index d3b3035..3369ce1 100644
 --- a/packages/client/src/features/composer/inline.css
 +++ b/packages/client/src/features/composer/inline.css
-@@ -503,11 +503,18 @@ body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-c
-   background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08));
+@@ -503,11 +503,18 @@ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-c
+   background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08));
    color: var(--dsw-alias-label-primary);
  }
 +/* The cluster gives up width when the row is short, and the model name is what
@@ -54,8 +54,8 @@ index d3b3035..3369ce1 100644
 +   too long for the room. `min-width: 0` is what lets the shrink pass a flex
 +   item's content-sized floor. The controls the reader presses — the send
 +   button, the activity slot — stay at their own width inside it. */
- body[data-dsh-claude-style] [data-composer-card][data-composer-variant="inline"] [data-dsh-claude-part~="trailing"],
- body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] [data-dsh-claude-part~="trailing"] {
+ body[data-dsh-telegram-style] [data-composer-card][data-composer-variant="inline"] [data-dsh-tg-part~="trailing"],
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] [data-dsh-tg-part~="trailing"] {
    display: flex;
    align-items: center;
    gap: 8px;
@@ -68,7 +68,7 @@ diff --git a/packages/client/src/theme/chrome.css b/packages/client/src/theme/ch
 index ce1c3a0..400867c 100644
 --- a/packages/client/src/theme/chrome.css
 +++ b/packages/client/src/theme/chrome.css
-@@ -288,6 +288,19 @@ body[data-dsh-claude-style][data-ds-dark-theme] :is(button, input, textarea, sel
+@@ -288,6 +288,19 @@ body[data-dsh-telegram-style][data-ds-dark-theme] :is(button, input, textarea, sel
    outline-color: rgba(250, 249, 245, 0.60);
  }
  
@@ -81,7 +81,7 @@ index ce1c3a0..400867c 100644
 +   rather than scrollable; the process body takes the same decision in
 +   features/chat-follow/chat-follow.css. The y-axis stays the host's, which is
 +   what every follow and scroll owner reads. */
-+body[data-dsh-claude-style] [data-conversation-scroll] {
++body[data-dsh-telegram-style] [data-conversation-scroll] {
 +  overflow-x: hidden;
 +}
 +

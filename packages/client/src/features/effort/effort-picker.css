@@ -2,7 +2,7 @@
 /* Same card language as the model picker — the two panels open over the same
    corner and must read as one design — sized to the slider, which is the only
    thing it holds. The card is the shared popover card (shared/popover.css). */
-body[data-dsh-claude-style] .dsh-claude-effort-popover {
+body[data-dsh-telegram-style] .dsh-tg-effort-popover {
   position: fixed;
   min-width: 264px;
   max-width: min(320px, calc(100vw - 16px));
@@ -16,7 +16,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-popover {
    control never reads as a hard switch between fixed stops. The transition is
    what makes that settle read as a settle; it is switched off while the pointer
    owns the knob, which is what `data-dragging` marks. */
-body[data-dsh-claude-style] .dsh-claude-effort {
+body[data-dsh-telegram-style] .dsh-tg-effort {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -25,7 +25,7 @@ body[data-dsh-claude-style] .dsh-claude-effort {
   user-select: none;
   -webkit-user-select: none;
 }
-body[data-dsh-claude-style] .dsh-claude-effort-head {
+body[data-dsh-telegram-style] .dsh-tg-effort-head {
   display: flex;
   align-items: baseline;
   gap: 6px;
@@ -35,7 +35,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-head {
 }
 /* The label recedes and the level's name carries the weight — Claude's own
    `Effort High` pairs a grey caption with a near-black value. */
-body[data-dsh-claude-style] .dsh-claude-effort-label {
+body[data-dsh-telegram-style] .dsh-tg-effort-label {
   flex: none;
   font-size: 13px;
   line-height: 16px;
@@ -47,7 +47,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-label {
    rises out of a blur from below while the outgoing one (the ghost, absolutely
    positioned over this one) blurs away upward. Both animations are re-armed
    from the override on every real change. */
-body[data-dsh-claude-style] .dsh-claude-effort-value {
+body[data-dsh-telegram-style] .dsh-tg-effort-value {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -56,8 +56,8 @@ body[data-dsh-claude-style] .dsh-claude-effort-value {
   font-size: 13px;
   line-height: 16px;
   color: var(--dsw-alias-label-primary, #141413);
-  transition: color var(--dsh-claude-timing-feedback);
-  animation: dsh-claude-swap-in var(--dsh-claude-duration-swap) var(--dsh-claude-swap-ease);
+  transition: color var(--dsh-tg-timing-feedback);
+  animation: dsh-tg-swap-in var(--dsh-tg-duration-swap) var(--dsh-tg-swap-ease);
 }
 /* The outgoing name. It sits exactly where the value sat (the override writes
    its left offset), takes no layout space, and ends at opacity 0 — so it never
@@ -65,11 +65,11 @@ body[data-dsh-claude-style] .dsh-claude-effort-value {
 /* The two halves of the name's swap are siblings, so both are told the travel:
    the shared preset over the short distance, this line being 16px tall
    (shared/motion.css, D9). */
-body[data-dsh-claude-style] .dsh-claude-effort-value,
-body[data-dsh-claude-style] .dsh-claude-effort-value-ghost {
-  --dsh-claude-swap-distance: var(--dsh-claude-distance-nudge);
+body[data-dsh-telegram-style] .dsh-tg-effort-value,
+body[data-dsh-telegram-style] .dsh-tg-effort-value-ghost {
+  --dsh-tg-swap-distance: var(--dsh-tg-distance-nudge);
 }
-body[data-dsh-claude-style] .dsh-claude-effort-value-ghost {
+body[data-dsh-telegram-style] .dsh-tg-effort-value-ghost {
   position: absolute;
   left: 0;
   top: 0;
@@ -79,11 +79,11 @@ body[data-dsh-claude-style] .dsh-claude-effort-value-ghost {
   line-height: 16px;
   color: var(--dsw-alias-label-primary, #141413);
   opacity: 0;
-  animation: dsh-claude-swap-out var(--dsh-claude-duration-swap) var(--dsh-claude-swap-ease) forwards;
+  animation: dsh-tg-swap-out var(--dsh-tg-duration-swap) var(--dsh-tg-swap-ease) forwards;
 }
 /* The ends name the axis: a scale, not a value, so they keep the caption colour
    and take their words from the copy table (更快 / 更强 in Chinese). */
-body[data-dsh-claude-style] .dsh-claude-effort-ends {
+body[data-dsh-telegram-style] .dsh-tg-effort-ends {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -92,7 +92,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-ends {
   line-height: 14px;
   color: var(--dsw-alias-label-caption, #a6a094);
 }
-body[data-dsh-claude-style] .dsh-claude-effort-track {
+body[data-dsh-telegram-style] .dsh-tg-effort-track {
   position: relative;
   /* The hit area is the knob's height; the groove itself sits centred in it. */
   height: 30px;
@@ -100,7 +100,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-track {
   cursor: pointer;
   touch-action: none;
 }
-body[data-dsh-claude-style] .dsh-claude-effort-track::before {
+body[data-dsh-telegram-style] .dsh-tg-effort-track::before {
   content: "";
   position: absolute;
   left: 0;
@@ -124,7 +124,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-track::before {
 /* The filled portion: from the track's left end to the knob's centre, where
    the opaque knob swallows it. Its colour IS the label ink at low alpha, so it
    darkens the light groove and lightens the dark one with a single rule. */
-body[data-dsh-claude-style] .dsh-claude-effort-fill {
+body[data-dsh-telegram-style] .dsh-tg-effort-fill {
   position: absolute;
   left: 0;
   top: 50%;
@@ -140,19 +140,19 @@ body[data-dsh-claude-style] .dsh-claude-effort-fill {
   border-radius: 8px 0 0 8px;
   corner-shape: round;
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #141413) 26%, transparent);
-  transition: width var(--dsh-claude-duration-move) var(--dsh-claude-ease-glide), opacity var(--dsh-claude-duration-move) var(--dsh-claude-ease-standard);
+  transition: width var(--dsh-tg-duration-move) var(--dsh-tg-ease-glide), opacity var(--dsh-tg-duration-move) var(--dsh-tg-ease-standard);
   pointer-events: none;
 }
 /* One tick per stop, centred on the stop's resting position (the override
    computes the px). Same ink as the fill: the fill swallows passed ticks, the
    knob swallows the current one, so a tick only ever shows on bare track. */
-body[data-dsh-claude-style] .dsh-claude-effort-ticks {
+body[data-dsh-telegram-style] .dsh-tg-effort-ticks {
   position: absolute;
   inset: 0;
-  transition: opacity var(--dsh-claude-duration-move) var(--dsh-claude-ease-standard);
+  transition: opacity var(--dsh-tg-duration-move) var(--dsh-tg-ease-standard);
   pointer-events: none;
 }
-body[data-dsh-claude-style] .dsh-claude-effort-tick {
+body[data-dsh-telegram-style] .dsh-tg-effort-tick {
   position: absolute;
   top: 50%;
   width: 4px;
@@ -170,7 +170,7 @@ body[data-dsh-claude-style] .dsh-claude-effort-tick {
    The plume shape (solid at the nozzle, dissolving into the track by the far
    left) is a static per-block opacity all three ride through. The grid lives
    only while the apex is shown, so the cost stays bounded to that state. */
-body[data-dsh-claude-style] .dsh-claude-effort-matrix {
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix {
   position: absolute;
   left: 0;
   right: 0;
@@ -186,30 +186,30 @@ body[data-dsh-claude-style] .dsh-claude-effort-matrix {
   display: none;
   pointer-events: none;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-matrix {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-matrix {
   display: grid !important;
   grid-auto-flow: row !important;
 }
 /* No base opacity: an !important declaration would outrank the animation in
    the cascade and freeze the cell at 0. fill-mode both covers the pre-delay
    (from) and the rest (to), so the keyframes own the whole life cycle. */
-body[data-dsh-claude-style] .dsh-claude-effort-matrix-cell {
-  animation: dsh-claude-fade-in var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard) both !important;
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix-cell {
+  animation: dsh-tg-fade-in var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard) both;
 }
-body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 1px !important;
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix-sq {
+  width: 100%;
+  height: 100%;
+  border-radius: 1px;
   /* NOT !important: the flash animates background-color, and no animation can
      outrank an !important declaration — the same cascade trap the cell's
      opacity fell into. Nothing in the host targets these private classes. */
-  background-color: var(--dsh-claude-apex, #8b7ad0);
-  --dsh-flash-light: var(--dsh-claude-apex-flash, #d9d2f5);
+  background-color: var(--dsh-tg-apex, #8b7ad0);
+  --dsh-flash-light: var(--dsh-tg-apex-flash, #d9d2f5);
   /* One flash cycle: the block holds violet, jumps to its lighter peak for a
      short window, and eases back over the rest of the period. var() in keyframes
      resolves against the animated block, so one keyframes rule serves every
      block's own peak colour. */
-  animation: dshClaudeEffortFlash var(--dsh-claude-period-flash) infinite var(--dsh-claude-ease-in-out) !important;
+  animation: dshTgEffortFlash var(--dsh-tg-period-flash) infinite var(--dsh-tg-ease-in-out);
 }
 /* The block's flash peak lives HERE, never inline: the override only picks the
    share of apex the peak mixes (--dsh-flash-mix), so a stylesheet swap always
@@ -218,21 +218,21 @@ body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq {
    stale inline values. A continuous share, not eight buckets: the buckets
    showed as bands across a wide track. The rule is its own so the declarations
    above keep the shape the importance walk recorded. */
-body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq {
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix-sq {
   position: relative;
-  --dsh-flash-light: color-mix(in srgb, var(--dsh-claude-apex, #8b7ad0) var(--dsh-flash-mix, 62%), var(--dsh-claude-apex-flash, #d9d2f5));
+  --dsh-flash-light: color-mix(in srgb, var(--dsh-tg-apex, #8b7ad0) var(--dsh-flash-mix, 62%), var(--dsh-tg-apex-flash, #d9d2f5));
 }
 /* The frontier glow: the block lights past its own peak as the entrance sweep
    passes it, which is what makes the arrival read as an edge rather than a
    fade. One pass per block, on the block's own entrance delay. */
-body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq::before {
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix-sq::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: var(--dsh-claude-apex-flash, #d9d2f5);
+  background-color: var(--dsh-tg-apex-flash, #d9d2f5);
   opacity: 0;
-  animation: dshClaudeEffortFront var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard) var(--dsh-front-delay, 0s) both;
+  animation: dshTgEffortFront var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard) var(--dsh-front-delay, 0s) both;
 }
 /* The flow: a stream of light travelling right to left, each block lighting only
    while the stream is on it (--dsh-flow-delay) and only as far as its sparse
@@ -240,34 +240,34 @@ body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq::before {
    particles rather than a stripe. It wears the brightest tone of the three
    layers and the flash peak is held below it, so the one direction on the field
    is the stream's; the base flash alone is a field of independent blinks. */
-body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq::after {
+body[data-dsh-telegram-style] .dsh-tg-effort-matrix-sq::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: var(--dsh-claude-apex-flash, #d9d2f5);
+  background-color: var(--dsh-tg-apex-flash, #d9d2f5);
   opacity: 0;
-  animation: dshClaudeEffortFlow var(--dsh-claude-period-flow) linear var(--dsh-flow-delay, 0s) infinite;
+  animation: dshTgEffortFlow var(--dsh-tg-period-flow) linear var(--dsh-flow-delay, 0s) infinite;
 }
 /* The reduced answer stops the two added layers at once: their animations are
    not `!important`, so the choice in the selector outranks them (theme/chrome.css
    holds the base flash, which is). */
-body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-effort-matrix-sq::before,
-body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-effort-matrix-sq::after {
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-effort-matrix-sq::before,
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-effort-matrix-sq::after {
   animation: none;
   opacity: 0;
 }
-@keyframes dshClaudeEffortFlash {
-  0%, 14% { background-color: var(--dsh-claude-apex, #8b7ad0); }
+@keyframes dshTgEffortFlash {
+  0%, 14% { background-color: var(--dsh-tg-apex, #8b7ad0); }
   20%, 34% { background-color: var(--dsh-flash-light, #d9d2f5); }
-  100% { background-color: var(--dsh-claude-apex, #8b7ad0); }
+  100% { background-color: var(--dsh-tg-apex, #8b7ad0); }
 }
-@keyframes dshClaudeEffortFront {
+@keyframes dshTgEffortFront {
   0% { opacity: 0; }
   30% { opacity: .9; }
   100% { opacity: 0; }
 }
-@keyframes dshClaudeEffortFlow {
+@keyframes dshTgEffortFlow {
   0% { opacity: 0; }
   3% { opacity: calc(var(--dsh-flow-strength, 1) * .95); }
   6% { opacity: 0; }
@@ -276,23 +276,23 @@ body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-effort
 /* Reaching the top rung: the plain fill and the ticks hand the groove over to
    the matrix, the knob takes a violet tint and a soft glow, and the level's
    name goes violet. */
-body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-fill {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-fill {
   opacity: 0 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-ticks {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-ticks {
   opacity: 0 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-knob {
-  background: color-mix(in srgb, var(--dsh-claude-apex, #8b7ad0) 22%, var(--dsw-static-neutral-bluish-00, #ffffff)) !important;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--dsh-claude-apex, #8b7ad0) 80%, transparent), 0 0 0 1px color-mix(in srgb, var(--dsh-claude-apex, #8b7ad0) 35%, transparent) !important;
+body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-knob {
+  background: color-mix(in srgb, var(--dsh-tg-apex, #8b7ad0) 22%, var(--dsw-static-neutral-bluish-00, #ffffff)) !important;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--dsh-tg-apex, #8b7ad0) 80%, transparent), 0 0 0 1px color-mix(in srgb, var(--dsh-tg-apex, #8b7ad0) 35%, transparent) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-value {
-  color: var(--dsh-claude-apex-ink, #5f51b5) !important;
+body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-value {
+  color: var(--dsh-tg-apex-ink, #5f51b5) !important;
 }
 /* A vertical capsule, not a bead: 16px wide, 30px tall, poking 2px past the
    groove top and bottom. The width stays 16px, which the override's travel
    geometry (and the fill's +8) depends on. */
-body[data-dsh-claude-style] .dsh-claude-effort-knob {
+body[data-dsh-telegram-style] .dsh-tg-effort-knob {
   position: absolute;
   left: 0;
   top: 50%;
@@ -316,38 +316,38 @@ body[data-dsh-claude-style] .dsh-claude-effort-knob {
      the fill. The explicit 1 also gives the release a numeric target to ease
      back to (an unset value is `none`, which does not interpolate). */
   scale: 1;
-  transition: translate var(--dsh-claude-duration-move) var(--dsh-claude-ease-glide), scale var(--dsh-claude-timing-feedback), background-color var(--dsh-claude-duration-fade) var(--dsh-claude-ease-standard), box-shadow var(--dsh-claude-duration-fade) var(--dsh-claude-ease-standard);
+  transition: translate var(--dsh-tg-duration-move) var(--dsh-tg-ease-glide), scale var(--dsh-tg-timing-feedback), background-color var(--dsh-tg-duration-fade) var(--dsh-tg-ease-standard), box-shadow var(--dsh-tg-duration-fade) var(--dsh-tg-ease-standard);
   will-change: translate, scale;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-effort-knob {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-effort-knob {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.4);
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-effort[data-apex] .dsh-claude-effort-knob {
-  box-shadow: 0 0 10px color-mix(in srgb, var(--dsh-claude-apex, #9d8ce0) 80%, transparent), 0 0 0 1px color-mix(in srgb, var(--dsh-claude-apex, #9d8ce0) 35%, transparent) !important;
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-effort[data-apex] .dsh-tg-effort-knob {
+  box-shadow: 0 0 10px color-mix(in srgb, var(--dsh-tg-apex, #9d8ce0) 80%, transparent), 0 0 0 1px color-mix(in srgb, var(--dsh-tg-apex, #9d8ce0) 35%, transparent) !important;
 }
 /* Held: the knob lifts 10%. Only `transform` stays un-transitioned (the drag
    writes it every frame); the lift itself eases in and, on release, eases back
    — so grabbing and letting go read as motion rather than a size jump. */
-body[data-dsh-claude-style] .dsh-claude-effort[data-dragging] .dsh-claude-effort-knob {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-dragging] .dsh-tg-effort-knob {
   scale: 1.1 !important;
   /* `translate` is dropped from the transition (the drag writes it every
      frame); the lift itself still eases in and back out. */
-  transition: scale var(--dsh-claude-timing-feedback), background-color var(--dsh-claude-duration-fade) var(--dsh-claude-ease-standard), box-shadow var(--dsh-claude-duration-fade) var(--dsh-claude-ease-standard) !important;
+  transition: scale var(--dsh-tg-timing-feedback), background-color var(--dsh-tg-duration-fade) var(--dsh-tg-ease-standard), box-shadow var(--dsh-tg-duration-fade) var(--dsh-tg-ease-standard) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-dragging] .dsh-claude-effort-fill {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-dragging] .dsh-tg-effort-fill {
   transition: none !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort-track:focus-visible {
+body[data-dsh-telegram-style] .dsh-tg-effort-track:focus-visible {
   outline: 2px solid var(--dsw-alias-brand-primary, #d97757) !important;
   outline-offset: 1px !important;
   border-radius: 10px !important;
 }
 /* No ladder to climb: the track is dimmed and the value reads as a dash, but the
    knob still travels and eases home — the control keeps its shape. */
-body[data-dsh-claude-style] .dsh-claude-effort[data-empty] .dsh-claude-effort-track::before {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-empty] .dsh-tg-effort-track::before {
   opacity: 0.55 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-effort[data-empty] .dsh-claude-effort-value {
+body[data-dsh-telegram-style] .dsh-tg-effort[data-empty] .dsh-tg-effort-value {
   color: var(--dsw-alias-label-caption, #a6a094) !important;
 }
 
@@ -355,7 +355,7 @@ body[data-dsh-claude-style] .dsh-claude-effort[data-empty] .dsh-claude-effort-va
 /* Body-mounted (the seat slot is React-managed and crashed on a foreign node),
    pinned beside the model trigger by measurement — every pass, and in the same
    frame as a resize / scroll / card-resize through the handle's reposition(). */
-body[data-dsh-claude-style] .dsh-claude-effort-btn {
+body[data-dsh-telegram-style] .dsh-tg-effort-btn {
   position: fixed;
   display: inline-flex;
   align-items: center;
@@ -382,10 +382,10 @@ body[data-dsh-claude-style] .dsh-claude-effort-btn {
      paint above anything lower — the trigger read as missing while it sat at 4
      under the opaque card. Page-level surfaces sit at 1000 and above, and the
      trigger goes with the seat when the composer does. */
-  z-index: var(--dsh-claude-layer-control);
-  transition: background-color var(--dsh-claude-timing-feedback), color var(--dsh-claude-timing-feedback);
+  z-index: var(--dsh-tg-layer-control);
+  transition: background-color var(--dsh-tg-timing-feedback), color var(--dsh-tg-timing-feedback);
 }
-body[data-dsh-claude-style] .dsh-claude-effort-btn:hover {
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08));
+body[data-dsh-telegram-style] .dsh-tg-effort-btn:hover {
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08));
   color: var(--dsw-alias-label-primary, #141413);
 }

@@ -1,8 +1,8 @@
 /**
  * build-cache.mjs — the results of the build's slow pure steps, kept between runs.
  *
- * Converting Deepy's sheets to vectors and brotli-compressing the routed text
- * assets take most of a build and change only when their inputs do. Each result
+ * Brotli-compressing the routed text assets takes most of a build and changes
+ * only when its inputs do. Each result
  * is stored under the hash of everything it is computed from, the code that
  * computes it included, so a hit hands back the very bytes a fresh run would
  * produce: `lib/` is the same with the cache or without it. The directory sits

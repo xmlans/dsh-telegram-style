@@ -1,8 +1,8 @@
 import { sessionStatsCacheHit, sessionStatsDuration, sessionStatsSpeed, sessionStatsTokens } from './stats-format'
-import { formatMoneyMicro } from '@dsh-claude-style/contracts/prices'
-import type { Currency } from '@dsh-claude-style/contracts/prices'
-import type { HostText } from '@dsh-claude-style/engine/host'
-import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-claude-style/contracts/services'
+import { formatMoneyMicro } from '@dsh-telegram-style/contracts/prices'
+import type { Currency } from '@dsh-telegram-style/contracts/prices'
+import type { HostText } from '@dsh-telegram-style/engine/host'
+import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-telegram-style/contracts/services'
 import { copy } from './copy'
 
 /**

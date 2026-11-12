@@ -20,5 +20,5 @@ export default {
     title: 'composerTitle',
     choiceLabels: { off: 'scopeOff', hero: 'scopeHero', conversation: 'scopeConversation', all: 'scopeAll' },
   }],
-  cases: ['composer', 'sync-fault', 'hero', 'late-forms']
+  cases: ['composer', 'sync-fault', 'hero', 'late-forms', 'input-bar']
 } satisfies FeatureManifest

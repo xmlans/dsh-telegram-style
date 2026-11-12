@@ -9,7 +9,7 @@
  */
 import { expect, test } from 'vitest'
 import fc from 'fast-check'
-import { isRankedEffort, orderEffortIds } from '@dsh-claude-style/client/pure'
+import { isRankedEffort, orderEffortIds } from '@dsh-telegram-style/client/pure'
 
 const RANKED = ['none', 'off', 'low', 'medium', 'high', 'on', 'xhigh', 'max', 'ultra']
 

@@ -1,5 +1,7 @@
 # Third-Party Notices
 
+本文件列出 dsh-telegram-style 中来自第三方的代码和素材。本项目基于 dsh-claude-style（MIT，© 2026 Nwflower）修改。
+
 This package includes material from the projects below. Each keeps its own license; the MIT license of this package does not relicense it.
 
 ## dsh-chat-ux
@@ -34,51 +36,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Lobe Icons
-
-The vendor lockups the model picker draws (`packages/assets/src/icons/combine/`, inlined into `lib/client.js`) are composed by `scripts/fetch-lobe-combines.py`: most from Lobe Icons (`@lobehub/icons-static-svg` ships each vendor's mono mark, colour mark and wordmark, and `@lobehub/icons` carries each vendor's brand colour and which artwork variants exist), the rest — OpenAI's and Reflection's — from artwork the repository carries under `packages/assets/src/icons/`. Brand names and logos remain trademarks of their respective owners.
-
-Source: <https://github.com/lobehub/lobe-icons>
-
-```
-MIT License
-
-Copyright (c) 2023 LobeHub
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ## transitions.dev
 
-The "Text states swap" transition (`packages/client/src/features/chat-wait/chat-wait.ts` and the `dsh-claude-chat-wait-label` rules in its stylesheet, and the operation label of a shared file row in `packages/client/src/features/chat-files/` with the `dsh-claude-file-op-*` rules in its stylesheet) is ported the same way: its three-phase sequence (leave upward with a blur, change the text out of sight, enter from below), its duration, shift, blur and easing tokens as this package's own custom properties, and the reflow that releases the entry pose. The snippet's `prefers-reduced-motion` guard is answered by the animation choice this skin resolves onto `<body>` (D40), which already folds the system setting in.
+The "Text states swap" transition (`packages/client/src/features/chat-wait/chat-wait.ts` and the `dsh-tg-chat-wait-label` rules in its stylesheet, and the operation label of a shared file row in `packages/client/src/features/chat-files/` with the `dsh-tg-file-op-*` rules in its stylesheet) is ported the same way: its three-phase sequence (leave upward with a blur, change the text out of sight, enter from below), its duration, shift, blur and easing tokens as this package's own custom properties, and the reflow that releases the entry pose. The snippet's `prefers-reduced-motion` guard is answered by the animation choice this skin resolves onto `<body>` (D40), which already folds the system setting in.
 
-The "Reasoning stream" transition (`packages/client/src/features/chat-fold/reasoning-stream.ts` and the `data-dsh-claude-reason-window` rules in that feature's `fold-motion.css`) is ported as well: its window (a few lines tall with a mask at each edge rather than painted gradients), its hold, step, lines, fade and easing tokens, and the stepping clock — read as live text, so there is no copy and no wrap and the steps stop at the newest line.
+The "Reasoning stream" transition (`packages/client/src/features/chat-fold/reasoning-stream.ts` and the `data-dsh-tg-reason-window` rules in that feature's `fold-motion.css`) is ported as well: its window (a few lines tall with a mask at each edge rather than painted gradients), its hold, step, lines, fade and easing tokens, and the stepping clock — read as live text, so there is no copy and no wrap and the steps stop at the newest line.
 
-Seven more are ported the same way, each into this package's own classes, attributes and motion tokens, with the snippet's `prefers-reduced-motion` guard answered by the skin's animation choice: "Menu dropdown" (the popover cards in `packages/client/src/shared/popover.css` and the `dsh-claude-dropdown-in` preset in `packages/client/src/shared/motion.css` — its pre-open and closing scales and its curve, the closing state carried by the separate `scale` property instead of a class), "Modal open / close" (the account-hold page, `packages/client/src/features/ban-screen/`), "Page side-by-side" (the settings tabs, `packages/client/src/features/settings/` — the page leaving is a still copy of its rows), "Notification badge" (the waiting line's overtime badge, `packages/client/src/features/chat-wait/` — the slide and the pop as `translate` and `scale` on the one pill), "Skeleton loader and reveal" (the home usage panel, `packages/client/src/features/home/` — the placeholder and the figure being one element, its fill fades while the figure comes out of the blur), "Texts reveal" (the home greeting, `packages/client/src/theme/hero.css` — the brand mark and the greeting as its two lines) and "Toggle" (the settings switches — its double-bounce keyframes, armed by the first press).
+Six more are ported the same way, each into this package's own classes, attributes and motion tokens, with the snippet's `prefers-reduced-motion` guard answered by the skin's animation choice: "Menu dropdown" (the popover cards in `packages/client/src/shared/popover.css` and the `dsh-tg-dropdown-in` preset in `packages/client/src/shared/motion.css` — its pre-open and closing scales and its curve, the closing state carried by the separate `scale` property instead of a class), "Page side-by-side" (the settings tabs, `packages/client/src/features/settings/` — the page leaving is a still copy of its rows), "Notification badge" (the waiting line's overtime badge, `packages/client/src/features/chat-wait/` — the slide and the pop as `translate` and `scale` on the one pill), "Skeleton loader and reveal" (the home usage panel, `packages/client/src/features/home/` — the placeholder and the figure being one element, its fill fades while the figure comes out of the blur), "Texts reveal" (the home greeting, `packages/client/src/theme/hero.css` — the brand mark and the greeting as its two lines) and "Toggle" (the settings switches — its double-bounce keyframes, armed by the first press).
 
-The colour wash the waiting line can wear instead of the band (`packages/client/src/shared/motion.css`, the `dsh-claude-sweep` and `dsh-claude-wash` presets in that sheet and the `--dsh-claude-wash-*` custom properties) is the paint transitions.dev serves on its own pages as "Pro gradient text" (`.title-pro` on <https://transitions.dev/agent.html>): its seven radial washes over a grey base ramp as inline SVG, its 180% layer sizes, and its orbit and hue-rotation periods, renamed into this package's own custom properties and motion tokens, with the `prefers-reduced-motion` guard answered by the skin's animation choice (D40) as everywhere else.
+The colour wash the waiting line can wear instead of the band (`packages/client/src/shared/motion.css`, the `dsh-tg-sweep` and `dsh-tg-wash` presets in that sheet and the `--dsh-tg-wash-*` custom properties) is the paint transitions.dev serves on its own pages as "Pro gradient text" (`.title-pro` on <https://transitions.dev/agent.html>): its seven radial washes over a grey base ramp as inline SVG, its 180% layer sizes, and its orbit and hue-rotation periods, renamed into this package's own custom properties and motion tokens, with the `prefers-reduced-motion` guard answered by the skin's animation choice (D40) as everywhere else.
 
-The "Input clear with dissolve" transition (the search field at the top of the model picker's second level, `packages/client/src/features/model/sub-menu.ts` with the `dsh-claude-model-search-*` rules in its stylesheet) is ported the way the rest are: the typed words fly down through a blur while a streak ignites under each of them and the placeholder falls in from above, with the per-frame envelope the snippet writes by hand (its streak cannot be a keyframe), its two halves, its fly, blur and glow-delay times and its curve as this package's motion tokens, and its multiply/screen blend read off the reader's palette. Its `prefers-reduced-motion` guard is answered by the skin's animation choice, which the module asks before it starts a clear.
+The "Input clear with dissolve" transition (the search field at the top of the model picker's second level, `packages/client/src/features/model/sub-menu.ts` with the `dsh-tg-model-search-*` rules in its stylesheet) is ported the way the rest are: the typed words fly down through a blur while a streak ignites under each of them and the placeholder falls in from above, with the per-frame envelope the snippet writes by hand (its streak cannot be a keyframe), its two halves, its fly, blur and glow-delay times and its curve as this package's motion tokens, and its multiply/screen blend read off the reader's palette. Its `prefers-reduced-motion` guard is answered by the skin's animation choice, which the module asks before it starts a clear.
 
-The "Card resize" transition (the model picker's second level taking the height of the list a query leaves, `packages/client/src/features/model/sub-menu.ts` with the `dsh-claude-model-popover-sub` rule in its stylesheet) is ported as the width and height tween it is, with its duration as this package's `--dsh-claude-duration-resize` and its curve the settling one the other surface transitions already read. A height cannot be interpolated into `auto`, so the two ends are written as lengths around the rebuild and the height returns to the content once the travel lands. Its `prefers-reduced-motion` guard is answered by the skin's animation choice (D40).
+The "Card resize" transition (the model picker's second level taking the height of the list a query leaves, `packages/client/src/features/model/sub-menu.ts` with the `dsh-tg-model-popover-sub` rule in its stylesheet) is ported as the width and height tween it is, with its duration as this package's `--dsh-tg-duration-resize` and its curve the settling one the other surface transitions already read. A height cannot be interpolated into `auto`, so the two ends are written as lengths around the rebuild and the height returns to the content once the travel lands. Its `prefers-reduced-motion` guard is answered by the skin's animation choice (D40).
 
-Source: <https://transitions.dev/detail.html?t=text-states-swap> · <https://transitions.dev/detail.html?t=reasoning-stream> · <https://transitions.dev/detail.html?t=menu-dropdown> · <https://transitions.dev/detail.html?t=modal-open-close> · <https://transitions.dev/detail.html?t=page-side-by-side> · <https://transitions.dev/detail.html?t=notification-badge> · <https://transitions.dev/detail.html?t=skeleton-loader-and-reveal> · <https://transitions.dev/detail.html?t=texts-reveal> · <https://transitions.dev/detail.html?t=toggle> · <https://transitions.dev/detail.html?t=pro-gradient-text> · <https://transitions.dev/detail.html?t=input-clear-dissolve> · <https://transitions.dev/detail.html?t=card-resize> · <https://github.com/Jakubantalik/transitions.dev>
+Source: <https://transitions.dev/detail.html?t=text-states-swap> · <https://transitions.dev/detail.html?t=reasoning-stream> · <https://transitions.dev/detail.html?t=menu-dropdown> · <https://transitions.dev/detail.html?t=page-side-by-side> · <https://transitions.dev/detail.html?t=notification-badge> · <https://transitions.dev/detail.html?t=skeleton-loader-and-reveal> · <https://transitions.dev/detail.html?t=texts-reveal> · <https://transitions.dev/detail.html?t=toggle> · <https://transitions.dev/detail.html?t=pro-gradient-text> · <https://transitions.dev/detail.html?t=input-clear-dissolve> · <https://transitions.dev/detail.html?t=card-resize> · <https://github.com/Jakubantalik/transitions.dev>
 
 ```
 Transitions.dev License
@@ -110,7 +82,7 @@ Full terms: https://transitions.dev/terms.html
 
 ## zai-org/ZCode
 
-The figures on a file-change row (`packages/client/src/features/chat-files/` and the `dsh-claude-file-roll-*` rules in its stylesheet) turn the way ZCode's metric flip does (its UI package's `flip-metric-value.tsx`): one short turn per update, only the characters whose own digit changed, a fixed-width slot per character with the perspective on the slot, 160 ms, and an animation choice that writes the value in place instead of turning it.
+The figures on a file-change row (`packages/client/src/features/chat-files/` and the `dsh-tg-file-roll-*` rules in its stylesheet) turn the way ZCode's metric flip does (its UI package's `flip-metric-value.tsx`): one short turn per update, only the characters whose own digit changed, a fixed-width slot per character with the perspective on the slot, 160 ms, and an animation choice that writes the value in place instead of turning it.
 
 Source: <https://github.com/zai-org/ZCode> · <https://github.com/zai-org/ZCode/blob/main/packages/ui/src/components/ui/flip-metric-value.tsx>
 
@@ -322,7 +294,7 @@ License: Apache-2.0.
 
 ## Uiverse — "Loader" by mobinkakei
 
-The loader the waiting line leads with under the Claude brand (`packages/client/src/features/chat-wait/chat-wait.ts` and the `dsh-claude-chat-wait-loader` rules in its stylesheet) is ported from a Uiverse loader: its three dots, its squash-and-stretch keyframes (the flat-bottomed radius the dot lands with, the round pose two fifths into the bounce, the travel to the top), its half-second period and the phase each dot starts behind the one before it — renamed into this package's own classes, read from its own motion tokens and painted with the accent in force. The snippet's three shadow ellipses are left out, so the loader carries no shadow at all.
+The loader the waiting line leads with (`packages/client/src/features/chat-wait/chat-wait.ts` and the `dsh-tg-chat-wait-loader` rules in its stylesheet) is ported from a Uiverse loader: its three dots, its squash-and-stretch keyframes (the flat-bottomed radius the dot lands with, the round pose two fifths into the bounce, the travel to the top), its half-second period and the phase each dot starts behind the one before it — renamed into this package's own classes, read from its own motion tokens and painted with the accent in force. The snippet's three shadow ellipses are left out, so the loader carries no shadow at all.
 
 Source: <https://uiverse.io/mobinkakei/grumpy-turtle-41>
 
@@ -349,3 +321,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Wallpaper pattern
+
+The pattern laid over the wallpaper (`packages/assets/src/wallpaper/pattern.webp`, tinted per palette through the mask in `packages/client/src/features/wallpaper/wallpaper.css`) is not drawn in this repository. Supplied by the project's maintainer, who holds the right to redistribute it.

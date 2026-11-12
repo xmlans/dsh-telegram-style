@@ -1,12 +1,12 @@
-import { buildElement } from '@dsh-claude-style/engine/dom'
+import { buildElement } from '@dsh-telegram-style/engine/dom'
 import { copy } from './copy'
 import { byModelId } from './rows'
 import { motionEaseAt, motionMs, motionValue } from '../../shared/motion'
 import { motionReduced } from '../../core/prefs'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { CARET_FIELD_ATTR } from '../../constants'
 import type { createModelRows } from './rows'
-import type { HostModelCatalogSnapshot, HostModelEntry, HostModelGroup } from '@dsh-claude-style/contracts/services'
+import type { HostModelCatalogSnapshot, HostModelEntry, HostModelGroup } from '@dsh-telegram-style/contracts/services'
 
 /**
  * The model picker's second level: the search field at the top of the card and
@@ -21,9 +21,9 @@ import type { HostModelCatalogSnapshot, HostModelEntry, HostModelGroup } from '@
  */
 
 /** The field's own state: the mirror draws the words, so the field draws none. */
-const FILLED_ATTR = 'data-dsh-claude-field-filled'
+const FILLED_ATTR = 'data-dsh-tg-field-filled'
 /** The field's own state: a clear is running, and the words and placeholder are mid-flight. */
-const CLEARING_ATTR = 'data-dsh-claude-field-clearing'
+const CLEARING_ATTR = 'data-dsh-tg-field-clearing'
 
 /** The clear control's mark. */
 const CLEAR_SVG = '<svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>'
@@ -38,7 +38,7 @@ const GLOW_SPREAD = 1.5
 /** Where the envelope peaks inside the clear, as a share of its length. */
 const GLOW_PEAK_AT = 0.15
 /** The streak's own strength on the field: the sheet holds the two palettes' values. */
-const GLOW_STRENGTH_PROPERTY = '--dsh-claude-clear-glow-opacity'
+const GLOW_STRENGTH_PROPERTY = '--dsh-tg-clear-glow-opacity'
 
 export interface ModelSubMenuOptions {
   /** The row builders the two levels share. */
@@ -62,9 +62,9 @@ export interface ModelSubMenuOptions {
 export function createModelSubMenu(options: ModelSubMenuOptions) {
   const rows = options.rows
 
-  const head = buildElement('div', 'dsh-claude-model-search')
-  const box = buildElement('div', 'dsh-claude-model-search-field')
-  const field = buildElement('input', 'dsh-claude-model-search-input')
+  const head = buildElement('div', 'dsh-tg-model-search')
+  const box = buildElement('div', 'dsh-tg-model-search-field')
+  const field = buildElement('input', 'dsh-tg-model-search-input')
   field.type = 'text'
   field.spellcheck = false
   field.setAttribute('autocomplete', 'off')
@@ -73,17 +73,17 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
   field.setAttribute(CARET_FIELD_ATTR, '')
   // The words sit in the mirror so they can fly off it; the field keeps its own
   // glyphs transparent while it has any (the sheet).
-  const mirror = buildElement('div', 'dsh-claude-model-search-mirror')
+  const mirror = buildElement('div', 'dsh-tg-model-search-mirror')
   mirror.setAttribute('aria-hidden', 'true')
   // The mirror is not inside the field, so the offset the field scrolls its text
   // by is written across to it: a long query stays under its own caret.
-  const travel = buildElement('span', 'dsh-claude-model-search-travel')
+  const travel = buildElement('span', 'dsh-tg-model-search-travel')
   mirror.appendChild(travel)
-  const placeholder = buildElement('div', 'dsh-claude-model-search-placeholder')
+  const placeholder = buildElement('div', 'dsh-tg-model-search-placeholder')
   placeholder.setAttribute('aria-hidden', 'true')
-  const glow = buildElement('div', 'dsh-claude-model-search-glow')
+  const glow = buildElement('div', 'dsh-tg-model-search-glow')
   glow.setAttribute('aria-hidden', 'true')
-  const clear = buildElement('button', 'dsh-claude-model-search-clear')
+  const clear = buildElement('button', 'dsh-tg-model-search-clear')
   clear.type = 'button'
   clear.innerHTML = CLEAR_SVG
   box.appendChild(field)
@@ -92,7 +92,7 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
   box.appendChild(glow)
   box.appendChild(clear)
   head.appendChild(box)
-  const body = buildElement('div', 'dsh-claude-popover-body dsh-claude-model-sub-body')
+  const body = buildElement('div', 'dsh-tg-popover-body dsh-tg-model-sub-body')
 
   /** What the list on screen was drawn from: the signature and the query. */
   let painted = ''
@@ -152,12 +152,12 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
       const group = sections[g]
       const found = group.models.slice().sort(byModelId).filter(model => admits(group, model, query))
       if (found.length === 0) continue
-      const section = buildElement('div', 'dsh-claude-model-group-section')
-      const groupRow = buildElement('div', 'dsh-claude-model-group-row')
-      const groupLabel = buildElement('div', 'dsh-claude-model-group')
-      // The group label is the provider's name alone: a mark there would repeat
-      // what the rows below already carry inside their lockups.
-      groupLabel.appendChild(buildElement('span', 'dsh-claude-model-group-name', group.name))
+      const section = buildElement('div', 'dsh-tg-model-group-section')
+      const groupRow = buildElement('div', 'dsh-tg-model-group-row')
+      const groupLabel = buildElement('div', 'dsh-tg-model-group')
+      // The group label is the provider's name alone: an avatar there would repeat
+      // what the rows below already carry.
+      groupLabel.appendChild(buildElement('span', 'dsh-tg-model-group-name', group.name))
       groupRow.appendChild(groupLabel)
       section.appendChild(groupRow)
       for (let m = 0; m < found.length; m++) {
@@ -168,7 +168,7 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
       body.appendChild(section)
     }
     if (listed === 0) {
-      body.appendChild(buildElement('div', 'dsh-claude-popover-status', query === '' ? copy('empty') : copy('searchEmpty')))
+      body.appendChild(buildElement('div', 'dsh-tg-popover-status', query === '' ? copy('empty') : copy('searchEmpty')))
     }
     if (card !== null && before > 0) resizeThrough(card, before)
   }
@@ -193,7 +193,7 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
     // Read once, so the browser holds the old height as the travel's start.
     void card.getBoundingClientRect().height
     resized = card
-    settleTimer = window.setTimeout(releaseHeight, motionMs('--dsh-claude-duration-resize') + 40)
+    settleTimer = window.setTimeout(releaseHeight, motionMs('--dsh-tg-duration-resize') + 40)
     requestFrame({
       write() {
         if (resized === card) card.style.height = `${after}px`
@@ -285,16 +285,16 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
 
   /** One frame of the clear: the words leaving, the placeholder arriving, the streak's envelope. */
   function step(started: number, strength: number) {
-    const total = motionMs('--dsh-claude-duration-clear')
-    const half = motionMs('--dsh-claude-duration-clear-text')
-    const delay = motionMs('--dsh-claude-duration-clear-delay')
-    const fly = Number.parseFloat(motionValue('--dsh-claude-distance-rise'))
-    const blur = Number.parseFloat(motionValue('--dsh-claude-blur-soft'))
+    const total = motionMs('--dsh-tg-duration-clear')
+    const half = motionMs('--dsh-tg-duration-clear-text')
+    const delay = motionMs('--dsh-tg-duration-clear-delay')
+    const fly = Number.parseFloat(motionValue('--dsh-tg-distance-rise'))
+    const blur = Number.parseFloat(motionValue('--dsh-tg-blur-soft'))
     frame = requestFrame({
       write(now) {
         frame = null
         const elapsed = now - started
-        const out = motionEaseAt('--dsh-claude-ease-settle', Math.min(1, elapsed / half))
+        const out = motionEaseAt('--dsh-tg-ease-settle', Math.min(1, elapsed / half))
         mirror.style.transform = `translateY(${(out * fly).toFixed(1)}px)`
         mirror.style.opacity = (1 - out).toFixed(3)
         mirror.style.filter = `blur(${(out * blur).toFixed(1)}px)`
@@ -350,9 +350,9 @@ export function createModelSubMenu(options: ModelSubMenuOptions) {
     emptyField()
     glow.style.background = buildGlow(text)
     glow.style.opacity = '0'
-    placeholder.style.transform = `translateY(${-Number.parseFloat(motionValue('--dsh-claude-distance-rise'))}px)`
+    placeholder.style.transform = `translateY(${-Number.parseFloat(motionValue('--dsh-tg-distance-rise'))}px)`
     placeholder.style.opacity = '0.9'
-    placeholder.style.filter = `blur(${Number.parseFloat(motionValue('--dsh-claude-blur-soft'))}px)`
+    placeholder.style.filter = `blur(${Number.parseFloat(motionValue('--dsh-tg-blur-soft'))}px)`
     step(performance.now(), strength)
     return true
   }

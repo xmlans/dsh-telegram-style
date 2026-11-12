@@ -1,10 +1,10 @@
 {
-  "name": "dsh-claude-style",
-  "description": "Claude Code Desktop theme for DeepSeek Harness (dsh) web GUI — visual & interaction overhaul",
-  "version": "0.17.0",
+  "name": "dsh-telegram-style",
+  "description": "Telegram Web style theme for DeepSeek Harness (dsh) web GUI — layout & interaction overhaul",
+  "version": "0.1.0",
   "type": "module",
   "main": "lib/host/index.js",
-  "icon": "lib/claude-mark.svg",
+  "icon": "lib/telegram-style-mark.svg",
   "workspaces": [
     "packages/*"
   ],
@@ -26,6 +26,7 @@
     "coverage": "node packages/testing/coverage.cjs",
     "test": "vitest run",
     "verify": "node scripts/verify.mjs",
+    "sticker": "node scripts/sticker.mjs",
     "prepublishOnly": "npm run build"
   },
   "exports": {
@@ -67,21 +68,18 @@
     "cordis",
     "web-ui",
     "theme",
-    "claude",
-    "claude-code",
-    "desktop-theme",
-    "anthropic",
-    "editorial"
+    "telegram-style",
+    "chat-ui"
   ],
   "license": "MIT",
-  "author": "Nwflower",
+  "author": "xmlans",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nwflower/dsh-claude-style.git"
+    "url": "git+https://github.com/xmlans/dsh-telegram-style.git"
   },
-  "homepage": "https://github.com/Nwflower/dsh-claude-style#readme",
+  "homepage": "https://github.com/xmlans/dsh-telegram-style#readme",
   "bugs": {
-    "url": "https://github.com/Nwflower/dsh-claude-style/issues"
+    "url": "https://github.com/xmlans/dsh-telegram-style/issues"
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-client-ui-primitives": ">=0.1.5-rc.1",
@@ -102,9 +100,9 @@
     "fast-check": "4.10.2",
     "jscpd": "5.3.3",
     "playwright": "1.63.0",
-    "pngjs": "^7.0.0",
     "postcss": "8.5.29",
     "postcss-selector-parser": "7.1.6",
+    "sharp": "^0.35.5",
     "typescript": "7.0.2",
     "vitest": "5.0.3"
   }

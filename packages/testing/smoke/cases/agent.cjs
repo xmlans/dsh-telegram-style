@@ -114,9 +114,8 @@ module.exports = {
     check('no injected markup executed', r.pwned === 0, `${r.pwned} executions`)
     check('account name rendered as text', r.accountUser === MARKUP, JSON.stringify(r.accountUser))
     check('mirrored plugin label and badge rendered as text', r.mirroredText === MARKUP && r.mirroredBadge === MARKUP, JSON.stringify([r.mirroredText, r.mirroredBadge]))
-    check('account-hold toast renders the username as text', r.banToast === MARKUP + ': account_banned', JSON.stringify(r.banToast))
     check('avatar URL adds no attribute to the page',
-      r.avatarAttrs !== null && r.avatarAttrs.every((a) => a === 'class' || a === 'data-dsh-claude-photo') &&
+      r.avatarAttrs !== null && r.avatarAttrs.every((a) => a === 'class' || a === 'data-dsh-tg-photo') &&
       (r.photo === null || r.photo.attrs.every((a) => !/^on/i.test(a))), JSON.stringify([r.avatarAttrs, r.photo]))
     commonChecks(r)
   },
@@ -134,7 +133,7 @@ module.exports = {
     // shipped values want asks for its chunk here.
     check('each deferred feature the page wants was switched off once, and nothing else',
       same(switchedOff, [...deferredWanted(SHIPPED_PREFS)].sort()), r.errors.join(' | '))
-    check('each report names the chunk that did not load', r.errors.every((line) => line.includes('/dsh-claude-style/assets/') && line.includes('failed to load')), r.errors.join(' | '))
+    check('each report names the chunk that did not load', r.errors.every((line) => line.includes('/dsh-telegram-style/assets/') && line.includes('failed to load')), r.errors.join(' | '))
     check('the features in the bundle keep running', r.composerRestyle === true && r.accountUser === 'Tester', JSON.stringify({ restyle: r.composerRestyle, account: r.accountUser }))
     commonChecks(r)
   },
@@ -148,8 +147,8 @@ module.exports = {
   },
   'sync-fault'(r) {
     check('apply() completes', r.applyError === null, r.applyError)
-    check('only the two features that read the session list were switched off: the permission control and the model picker',
-      r.errors.length === 2 && r.errors.some((e) => e.includes('"permissions"')) && r.errors.some((e) => e.includes('"model"')), r.errors.join(' | '))
+    check('only the three features that read the session list were switched off: the permission control, the model picker and the chat list',
+      r.errors.length === 3 && ['permissions', 'model', 'chatList'].every((id) => r.errors.some((e) => e.includes('"' + id + '"'))), r.errors.join(' | '))
     check("the host's own access button is handed back", r.hostAccessVisible === true, JSON.stringify(r.hostAccessVisible))
     check('the composer restyle keeps running', r.composerRestyle === true, JSON.stringify(r.composerRestyle))
     check('the rest of the skin keeps running', r.accountUser === 'Tester', JSON.stringify(r.accountUser))
@@ -229,16 +228,6 @@ module.exports = {
       JSON.stringify({ first: r.injectHealedFirst, same: r.injectHealedSame }))
     check("the host's keyboard walk reaches our injected button",
       r.focusInInjected === true, JSON.stringify(r.focusInInjected))
-    check('the hold screen opens over the menu and survives the leaves its overlay causes',
-      r.banOpened === 1 && r.banSurvivesLeave === 1,
-      JSON.stringify({ opened: r.banOpened, survived: r.banSurvivesLeave }))
-    check('the host menu stays up behind the hold screen and the screen leaves by its own control, playing its exit first',
-      r.menuBehindBan === true && r.banLeaving === true && r.banAfterDismiss === 0,
-      JSON.stringify({ menu: r.menuBehindBan, leaving: r.banLeaving, exitMs: r.banExitMs, dismissed: r.banAfterDismiss }))
-    check('with the easter egg off the account row is a plain name a press does not open, and back on it is the button again',
-      !!r.banOff && !!r.banOff.row && r.banOff.row.role === null && r.banOff.row.tabindex === null && r.banOff.opened === 0 &&
-        !!r.banOn && !!r.banOn.row && r.banOn.row.role === 'button' && r.banOn.row.tabindex === '0',
-      JSON.stringify({ off: r.banOff, on: r.banOn }))
     check('closing the host menu leaves no injected container behind',
       r.injectAfterClose === 0 && r.hostMenuAfterClose === 0,
       JSON.stringify({ containers: r.injectAfterClose, menus: r.hostMenuAfterClose }))

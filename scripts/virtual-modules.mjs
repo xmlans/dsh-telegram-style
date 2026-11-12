@@ -13,7 +13,7 @@ const SRC = path.join(ROOT, 'packages', 'client', 'src')
 const RUNTIME_FIELDS = ['id', 'handle', 'order', 'pref', 'prefValues', 'ungated', 'yieldsTo', 'settingsRows']
 
 /**
- * The feature registry, `virtual:dsh-claude-style/features`: each manifest's
+ * The feature registry, `virtual:dsh-telegram-style/features`: each manifest's
  * runtime fields beside its main module's `install`, or beside its chunk's
  * address for a deferred feature (D72), in install order. The manifests
  * themselves stay out of the bundle: the page reads none of their test coverage.
@@ -45,7 +45,7 @@ export function featuresModule(manifests, chunks) {
   return {
     name: 'features',
     setup(build) {
-      build.onResolve({ filter: /^virtual:dsh-claude-style\/features$/ }, (args) => ({ path: args.path, namespace: 'features' }))
+      build.onResolve({ filter: /^virtual:dsh-telegram-style\/features$/ }, (args) => ({ path: args.path, namespace: 'features' }))
       build.onLoad({ filter: /.*/, namespace: 'features' }, () => ({ contents, loader: 'js', resolveDir: SRC }))
     },
   }
@@ -53,7 +53,7 @@ export function featuresModule(manifests, chunks) {
 
 /**
  * The table the feature chunks resolve their shared modules from,
- * `virtual:dsh-claude-style/chunk-modules` (D72): each id a chunk imports, as
+ * `virtual:dsh-telegram-style/chunk-modules` (D72): each id a chunk imports, as
  * this bundle's own instance — a source module's namespace or a generated
  * module's, or the host package exactly as the loader's `require` hands it
  * over, so the chunk's own import helpers treat it as the bundle's do.
@@ -72,7 +72,7 @@ export function chunkModulesModule(ids) {
   return {
     name: 'chunk-modules',
     setup(build) {
-      build.onResolve({ filter: /^virtual:dsh-claude-style\/chunk-modules$/ }, (args) => ({ path: args.path, namespace: 'chunk-modules' }))
+      build.onResolve({ filter: /^virtual:dsh-telegram-style\/chunk-modules$/ }, (args) => ({ path: args.path, namespace: 'chunk-modules' }))
       build.onLoad({ filter: /.*/, namespace: 'chunk-modules' }, () => ({ contents, loader: 'js', resolveDir: SRC }))
     },
   }
@@ -80,7 +80,7 @@ export function chunkModulesModule(ids) {
 
 /**
  * The table the settings page resolves its own row controls from,
- * `virtual:dsh-claude-style/settings-controls` (D72): each feature that draws a
+ * `virtual:dsh-telegram-style/settings-controls` (D72): each feature that draws a
  * control or a status line itself exports them from `<功能>.settings.ts` beside its main module,
  * and the settings page — the only importer — carries them with its own chunk.
  *
@@ -94,7 +94,7 @@ export function settingsControlsModule(manifests) {
   return {
     name: 'settings-controls',
     setup(build) {
-      build.onResolve({ filter: /^virtual:dsh-claude-style\/settings-controls$/ }, (args) => ({ path: args.path, namespace: 'settings-controls' }))
+      build.onResolve({ filter: /^virtual:dsh-telegram-style\/settings-controls$/ }, (args) => ({ path: args.path, namespace: 'settings-controls' }))
       build.onLoad({ filter: /.*/, namespace: 'settings-controls' }, () => ({ contents, loader: 'js', resolveDir: SRC }))
     },
   }
@@ -120,7 +120,7 @@ export function generatedModule(values) {
   return {
     name: 'generated',
     setup(build) {
-      build.onResolve({ filter: /^virtual:dsh-claude-style\/generated$/ }, (args) => ({ path: args.path, namespace: 'generated' }))
+      build.onResolve({ filter: /^virtual:dsh-telegram-style\/generated$/ }, (args) => ({ path: args.path, namespace: 'generated' }))
       build.onLoad({ filter: /.*/, namespace: 'generated' }, () => ({ contents, loader: 'js' }))
     },
   }

@@ -1,6 +1,6 @@
-import { findChatTarget, hostSessions, hostUiSession, readTurnActivity } from '@dsh-claude-style/engine/host'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import type { HostChatSnapshot, HostChatTarget, HostFeedEntry, HostSessionEvent, HostSessionListSnapshot, HostSessionStatusSnapshot, HostSnapshotSource, HostSubagentEntry } from '@dsh-claude-style/contracts/services'
+import { findChatTarget, hostSessions, hostUiSession, readTurnActivity } from '@dsh-telegram-style/engine/host'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import type { HostChatSnapshot, HostChatTarget, HostFeedEntry, HostSessionEvent, HostSessionListSnapshot, HostSessionStatusSnapshot, HostSnapshotSource, HostSubagentEntry } from '@dsh-telegram-style/contracts/services'
 
 /** A state the mascot shows: its name, the animation that plays it, and how much it outranks. */
 export interface MascotLevel {
@@ -30,7 +30,7 @@ export interface MascotReading {
 const IDLE: MascotLevel = { state: 'idle', animation: 'idle', priority: 1 }
 const THINKING: MascotLevel = { state: 'thinking', animation: 'thinking', priority: 2 }
 const NOTIFICATION: MascotLevel = { state: 'notification', animation: 'notification', priority: 7 }
-const SWEEPING: MascotLevel = { state: 'sweeping', animation: 'compacting', priority: 6 }
+const SWEEPING: MascotLevel = { state: 'sweeping', animation: 'sweeping', priority: 6 }
 
 /** The host's own reading of "running": the live status first, the list's summary behind it. */
 function isRunning(id: string, status: HostSessionStatusSnapshot | null, list: HostSessionListSnapshot | null) {
@@ -55,9 +55,9 @@ function subagentsOf(id: string, list: HostSessionListSnapshot | null): HostSuba
   return Array.isArray(catalog) ? catalog as HostSubagentEntry[] : []
 }
 
-/** One working animation per crowd size, as Clawd's working tiers pick them. */
+/** Work in progress: two or more sessions running quicken the sticker's bounce (spec 4.6). */
 function working(busy: number): MascotLevel {
-  return { state: 'working', animation: busy >= 3 ? 'building' : busy === 2 ? 'music' : 'typing', priority: 3 }
+  return { state: 'working', animation: busy >= 2 ? 'working-fast' : 'working', priority: 3 }
 }
 
 /**
@@ -90,14 +90,14 @@ export function mascotLevel(reading: MascotReading): MascotLevel {
   for (let i = 0; i < subagents.length; i++) {
     if (isRunning(subagents[i].id, status, list)) juggling++
   }
-  if (juggling > 0) return { state: 'juggling', animation: juggling >= 2 ? 'conducting' : 'music', priority: 4 }
+  if (juggling > 0) return { state: 'juggling', animation: 'working-fast', priority: 4 }
   if (reading.phase === 'working') return working(Math.max(1, busy))
   if (reading.phase === 'thinking' || isRunning(sessionId, status, list)) return THINKING
   return IDLE
 }
 
 /**
- * What the mascot reads off the host (packages/client/src/features/mascot/mascot-player.ts):
+ * What the mascot reads off the host (packages/client/src/features/mascot/sticker.ts):
  * the state a session — or, on the home page, the whole workspace — is in
  * right now, and the moments that end a piece of work.
  *
@@ -118,9 +118,8 @@ export function mascotLevel(reading: MascotReading): MascotLevel {
  * that finishes out of view (the host's `completionUnread`, the sidebar's
  * green dot) is the moment.
  *
- * The names follow the Clawd on Desk themes both mascots are drawn to: a
- * state picks an animation, and its priority decides which of two states
- * shows.
+ * A state picks an act (sticker-acts.ts), and its priority decides which of
+ * two states shows.
  *
  * @param onMoment - `onMoment(moment)` with 'error' or 'attention'.
  * @param onChange - the state may have changed with no DOM change to wake a

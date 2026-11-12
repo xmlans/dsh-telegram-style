@@ -1,9 +1,9 @@
-import { subscribeMutations } from '@dsh-claude-style/engine/bus'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { subscribeMutations } from '@dsh-telegram-style/engine/bus'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { beginChatFoldToggle, endChatFoldToggle, isChatFoldToggle } from './fold-toggle'
-import { writeScroll } from '@dsh-claude-style/engine/scroll-owner'
+import { writeScroll } from '@dsh-telegram-style/engine/scroll-owner'
 import { captureComposerCaret, focusKeepingComposerCaret } from '../../shared/composer-caret'
-import { CONVERSATION_SCROLL_SELECTOR, FOLLOW_THRESHOLD_PX, PROCESS_ACTIVITY_SELECTOR, PROCESS_BODY_SELECTOR, PROCESS_EXPANDED_MODE_ATTRIBUTE, PROCESS_GROUP_SELECTOR, RUNNING_STATE, SHIMMER_ATTRIBUTE, SHIMMER_LEGACY_ATTRIBUTE, SHIMMER_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { CONVERSATION_SCROLL_SELECTOR, FOLLOW_THRESHOLD_PX, PROCESS_ACTIVITY_SELECTOR, PROCESS_BODY_SELECTOR, PROCESS_EXPANDED_MODE_ATTRIBUTE, PROCESS_GROUP_SELECTOR, RUNNING_STATE, SHIMMER_ATTRIBUTE, SHIMMER_LEGACY_ATTRIBUTE, SHIMMER_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 
 /**
  * A running process group opens by default and folds back once the piece of

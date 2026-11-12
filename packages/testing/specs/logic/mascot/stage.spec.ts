@@ -9,12 +9,12 @@
  */
 import { expect, test } from 'vitest'
 import fc from 'fast-check'
-import { EXTRA_MIN_MS, EXTRA_SPAN_MS, MIN_SHOW_MS, MOMENTS, REACTION_PRIORITY, SLEEP_AFTER_MS, decideStage, finishStage, freshStage, nextDecisionAt, switchSettles, takeMoment } from '@dsh-claude-style/client/pure'
-import type { MascotLevel, MascotStage, StageSurroundings } from '@dsh-claude-style/client/pure'
+import { EXTRA_MIN_MS, EXTRA_SPAN_MS, MIN_SHOW_MS, MOMENTS, REACTION_PRIORITY, SLEEP_AFTER_MS, decideStage, finishStage, freshStage, nextDecisionAt, switchSettles, takeMoment } from '@dsh-telegram-style/client/pure'
+import type { MascotLevel, MascotStage, StageSurroundings } from '@dsh-telegram-style/client/pure'
 
 const IDLE: MascotLevel = { state: 'idle', animation: 'idle', priority: 1 }
 const THINKING: MascotLevel = { state: 'thinking', animation: 'thinking', priority: 2 }
-const WORKING: MascotLevel = { state: 'working', animation: 'typing', priority: 3 }
+const WORKING: MascotLevel = { state: 'working', animation: 'working', priority: 3 }
 const NOTIFICATION: MascotLevel = { state: 'notification', animation: 'notification', priority: 7 }
 
 /** Surroundings with fixed dice: an extra waits the shortest spell and the first extra is picked. */
@@ -53,13 +53,13 @@ test('a lesser moment waits behind a greater one, then takes its own full hold',
 test('a reaction outranks everything until it has played', () => {
   const stage = freshStage(0)
   takeMoment(stage, 'error', 0)
-  stage.reaction = { key: 'poke-left', mode: 'once', fresh: true }
-  expect(decideStage(stage, 10, NOTIFICATION, around())).toEqual({ key: 'poke-left', mode: 'once', priority: REACTION_PRIORITY })
+  stage.reaction = { key: 'hearts', mode: 'once', fresh: true }
+  expect(decideStage(stage, 10, NOTIFICATION, around())).toEqual({ key: 'hearts', mode: 'once', priority: REACTION_PRIORITY })
   // Its predecessor ending does not end a reaction that has not been shown yet.
-  finishStage(stage, 'poke-left', 20, () => 0)
+  finishStage(stage, 'hearts', 20, () => 0)
   expect(stage.reaction).not.toBeNull()
   stage.reaction!.fresh = false
-  finishStage(stage, 'poke-left', 30, () => 0)
+  finishStage(stage, 'hearts', 30, () => 0)
   expect(stage.reaction).toBeNull()
 })
 
@@ -67,7 +67,7 @@ test('a quiet minute puts it to sleep, work wakes it, and a wake plays once', ()
   const stage = freshStage(0)
   expect(decideStage(stage, SLEEP_AFTER_MS - 1, IDLE, around(false)).key).toBe('idle')
   expect(decideStage(stage, SLEEP_AFTER_MS, IDLE, around(false)).key).toBe('sleeping')
-  expect(decideStage(stage, SLEEP_AFTER_MS + 5, WORKING, around()).key).toBe('typing')
+  expect(decideStage(stage, SLEEP_AFTER_MS + 5, WORKING, around()).key).toBe('working')
   expect(stage.asleep).toBe(false)
   // Work restarts the quiet spell.
   expect(stage.quietSince).toBe(SLEEP_AFTER_MS + 5)
@@ -110,7 +110,7 @@ test('the next decision is the earliest moment something can flip', () => {
   expect(nextDecisionAt(stage, 0, false, () => 400)).toBe(SLEEP_AFTER_MS)
   takeMoment(stage, 'attention', 100)
   expect(nextDecisionAt(stage, 100, false, () => 400)).toBe(100 + MOMENTS.attention.holdMs)
-  stage.current = { key: 'poke-left', mode: 'once', priority: REACTION_PRIORITY, start: 200 }
+  stage.current = { key: 'hearts', mode: 'once', priority: REACTION_PRIORITY, start: 200 }
   expect(nextDecisionAt(stage, 200, false, () => 400)).toBe(600)
   stage.current = { key: 'thinking', mode: 'loop', priority: 2, start: 300 }
   expect(nextDecisionAt(stage, 300, true, () => 400)).toBe(300 + MIN_SHOW_MS)

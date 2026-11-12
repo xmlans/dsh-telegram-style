@@ -1,115 +1,62 @@
-<div align="center">
+# dsh-telegram-style
 
-# DSH Claude Style
+A Telegram Web style theme for DeepSeek Harness: a floating chat list on a wallpaper, session rows, message bubbles, a floating input bar and three palettes.
 
-**A theme plugin that brings the look and feel of Claude Code Desktop to the DeepSeek Harness Web GUI.**
-
-> **Why settle for another Claude Code when your next Claude Code Desktop is here.**
-
-[![English](https://img.shields.io/badge/lang-English-blue.svg)](README.en.md) [![简体中文](https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg)](README.md)
-
-[![version](https://img.shields.io/npm/v/dsh-claude-style?style=flat&label=version&color=D97757)](https://www.npmjs.com/package/dsh-claude-style)
-[![downloads](https://img.shields.io/npm/dm/dsh-claude-style?style=flat&label=downloads&color=D97757)](https://www.npmjs.com/package/dsh-claude-style)
-[![GitHub stars](https://img.shields.io/github/stars/Nwflower/dsh-claude-style?style=flat&label=%E2%98%85&color=08C)](https://github.com/Nwflower/dsh-claude-style)
-[![dsh.so install](https://www.dsh.so/badge/install/dsh-claude-style.svg)](https://www.dsh.so/artifact/dsh-claude-style/)
-[![license](https://img.shields.io/badge/license-MIT-2EA44F?style=flat)](LICENSE)
-
-</div>
-
-## Preview
-
-The settings page switches between the two palettes; light and dark follow the system.
-
-### Claude
+> Unofficial work, not affiliated with Telegram, DeepSeek or Anthropic. Modified from [dsh-claude-style](https://github.com/Nwflower/dsh-claude-style) (MIT, © 2026 Nwflower).
 
 <table>
   <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-home-light.png" alt="Claude brand, Studio home — light" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-home-dark.png" alt="Claude brand, Studio home — dark" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-home-light.png" alt="Classic palette home page, light" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-home-dark.png" alt="Classic palette home page, dark" /></td>
   </tr>
   <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-conversation-light.png" alt="Claude brand, Markdown conversation — light" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-conversation-dark.png" alt="Claude brand, Markdown conversation — dark" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-conversation-light.png" alt="Classic palette Markdown conversation, light" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-conversation-dark.png" alt="Classic palette Markdown conversation, dark" /></td>
   </tr>
 </table>
 
-> Studio home above, Markdown conversation below; light on the left, dark on the right. Ivory canvas `#FCFCFB`, warm black `#141413`, ember orange `#D97757` for every action, and Claude Code's pixel crab on the composer.
+## What it does
 
-### DeepSeek
+- **Wallpaper**: a plain colour with a pattern laid over it, the pattern tinted per palette. The Appearance page of the plugin settings can turn the pattern off and keep only the colour.
+- **Floating cards**: the chat list, the right panel, the header and the input bar float on the wallpaper; on a narrow window the cards go edge to edge.
+- **Session rows**: a coloured initial avatar, the time, a second line of status, and badges.
+- **Conversation**: a solid header; bubbles with Telegram's shape and small tail, sent messages carry a time and a status tick; Markdown, code and tables follow the bubble's look.
+- **Input bar**: a floating rounded bar with 48px send and stop buttons, a pill-shaped tool row, an accent-coloured caret, and a send animation that flies the bubble from the bar into the conversation.
+- **Details**: line-art icons, Telegram-style menus and toasts, thin scrollbars and a click ripple.
+- **Sticker mascot**: a sticker stands on the input bar's top edge and acts out the chat's state (thinking, working, waiting for your approval, an error, done, asleep); a click lets hearts float up and a double click makes it hop. The Appearance page of the plugin settings can turn it off, or keep it to the home page.
 
-<table>
-  <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-home-light.png" alt="DeepSeek brand, Studio home — light" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-home-dark.png" alt="DeepSeek brand, Studio home — dark" /></td>
-  </tr>
-  <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-conversation-light.png" alt="DeepSeek brand, Markdown conversation — light" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-conversation-dark.png" alt="DeepSeek brand, Markdown conversation — dark" /></td>
-  </tr>
-</table>
+## Palettes
 
-> Sky-blue canvas `#F7FAFF`, blue-black `#13161D`, DeepSeek blue `#4D6BFE`; Deepy the pixel whale stands on the composer, in eight states:
+- Classic: Telegram's default green wallpaper, white cards in light, a violet tone in dark.
+- Glass: a blue-violet wallpaper with translucent frosted cards.
+- Pink: a light pink wallpaper with deeper pink patterns; bubbles and buttons are in blues.
 
-<table>
-  <tr>
-    <td align="center" width="25%"><img src="./docs/gifs/idle.gif" width="120" alt="Idle" /><br />Idle</td>
-    <td align="center" width="25%"><img src="./docs/gifs/thinking.gif" width="120" alt="Thinking" /><br />Thinking</td>
-    <td align="center" width="25%"><img src="./docs/gifs/typing.gif" width="120" alt="Answering and calling tools" /><br />Answering and calling tools</td>
-    <td align="center" width="25%"><img src="./docs/gifs/conducting.gif" width="120" alt="Conducting subagents" /><br />Conducting subagents</td>
-  </tr>
-  <tr>
-    <td align="center" width="25%"><img src="./docs/gifs/notification.gif" width="120" alt="Waiting on you" /><br />Waiting on you</td>
-    <td align="center" width="25%"><img src="./docs/gifs/error.gif" width="120" alt="Failed" /><br />Failed</td>
-    <td align="center" width="25%"><img src="./docs/gifs/happy.gif" width="120" alt="Finished" /><br />Finished</td>
-    <td align="center" width="25%"><img src="./docs/gifs/sleeping.gif" width="120" alt="Asleep" /><br />Asleep</td>
-  </tr>
-</table>
+Every palette has a light and a dark side that follow DeepSeek Harness's own light/dark switch. Pick one with the segmented control on the Appearance page of the plugin settings.
 
-> The workspaces, sessions, usage figures and nickname in the screenshots are sample data.
+## Install
 
-## Installation
+WebUI:
 
-From the official plugin page add the package below, or from a terminal:
+    dsh plugin --profile web add <path to dsh-telegram-style-0.1.0.tgz>
 
-```
-dsh-claude-style
-```
+Desktop: use the dsh that ships with the desktop app, at `%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`:
 
-```bash
-dsh plugin --profile web add dsh-claude-style                    # npm package (recommended)
-dsh plugin --profile web add Nwflower/dsh-claude-style#dist      # GitHub release branch
-```
+    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add <path to the tgz>
 
-Also from the [plugin market](https://github.com/dsh-market/dsh-market) or the Skin Center of the dsh-web-all plugin. Keep one theme enabled at a time; dsh ≥ 0.1.7 is required, and a restart of DeepSeek Harness brings the full feature set.
+Then enable "Telegram Style" in DeepSeek Harness's skin centre. It can be installed next to dsh-claude-style; one is enabled at a time.
 
-## Fonts
+## Known limitations
 
-> The Anthropic fonts have no public release; this repository only offers [copies](https://github.com/Nwflower/dsh-claude-style/tree/master/packages/assets/src/fonts/anthropic) for download and study.
+- The language label at the top left of a code block is not restyled and stays as the host draws it: the host's code block header has no stable hook.
+- Workspace rows keep the upstream's compact style and may look out of step between the taller session rows.
+- Compared with upstream, the session row's "ongoing" indicator and the sidebar density (relaxed / compact) preferences are removed; the running state shows on the row's second line instead.
+- The Glass palette uses `backdrop-filter`, so scrolling can slow down in a very long session; switch to Classic or Pink if it does.
+- With dsh-chat-ux installed, this theme's matching chat features (folding, token reveal, send animation, follow and caret) stand down for it.
 
-To enable them, install the `.ttf` files on your system, or copy them into `$DSH_HOME/dsh-claude-style/fonts/`.
+## License
 
-## Documentation
-
-| Document | Contents |
-| --- | --- |
-| [Design tokens](docs/STYLE.md) | The palette, typography, shape, motion and layer rules |
-| [Architecture decisions](docs/adr/README.md) | One page per direction: background, decision, consequences, revisiting conditions |
-| [Changelog](CHANGELOG.md) | Version history |
-| [Contributing](CONTRIBUTING.md) | Building from `packages/client/src/`, commit conventions, and the screenshot and regression tooling |
-
-## Acknowledgements
-
-- The message navigator follows SherUnlocked-4869's [dsh-plugin-msg-nav](https://github.com/SherUnlocked-4869/dsh-plugin-msg-nav) (MIT).
-- The animation frames of Deepy the pixel whale come from the Deepy whale theme pack drawn by calmly-eating-bugs ([@wp3171216237](https://github.com/wp3171216237)), and ship with the plugin by the author's permission; GIFs of all 20 animations are in [docs/gifs/](docs/gifs/).
-- The enhanced animations in the chat area are modified from [dsh-chat-ux](https://github.com/alm-allen/dsh-chat-ux) (MIT).
-- Clawd is a character of Anthropic. Its frames are not covered by the MIT license (see [LICENSE](LICENSE)). This plugin is an unofficial fan work, not affiliated with or endorsed by Anthropic.
-
-## Related projects
-
-> Running several themes at once? Try [dsh-skin-manager](https://github.com/xiaoyangcheng84-svg/dsh-skin-manager) — it switches between all installed themes from a single settings page.
-
-> Want to import your Claude Code / Codex session history into DSH and keep the conversation going? Try the author's other plugin, [dsh-chat-import](https://github.com/Nwflower/dsh-chat-import).
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Nwflower/dsh-claude-style&type=Date)](https://star-history.com/#Nwflower/dsh-claude-style&Date)
+- Code: MIT, see [LICENSE](LICENSE).
+- JetBrains Mono ships under the SIL OFL 1.1.
+- The wallpaper pattern is supplied by the project's maintainer, who may redistribute it; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- The sticker mascot's artwork is the author's, all rights reserved, and not covered by the MIT license; see [LICENSE](LICENSE).
+- Third-party sources are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

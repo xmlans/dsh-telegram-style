@@ -1,10 +1,10 @@
-import { subscribeMutations } from '@dsh-claude-style/engine/bus'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { subscribeMutations } from '@dsh-telegram-style/engine/bus'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { beginChatFoldToggle, endChatFoldToggle, isChatFoldToggle } from './fold-toggle'
 import type { FoldPressReading } from './fold-toggle'
 import { foldControlAt, foldControlAtBottom, foldExpandedBody } from './fold-glide-parts'
 import { inPagePixels } from '../../shared/page-zoom'
-import { EXPANDED_ATTRIBUTE, ROW_PHASE_ATTRIBUTE, RUNNING_STATE, THINK_ROW_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { EXPANDED_ATTRIBUTE, ROW_PHASE_ATTRIBUTE, RUNNING_STATE, THINK_ROW_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 
 /**
  * Keep a thinking row open while the model is still reasoning, and fold it

@@ -16,68 +16,50 @@ module.exports = {
     const settings = r.settings || {}
     check('the settings section registers with the settings dialog', settings.registered === true, JSON.stringify(settings.registered))
     const expected = {
-      general: ['brand', 'username', 'pageZoom', 'autoPopover', 'sodium'],
-      appearance: ['brandLockup', 'brandInk', 'palette', 'brandAccent', 'typeface', 'homeLayout', 'homeRipple', 'mascot', 'mascotScope'],
-      composer: ['composerScope', 'modelPicker', 'modelDescriptions', 'quickProviders', 'peakrate', 'permissionsControl'],
-      sidebar: ['collapseFooter', 'banLocale', 'sidebarSearch', 'searchStyle', 'workspaceView', 'dockCards', 'sidebarLayout'],
-      conversation: ['turnNav', 'statsPosition', 'billingCurrency', 'viewTabs', 'headerBand'],
-      motion: ['motion', 'chatAnimations', 'chatWait', 'statusDetail', 'statusMotion', 'caretMotion', 'ongoingIndicator', 'chatReveal', 'chatSend', 'messageEnter'],
+      general: ['username', 'autoPopover'],
+      appearance: ['palette', 'doodle', 'homeLayout', 'mascot', 'mascotScope'],
+      composer: ['composerScope', 'modelPicker', 'modelDescriptions', 'quickProviders', 'permissionsControl'],
+      sidebar: ['collapseFooter', 'sidebarSearch', 'searchStyle', 'workspaceView', 'dockCards'],
+      conversation: ['turnNav', 'statsPosition', 'billingCurrency', 'viewTabs'],
+      motion: ['motion', 'chatAnimations', 'chatWait', 'statusDetail', 'statusMotion', 'caretMotion', 'chatReveal', 'chatSend', 'messageEnter'],
     }
-    // Greyed by the page itself rather than by a preference: the title-bar
-    // band waits for the Windows desktop window.
-    const expectedGrey = { conversation: ['headerBand'] }
     const pages = settings.pages || {}
     for (const tab of Object.keys(expected)) {
       const page = pages[tab] || {}
       check(`the ${tab} tab is selected in the six-tab strip and carries its rows, greying only the rows that wait for something`,
         JSON.stringify(page.tabs) === JSON.stringify(Object.keys(expected)) && page.selected === tab &&
           JSON.stringify(page.rows) === JSON.stringify(expected[tab]) &&
-          JSON.stringify(page.disabled || []) === JSON.stringify(expectedGrey[tab] || []) &&
-          JSON.stringify(page.notes || []) === JSON.stringify(expectedGrey[tab] || []),
+          JSON.stringify(page.disabled || []) === '[]' && JSON.stringify(page.notes || []) === '[]',
         JSON.stringify(page))
     }
-    const onWindows = settings.onWindows || {}
-    check('on the Windows window the title-bar row takes input and carries no note',
-      JSON.stringify(onWindows.rows) === JSON.stringify(expected.conversation) &&
-        JSON.stringify(onWindows.disabled) === '[]' && JSON.stringify(onWindows.notes) === '[]',
-      JSON.stringify(onWindows))
     const off = settings.parentsOff || {}
-    check('a sub-row greys out while its parent is off: the accent colour with the colours following the host, the mascot\'s place with the mascot off, the model descriptions, the quick providers and the peak rate meter with the model picker off, the search box\'s style with the sidebar search off',
-      !!off.appearance && JSON.stringify(off.appearance.disabled) === '["brandAccent","mascotScope"]' &&
-        !!off.composer && JSON.stringify(off.composer.disabled) === '["modelDescriptions","quickProviders","peakrate"]' &&
+    check('a sub-row greys out while its parent is off: the mascot\'s place with the mascot off, the model descriptions and the quick providers with the model picker off, the search box\'s style with the sidebar search off',
+      !!off.appearance && JSON.stringify(off.appearance.disabled) === '["mascotScope"]' &&
+        !!off.composer && JSON.stringify(off.composer.disabled) === '["modelDescriptions","quickProviders"]' &&
         !!off.sidebar && JSON.stringify(off.sidebar.disabled) === '["searchStyle"]',
       JSON.stringify(off))
     const unmet = settings.requirementsOff || {}
-    check('with the composer restyle off, the model picker with its sub-rows, the permission control and the statistics\' position grey out, the two switches and the position saying what they wait for; with the footer takeover off, so does the easter egg under it',
-      !!unmet.composer && JSON.stringify(unmet.composer.disabled) === '["modelPicker","modelDescriptions","quickProviders","peakrate","permissionsControl"]' &&
+    check('with the composer restyle off, the model picker with its sub-rows, the permission control and the statistics\' position grey out, the two switches and the position saying what they wait for',
+      !!unmet.composer && JSON.stringify(unmet.composer.disabled) === '["modelPicker","modelDescriptions","quickProviders","permissionsControl"]' &&
         JSON.stringify(unmet.composer.notes) === '["modelPicker","permissionsControl"]' &&
-        !!unmet.conversation && JSON.stringify(unmet.conversation.disabled) === '["statsPosition","billingCurrency","headerBand"]' &&
-        JSON.stringify(unmet.conversation.notes) === '["statsPosition","billingCurrency","headerBand"]' &&
-        !!unmet.sidebar && JSON.stringify(unmet.sidebar.disabled) === '["banLocale"]' && JSON.stringify(unmet.sidebar.notes) === '[]',
+        !!unmet.conversation && JSON.stringify(unmet.conversation.disabled) === '["statsPosition","billingCurrency"]' &&
+        JSON.stringify(unmet.conversation.notes) === '["statsPosition","billingCurrency"]' &&
+        !!unmet.sidebar && JSON.stringify(unmet.sidebar.disabled) === '[]' && JSON.stringify(unmet.sidebar.notes) === '[]',
       JSON.stringify(unmet))
     const hero = settings.heroOnly || {}
     check('with the restyle on the home page alone, the picker and the permission control take input and the statistics\' position still waits for a conversation',
       !!hero.composer && JSON.stringify(hero.composer.disabled) === '[]' &&
-        !!hero.conversation && JSON.stringify(hero.conversation.disabled) === '["statsPosition","billingCurrency","headerBand"]',
+        !!hero.conversation && JSON.stringify(hero.conversation.disabled) === '["statsPosition","billingCurrency"]',
       JSON.stringify(hero))
-    const pageZoom = settings.pageZoom || {}
-    const zoomed = pageZoom.zoomed || {}
-    const shrunk = pageZoom.shrunk || {}
-    const following = pageZoom.following || {}
-    check('page zoom reaches the document and the page is drawn at it above and below its own size; following the system writes neither',
-      zoomed.attr === '1.5' && zoomed.zoom === '1.5' &&
-        shrunk.attr === '0.8' && shrunk.zoom === '0.8' &&
-        following.attr === null && following.zoom === '1',
-      JSON.stringify(pageZoom))
     const link = settings.link || {}
     const mark = settings.mark || {}
     check('the heading carries the plugin\'s repository link, opening in a new tab with an accessible name',
-      link.href === 'https://github.com/Nwflower/dsh-claude-style' && link.target === '_blank' &&
+      link.href === 'https://github.com/xmlans/dsh-telegram-style' && link.target === '_blank' &&
         (link.rel || '').includes('noopener') && typeof link.label === 'string' && link.label.length > 0,
       JSON.stringify(link))
-    check('the link\'s mark is the inlined asset, painted as a mask in the quiet ink',
-      mark.mask.includes('data:image/svg+xml') && mark.size === '16px×16px',
-      JSON.stringify(mark))
+    check('the link is plain text: it shows its label and draws no mask icon',
+      [].concat(link.text).join('') === link.label && mark.mask === 'none',
+      JSON.stringify({ link, mark }))
     const paintCards = settings.paintCards || {}
     const cards = paintCards.cards || []
     const previews = paintCards.previews || {}
@@ -88,7 +70,7 @@ module.exports = {
       JSON.stringify(cards))
     check('each card previews its own paint: the host\'s band crosses a copy of the words, the wash fills them with seven orbiting washes over the ramp',
       previews.sweep?.band?.animation === BAND_ANIMATION && previews.sweep?.band?.matches === true && previews.sweep?.washes === 0 &&
-        previews.wash?.band === null && previews.wash?.animation === 'dsh-claude-wash-hue, dsh-claude-wash-drift' && previews.wash?.washes === 7 &&
+        previews.wash?.band === null && previews.wash?.animation === 'dsh-tg-wash-hue, dsh-tg-wash-drift' && previews.wash?.washes === 7 &&
         previews.sweep?.words?.join() === previews.wash?.words?.join(),
       JSON.stringify(previews))
     const delayOf = (value) => Number.parseFloat(value || '0')
@@ -97,7 +79,7 @@ module.exports = {
         const preview = previews[kind] || {}
         const delays = preview.wordDelays || []
         const centres = preview.wordCentres || []
-        return preview.wordAnimations?.join() === 'dsh-claude-motion-word,dsh-claude-motion-word' &&
+        return preview.wordAnimations?.join() === 'dsh-tg-motion-word,dsh-tg-motion-word' &&
           delays.length === 2 && delayOf(delays[0]) === 0 && delayOf(delays[1]) < 0 &&
           Math.abs(delayOf(delays[1])) === 2 && centres[0] === centres[1] &&
           preview.width === Math.max(...(preview.wordWidths || [0]))
@@ -109,41 +91,19 @@ module.exports = {
     const offCaret = caretPreview.off || {}
     check('the caret row previews its two answers on one typed line: a character waiting for its turn is unseen while the typed ones stand, the caret stands where the last typed character ends, and it is lit for the whole time the line is being typed and blinks on the native cycle once the line stands whole',
       typingCaret.typed === 'visible' && typingCaret.waiting === 'hidden' && typingCaret.x === 34 &&
-        typingCaret.animation === 'none' && standingCaret.animation === 'dsh-claude-caret-blink',
+        typingCaret.animation === 'none' && standingCaret.animation === 'dsh-tg-caret-blink',
       JSON.stringify(caretPreview))
     check('the on card\'s caret glides to each new place the line hands it and the off card\'s arrives there at once',
-      typingCaret.transition === '0.08s' && offCaret.animation === 'dsh-claude-caret-blink' && offCaret.transition === '0s',
+      typingCaret.transition === '0.08s' && offCaret.animation === 'dsh-tg-caret-blink' && offCaret.transition === '0s',
       JSON.stringify(caretPreview))
     const revealPreview = settings.revealPreview || {}
     const fade = revealPreview.fade || {}
     const waiting = revealPreview.waiting || {}
     const plain = revealPreview.plain || {}
     check('the new-text fade row previews its two answers: the fade card\'s character lands faint and settles over the reveal\'s own duration, the other stands solid as it arrives, and a character waiting for its turn is unseen',
-      fade.animation === 'dsh-claude-reveal-piece' && Number.parseFloat(fade.duration) === 0.12 && fade.fill === 'both' &&
+      fade.animation === 'dsh-tg-reveal-piece' && Number.parseFloat(fade.duration) === 0.12 && fade.fill === 'both' &&
         waiting.opacity === '0' && plain.animation === 'none' && plain.opacity === '1',
       JSON.stringify(revealPreview))
-    const ongoing = settings.ongoingCards || {}
-    const ongoingCards = ongoing.cards || []
-    check('the ongoing-mark row is two cards carrying the pair a sidebar row leads with, the mark first and a title beside it: each card names its own mark, the stored choice alone is drawn as picked, and the sample takes no reading',
-      ongoingCards.length === 2 &&
-        ongoingCards.map((card) => card.look).join() === 'breathe,ring' &&
-        ongoingCards.every((card) => typeof card.label === 'string' && card.label.length > 0 &&
-          card.sample === true && typeof card.title === 'string' && card.title.length > 0) &&
-        ongoingCards[0].active === true && ongoingCards[0].pressed === 'true' &&
-        ongoingCards[1].active === false && ongoingCards[1].pressed === 'false',
-      JSON.stringify(ongoingCards))
-    const marks = settings.ongoingMarks || {}
-    check('each card wears its own mark: the breathing dot is the idle seat\'s filled 6px circle pulsing on the shared breath, the ring a wider ring with a drawn track whose lit head turns on its own period',
-      marks.breathe?.width === '6px' && marks.breathe?.border === '0px' &&
-        marks.breathe?.animation === 'dsh-claude-pulse' && Number.parseFloat(marks.breathe?.duration) === 2.4 &&
-        marks.ring?.width === '10px' && parseFloat(marks.ring?.border) >= 1 &&
-        marks.ring?.animation === 'dsh-claude-ongoing-spin' && Number.parseFloat(marks.ring?.duration) === 0.85,
-      JSON.stringify(marks))
-    const stored = settings.ongoingStored || {}
-    check('the reader\'s stored mark reaches the page and repaints the running row\'s own mark, live',
-      stored.ring?.attribute === 'ring' && stored.ring?.width === '10px' && stored.ring?.animation === 'dsh-claude-ongoing-spin' &&
-        stored.breathe?.attribute === 'breathe' && stored.breathe?.width === '6px' && stored.breathe?.animation === 'dsh-claude-pulse',
-      JSON.stringify(stored))
     commonChecks(r)
   },
   'dock-cards'(r) {

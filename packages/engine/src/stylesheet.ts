@@ -50,6 +50,20 @@ export function parkForeignSheets(untaggedSelector: string, styleId: string, for
 }
 
 /**
+ * Hand every sheet parked under `foreignTag` back untagged: the sibling's own
+ * stylesheet carried no tag when it arrived, and a stood-down package leaves
+ * no mark on it.
+ *
+ * @param foreignTag - the resting tag parkForeignSheets used.
+ */
+export function unparkForeignSheets(foreignTag: string) {
+  const parked = document.querySelectorAll<HTMLStyleElement>('style')
+  for (const el of parked) {
+    if (el.dataset.plugin === foreignTag) delete el.dataset.plugin
+  }
+}
+
+/**
  * Mount one of a package's stylesheets, once per generation (D74).
  *
  * The sheet wears the package's own `data-plugin` and its own `data-plugin-css`

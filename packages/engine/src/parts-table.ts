@@ -30,7 +30,7 @@ export interface PartsTableVocabulary {
  * part gate) and holds every part a stylesheet reads to the table here. A host
  * rename is one line in this file.
  */
-import { CONVERSATION_HEADER_SLOT_SELECTOR, CONVERSATION_SCROLL_SELECTOR, RIGHTBAR_COLUMN_SELECTOR, ROOT_SLOT_SELECTOR, SIDEBAR_SLOT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { CONVERSATION_HEADER_SLOT_SELECTOR, CONVERSATION_SCROLL_SELECTOR, RIGHTBAR_COLUMN_SELECTOR, ROOT_SLOT_SELECTOR, SIDEBAR_SLOT_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 
 /** Host CSS-module local name → the skin's part name. */
 export type PartTable = Record<string, string>
@@ -122,6 +122,8 @@ export const CONVERSATION_PARTS: PartTable = {
   runningIcon: 'running-icon',
   runningContent: 'running-content',
   callRow: 'call-row',
+  // The reader's message bubble, in a settled user row and in the submission echo alike.
+  bubble: 'message-bubble',
   scroll: 'input-scroll',
   grow: 'input-grow',
   row: 'row',
@@ -304,7 +306,7 @@ export function partNames(vocabulary: PartsTableVocabulary): string[] {
 /**
  * The structural relations a stylesheet reads as a hold: a rule naming an
  * element because of what its subtree contains (`A:has(B)`) reads
- * `data-dsh-claude-holds` instead, and core/parts.ts keeps that mark current
+ * `data-dsh-tg-holds` instead, and core/parts.ts keeps that mark current
  * (D9). Each entry answers one question the walk already knows the answer to.
  *
  * `holder` names the element that takes the mark; `*` marks whichever ancestor
@@ -316,7 +318,7 @@ export function partNames(vocabulary: PartsTableVocabulary): string[] {
  * pass already watches class names.
  */
 export interface HoldRelation {
-  /** The word a stylesheet reads in `[data-dsh-claude-holds~="…"]`. */
+  /** The word a stylesheet reads in `[data-dsh-tg-holds~="…"]`. */
   name: string
   /** The element that takes the mark, or `*` for any ancestor that holds the node. */
   holder: string
@@ -335,10 +337,10 @@ export function holdRelations(vocabulary: PartsTableVocabulary): HoldRelation[] 
   /** The selector for one part name, so the relations below spell their sides in this vocabulary. */
   const part = (name: string) => `[${vocabulary.part}~="${name}"]`
   return [
-    // theme/chrome.css, theme/wallpaper.css: the frame paints to the window's top
+    // theme/chrome.css: the frame paints to the window's top
     // only where its own first column is the sidebar.
     { name: 'sidebar-column', holder: part('layout-frame'), held: part('sidebar-column'), direct: true, attributes: [] },
-  // theme/chrome.css, theme/wallpaper.css, features/view-tabs/view-tabs.css: the
+  // theme/chrome.css, features/view-tabs/view-tabs.css: the
   // header owns the tab strip, and only that header loses its bottom edge.
   { name: 'view-tabs', holder: part('conversation-header'), held: part('view-tabs'), attributes: [] },
   // theme/hero.css: the headline takes the display cut where it carries the mark.
@@ -348,7 +350,7 @@ export function holdRelations(vocabulary: PartsTableVocabulary): HoldRelation[] 
   { name: 'hero-headline', holder: '*', held: part('hero-headline'), scope: part('composer-hero'), attributes: [] },
   // features/composer/card.css: the classic tray sorts the boxes above the card.
   { name: 'composer-card', holder: '*', held: '[data-composer-card]', scope: part('composer-stack'), attributes: ['data-composer-card'] },
-  // theme/wallpaper.css: the phase box holding the transcript paints the canvas.
+  // theme/chrome.css: the phase box holding the transcript stands down so the wallpaper shows.
   { name: 'conversation-scroll', holder: '[data-phase]', held: '[data-conversation-scroll]', attributes: ['data-phase', 'data-conversation-scroll'] },
   // features/composer/inline-bar.css: the host's own statistics dialogs stand down.
   {
@@ -362,9 +364,9 @@ export function holdRelations(vocabulary: PartsTableVocabulary): HoldRelation[] 
   {
     name: 'account-row',
     holder: '*',
-    held: '[data-dsh-claude-account-host-row]',
+    held: '[data-dsh-tg-account-host-row]',
     scope: part('foot-area'),
-    attributes: ['data-dsh-claude-account-host-row'],
+    attributes: ['data-dsh-tg-account-host-row'],
   },
   // features/account/footer-takeover.css: the host mounts its own account menu on
   // <body>, outside the sidebar, so the collapsed rail's card width cannot be

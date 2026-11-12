@@ -1,9 +1,9 @@
-import { BRAND_ATTR, BRAND_DEEPSEEK, COMPOSER_ATTR, DOCK_LOOK_ATTR, DOCK_LOOK_CARD, DOCK_LOOK_FLUSH, FOOTER_ATTR, MASCOT_ATTR, MASCOT_BRAND, MASCOT_CRAB, MASCOT_DEEPY, MOTION_ATTR, MOTION_FULL, MOTION_REDUCED, ONGOING_INDICATOR_ATTR, PAGE_ZOOM_ATTR, PAGE_ZOOM_SYSTEM, PACKAGE_NAME, PALETTE_ATTR, PREF_DEFAULTS, SEARCH_STYLE_ATTR, SETTINGS_ENTRY_FALLBACK, SIDEBAR_LAYOUT_ATTR, STATS_POSITION_ATTR, STATUS_MOTION_ATTR, TYPEFACE_ATTR } from '../constants'
+import { COMPOSER_ATTR, DOCK_LOOK_ATTR, DOCK_LOOK_CARD, DOCK_LOOK_FLUSH, DOODLE_ATTR, FOOTER_ATTR, MOTION_ATTR, MOTION_FULL, MOTION_REDUCED, PACKAGE_NAME, PALETTE_ATTR, PREF_DEFAULTS, SEARCH_STYLE_ATTR, SETTINGS_ENTRY_FALLBACK, STATS_POSITION_ATTR, STATUS_MOTION_ATTR } from '../constants'
 import type { PrefKey, Prefs } from '../constants'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import { clampPrefs, PREFS } from '@dsh-claude-style/contracts/prefs'
-import { notifyAll } from '@dsh-claude-style/engine/notify'
-import { createSettingsBinding } from '@dsh-claude-style/engine/settings-binding'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import { clampPrefs, PREFS } from '@dsh-telegram-style/contracts/prefs'
+import { notifyAll } from '@dsh-telegram-style/engine/notify'
+import { createSettingsBinding } from '@dsh-telegram-style/engine/settings-binding'
 import { pageOwner } from '../shared/visual-owner'
 
 /**
@@ -15,13 +15,10 @@ import { pageOwner } from '../shared/visual-owner'
  */
 export let prefs = clampPrefs({})
 const prefsListeners: ((prefs: Prefs) => void)[] = []
-/** Whether the preferences on hand came from the form: until then they are the table's defaults. */
-let readFromForm = false
 
 const binding = createSettingsBinding({
   namespaces: [PACKAGE_NAME, SETTINGS_ENTRY_FALLBACK],
   adoptForm(value) {
-    readFromForm = true
     adoptPrefs(clampPrefs(value))
     moveLocalPrefs(value)
   },
@@ -68,15 +65,6 @@ export function readPrefs() {
   return prefs
 }
 
-/**
- * Whether the preferences are the reader's own: a decision taken on the
- * reader's behalf (the sodium probe, D78) waits for this, since the defaults
- * that hold until then say nothing about what the reader chose.
- */
-export function prefsFromForm() {
-  return readFromForm
-}
-
 /** Observe preference changes; returns the unsubscriber. */
 export function subscribePrefs(listener: (prefs: Prefs) => void) {
   prefsListeners.push(listener)
@@ -89,7 +77,7 @@ export function subscribePrefs(listener: (prefs: Prefs) => void) {
 /**
  * The document mirror: one entry per preference the stylesheet switches on,
  * with the attribute it rides and the resolver that turns the preference into
- * what the rules test (the resolved mascot, the dock's look, the footer's
+ * what the rules test (the dock's look, the footer's
  * presence). One list is the whole contract with the stylesheets: `adoptPrefs`
  * writes these and `clearPrefsAttributes` takes the same names back (entry.ts).
  * Its entries are literals so the build can hold every attribute a stylesheet
@@ -103,19 +91,12 @@ interface PrefMirror {
 }
 
 const MIRRORS = [
-  { key: 'brand', attr: BRAND_ATTR, value: (prefs: Prefs) => prefs.brand },
   { key: 'palette', attr: PALETTE_ATTR, value: (prefs: Prefs) => prefs.palette },
-  { key: 'typeface', attr: TYPEFACE_ATTR, value: (prefs: Prefs) => prefs.typeface },
-  { key: 'mascot', attr: MASCOT_ATTR, value: resolveMascot },
+  { key: 'doodle', attr: DOODLE_ATTR, value: (prefs: Prefs) => prefs.doodle ? 'on' : 'off' },
   { key: 'dockCards', attr: DOCK_LOOK_ATTR, value: (prefs: Prefs) => prefs.dockCards ? DOCK_LOOK_CARD : DOCK_LOOK_FLUSH },
   { key: 'searchStyle', attr: SEARCH_STYLE_ATTR, value: (prefs: Prefs) => prefs.searchStyle },
-  { key: 'sidebarLayout', attr: SIDEBAR_LAYOUT_ATTR, value: (prefs: Prefs) => prefs.sidebarLayout },
-  { key: 'ongoingIndicator', attr: ONGOING_INDICATOR_ATTR, value: (prefs: Prefs) => prefs.ongoingIndicator },
   { key: 'statsPosition', attr: STATS_POSITION_ATTR, value: (prefs: Prefs) => prefs.statsPosition },
   { key: 'statusMotion', attr: STATUS_MOTION_ATTR, value: (prefs: Prefs) => prefs.statusMotion },
-  // Following the system writes no attribute at all: every zoom rule hangs off
-  // a factor, so the page keeps the size the system and the host give it.
-  { key: 'pageZoom', attr: PAGE_ZOOM_ATTR, value: (prefs: Prefs) => prefs.pageZoom === PAGE_ZOOM_SYSTEM ? false : prefs.pageZoom },
   { key: 'collapseFooter', attr: FOOTER_ATTR, value: (prefs: Prefs) => prefs.collapseFooter && !footerTakeoverRetired },
 ] as const satisfies readonly PrefMirror[]
 
@@ -193,20 +174,13 @@ export function motionReduced() {
   return systemPrefersReducedMotion()
 }
 
-/** The mascot actually on the page: `brand` resolves through the brand. */
-export function resolveMascot(current: Prefs) {
-  if (current.mascot !== MASCOT_BRAND) return current.mascot
-  return current.brand === BRAND_DEEPSEEK ? MASCOT_DEEPY : MASCOT_CRAB
-}
-
 /**
  * Values an earlier build kept in this browser's local storage, by preference:
  * the first time the form carries values, each field the form does not hold
  * yet is written through the form and the local copy dropped.
  */
 const LOCAL_PREF_KEYS: Partial<Record<PrefKey, string>> = {
-  username: 'dsh-claude-style.username',
-  banLocale: 'dsh-claude-style.banLocale',
+  username: 'dsh-telegram-style.username',
 }
 let localPrefsMoved = false
 

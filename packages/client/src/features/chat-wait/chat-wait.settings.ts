@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { STATUS_MOTION_SWEEP, STATUS_MOTION_WASH } from '../../constants'
-import { hostChatCopy } from '../../core/i18n'
 import { motionReduced } from '../../core/prefs'
 import { motionMs } from '../../shared/motion'
 import { SWEEP_BAND_CLASS, SWEEP_GLYPHS_CLASS } from '../../shared/sweep-band'
-import { waitingWord } from '../../shared/turn-activity'
 import { copy } from './copy'
 import type { Prefs } from '../../constants'
 import type { SettingsControlsOf, SettingsRowView } from '../../core/feature'
@@ -30,7 +28,7 @@ function StatusMotionPicker(props: SettingsRowView) {
     const timer = window.setInterval(() => {
       phase = !phase
       setAlt(phase)
-    }, motionMs('--dsh-claude-period-preview-swap') / 2)
+    }, motionMs('--dsh-tg-period-preview-swap') / 2)
     return () => window.clearInterval(timer)
   }, [])
   React.useLayoutEffect(() => {
@@ -38,26 +36,26 @@ function StatusMotionPicker(props: SettingsRowView) {
     if (picker === null) return
     // Only the still page needs the hand-over: with motion the CSS loop is
     // already taking turns, and the attribute would cut across it.
-    if (motionReduced() && alt) picker.setAttribute('data-dsh-claude-word-alt', '')
-    else picker.removeAttribute('data-dsh-claude-word-alt')
+    if (motionReduced() && alt) picker.setAttribute('data-dsh-tg-word-alt', '')
+    else picker.removeAttribute('data-dsh-tg-word-alt')
     // The precise line writes the specifics one at a time, so the card's own
     // paint loop stands down and the picker above hands the turn over.
-    if (props.prefs.statusDetail) picker.setAttribute('data-dsh-claude-precise', '')
-    else picker.removeAttribute('data-dsh-claude-precise')
+    if (props.prefs.statusDetail) picker.setAttribute('data-dsh-tg-precise', '')
+    else picker.removeAttribute('data-dsh-tg-precise')
   }, [alt, props.prefs.statusDetail])
   // What the line says, in the wordings the card takes turns between. With the
   // precise status line on, the line writes the specifics a moment carries, so
   // the card takes turns between the three shapes those arrive in — a file
   // being read, a tree being checked out, the model thinking — one at a time,
   // because three wordings cannot share the two-word paint loop
-  // (features/settings/settings-cards.css reads data-dsh-claude-precise).
+  // (features/settings/settings-cards.css reads data-dsh-tg-precise).
   const preciseWords = [
     copy('statusDetailSampleRead'),
     copy('statusDetailSampleCheckout'),
     copy('statusDetailSampleThinking'),
   ]
   const plainWords = [
-    waitingWord(props.prefs.brand, hostChatCopy('chat.deepDiving', 'Deep diving'), copy('chatWaitThinking')),
+    copy('chatWaitThinking'),
     copy('chatWaitTools'),
   ]
   const [preciseTurn, setPreciseTurn] = React.useState(0)
@@ -65,7 +63,7 @@ function StatusMotionPicker(props: SettingsRowView) {
     if (!props.prefs.statusDetail) return
     const timer = window.setInterval(() => {
       setPreciseTurn(turn => (turn + 1) % preciseWords.length)
-    }, motionMs('--dsh-claude-period-preview-swap') / preciseWords.length)
+    }, motionMs('--dsh-tg-period-preview-swap') / preciseWords.length)
     return () => window.clearInterval(timer)
   }, [props.prefs.statusDetail, preciseWords.length])
   // The precise line swaps one specific for the next, so the card runs the
@@ -84,13 +82,13 @@ function StatusMotionPicker(props: SettingsRowView) {
   ]
   return React.createElement(
     'div',
-    { className: 'dsh-claude-motion-picker', role: 'group', ref: pickerRef },
+    { className: 'dsh-tg-motion-picker', role: 'group', ref: pickerRef },
     options.map(option => React.createElement(
       'button',
       {
         key: option.value,
         type: 'button',
-        className: 'dsh-claude-motion-card',
+        className: 'dsh-tg-motion-card',
         disabled: props.disabled,
         'data-active': option.value === props.prefs.statusMotion ? '' : undefined,
         'aria-pressed': option.value === props.prefs.statusMotion ? 'true' : 'false',
@@ -103,13 +101,13 @@ function StatusMotionPicker(props: SettingsRowView) {
       // shared/sweep-band.ts builds it on the line.
       React.createElement(
         'span',
-        { className: 'dsh-claude-motion-sample', 'aria-hidden': 'true' },
+        { className: 'dsh-tg-motion-sample', 'aria-hidden': 'true' },
         words.map((word, at) => React.createElement('span', {
           // Each turn re-keys the pair, which is what makes the two halves
           // play again on the precise line.
           key: props.prefs.statusDetail ? `${preciseTurn}-${at}` : word,
-          className: `dsh-claude-motion-word dsh-claude-${option.value}`
-            + (props.prefs.statusDetail ? (at === 0 ? ' dsh-claude-word-out' : ' dsh-claude-word-in') : ''),
+          className: `dsh-tg-motion-word dsh-tg-${option.value}`
+            + (props.prefs.statusDetail ? (at === 0 ? ' dsh-tg-word-out' : ' dsh-tg-word-in') : ''),
           'data-text': word,
         }, word, option.value === STATUS_MOTION_SWEEP
           ? React.createElement('span', { className: SWEEP_BAND_CLASS }, React.createElement('span', { className: SWEEP_GLYPHS_CLASS, 'data-text': word }))

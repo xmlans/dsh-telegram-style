@@ -1,0 +1,16 @@
+body[data-dsh-telegram-style] [data-dsh-tg-ripple] {
+  position: relative;
+  overflow: hidden;
+}
+body[data-dsh-telegram-style] .dsh-tg-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.12;
+  pointer-events: none;
+  transform: scale(0);
+  animation: dsh-tg-ripple var(--dsh-tg-duration-ripple) var(--dsh-tg-ease-out) forwards;
+}
+@keyframes dsh-tg-ripple {
+  to { transform: scale(1); opacity: 0; }
+}

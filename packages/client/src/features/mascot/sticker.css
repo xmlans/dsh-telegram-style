@@ -1,0 +1,183 @@
+/* The sticker mascot: 72px tall (56px on a narrow window), standing
+   on the input bar's top edge at the right. On the home page's card it stands
+   just above the edge and left of the card's 56px send circle; on the
+   conversation's stack or panel its feet are 6px over the edge. */
+/* The element it stands on is its containing block (sticker.ts marks it): the host does not always make the stack or the panel one; the card already is. */
+body[data-dsh-telegram-style] :is([data-dsh-tg-mascot-stand="stack"], [data-dsh-tg-mascot-stand="panel"]) {
+  position: relative;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker {
+  position: absolute;
+  right: 16px;
+  bottom: calc(100% - 6px);
+  width: 79px;
+  height: 72px;
+  z-index: 2;
+  pointer-events: none;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-place="card"] {
+  right: calc(56px + 16px);
+  bottom: calc(100% + 2px);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-body {
+  position: absolute;
+  inset: 0;
+  background: var(--dsh-tg-image-sticker) center bottom / contain no-repeat;
+  transform-origin: 50% 100%;
+  pointer-events: auto;
+  cursor: pointer;
+}
+@media (max-width: 759.98px) {
+  body[data-dsh-telegram-style] .dsh-tg-sticker {
+    width: 61px;
+    height: 56px;
+  }
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought,
+body[data-dsh-telegram-style] .dsh-tg-sticker-badge,
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts {
+  display: none;
+}
+/* The thought bubble at the top right: three dots while thinking, the loop arrow while compacting, z z while asleep. */
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought {
+  position: absolute;
+  right: -18px;
+  top: -16px;
+  min-width: 30px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--dsh-tg-menu);
+  box-shadow: var(--dsh-tg-menu-shadow);
+  color: var(--dsh-tg-ink-secondary);
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought > :is(i, .dsh-tg-icon, b) {
+  display: none;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought > i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.3;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought > .dsh-tg-icon {
+  width: 14px;
+  height: 14px;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-thought > b::before {
+  content: "z z";
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker:is([data-dsh-tg-mascot-state="thinking"], [data-dsh-tg-mascot-state="sweeping"], [data-dsh-tg-mascot-state="sleeping"]) .dsh-tg-sticker-thought {
+  display: flex;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="thinking"] .dsh-tg-sticker-thought > i {
+  display: block;
+  animation: dsh-tg-sticker-dot var(--dsh-tg-period-sticker-dots) var(--dsh-tg-ease-in-out) infinite;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="thinking"] .dsh-tg-sticker-thought > i:nth-child(2) {
+  animation-delay: calc(var(--dsh-tg-period-sticker-dots) / 3);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="thinking"] .dsh-tg-sticker-thought > i:nth-child(3) {
+  animation-delay: calc(var(--dsh-tg-period-sticker-dots) * 2 / 3);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="sweeping"] .dsh-tg-sticker-thought > .dsh-tg-icon {
+  display: block;
+  animation: dsh-tg-sticker-spin var(--dsh-tg-period-sticker-spin) linear infinite;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="sleeping"] .dsh-tg-sticker-thought > b {
+  display: block;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-badge {
+  position: absolute;
+  right: -6px;
+  top: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dsh-tg-on-accent);
+  background: var(--dsh-tg-accent-fill);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="notification"] .dsh-tg-sticker-badge {
+  display: grid;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts {
+  position: absolute;
+  left: 50%;
+  bottom: 60%;
+  width: 0;
+  height: 0;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts > .dsh-tg-icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: var(--dsh-tg-heart);
+  opacity: 0;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker:is([data-dsh-tg-mascot-state="happy"], [data-dsh-tg-mascot-state="hearts"]) .dsh-tg-sticker-hearts {
+  display: block;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker:is([data-dsh-tg-mascot-state="happy"], [data-dsh-tg-mascot-state="hearts"]) .dsh-tg-sticker-hearts > .dsh-tg-icon {
+  animation: dsh-tg-sticker-heart var(--dsh-tg-duration-sticker-hearts) var(--dsh-tg-ease-out) both;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts > .dsh-tg-icon:nth-child(1) { left: -20px; }
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts > .dsh-tg-icon:nth-child(2) { left: -6px; animation-delay: calc(var(--dsh-tg-duration-sticker-hearts) / 6); }
+body[data-dsh-telegram-style] .dsh-tg-sticker-hearts > .dsh-tg-icon:nth-child(3) { left: 8px; animation-delay: calc(var(--dsh-tg-duration-sticker-hearts) / 3); }
+/* The body's acts. */
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="idle"] .dsh-tg-sticker-body {
+  animation: dsh-tg-sticker-breathe var(--dsh-tg-period-sticker-breathe) var(--dsh-tg-ease-in-out) infinite;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="thinking"] .dsh-tg-sticker-body {
+  transform: rotate(-6deg);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="working"] .dsh-tg-sticker-body {
+  animation: dsh-tg-sticker-bounce var(--dsh-tg-period-sticker-bounce) var(--dsh-tg-ease-in-out) infinite;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="working"][data-dsh-tg-mascot-tempo="fast"] .dsh-tg-sticker-body {
+  animation-duration: var(--dsh-tg-period-sticker-bounce-fast);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="notification"] .dsh-tg-sticker-body {
+  animation: dsh-tg-sticker-sway var(--dsh-tg-period-sticker-sway) var(--dsh-tg-ease-in-out) infinite;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="error"] .dsh-tg-sticker-body {
+  animation:
+    dsh-tg-sticker-shake var(--dsh-tg-duration-sticker-shake) var(--dsh-tg-ease-in-out) 1,
+    dsh-tg-sticker-gray var(--dsh-tg-duration-sticker-gray) var(--dsh-tg-ease-out) 1 both;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker:is([data-dsh-tg-mascot-state="happy"], [data-dsh-tg-mascot-state="hop"]) .dsh-tg-sticker-body {
+  animation: dsh-tg-sticker-jump var(--dsh-tg-duration-sticker-hop) var(--dsh-tg-ease-out) 1;
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="sleeping"] .dsh-tg-sticker-body {
+  opacity: 0.85;
+  transform: rotate(4deg);
+}
+body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state="waking"] .dsh-tg-sticker-body {
+  animation: dsh-tg-sticker-wake var(--dsh-tg-duration-sticker-wake) var(--dsh-tg-ease-out) 1;
+}
+@keyframes dsh-tg-sticker-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+@keyframes dsh-tg-sticker-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes dsh-tg-sticker-sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+@keyframes dsh-tg-sticker-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes dsh-tg-sticker-gray { from { filter: grayscale(1); } to { filter: grayscale(0); } }
+@keyframes dsh-tg-sticker-jump { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
+@keyframes dsh-tg-sticker-wake { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes dsh-tg-sticker-dot { 0%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+@keyframes dsh-tg-sticker-spin { to { transform: rotate(360deg); } }
+@keyframes dsh-tg-sticker-heart { from { opacity: 1; transform: translateY(0) scale(0.6); } to { opacity: 0; transform: translateY(-36px) scale(1); } }
+/* Reduced motion: the still image and the bubble's marks, nothing moves. */
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-sticker :is(.dsh-tg-sticker-body, .dsh-tg-sticker-thought > *, .dsh-tg-sticker-hearts > *) {
+  animation: none;
+  transform: none;
+}
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-sticker[data-dsh-tg-mascot-state="thinking"] .dsh-tg-sticker-thought > i {
+  opacity: 1;
+}

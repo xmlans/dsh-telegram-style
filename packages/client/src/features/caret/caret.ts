@@ -1,12 +1,12 @@
 import { CARET_ATTR, CARET_FIELD_ATTR, CARET_HOST_ATTR, CARET_LAYER_ATTR, CARET_MOTION_OFF, CARET_VISIBLE_ATTR, QUIET_ATTR } from '../../constants'
-import { subscribeMutations } from '@dsh-claude-style/engine/bus'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { subscribeMutations } from '@dsh-telegram-style/engine/bus'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { readPrefs, subscribePrefs } from '../../core/prefs'
 import { caretClipToField, caretMeasurePlain, caretMeasureRich, noteFacesLoaded } from './caret-measure'
 import type { CaretBox, CaretReading } from './caret-measure'
 import { inPagePixels } from '../../shared/page-zoom'
-import { COMPOSER_INPUT_SELECTOR, COMPOSER_TEXTAREA_SELECTOR } from '@dsh-claude-style/contracts/dom'
-import type { HostContext } from '@dsh-claude-style/engine/host'
+import { COMPOSER_INPUT_SELECTOR, COMPOSER_TEXTAREA_SELECTOR } from '@dsh-telegram-style/contracts/dom'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
 import type { FeatureUi } from '../../core/feature'
 import type manifest from './caret.manifest'
 
@@ -37,9 +37,7 @@ import type manifest from './caret.manifest'
  * the native caret back rather than leaving the surface with none.
  */
 /** The blink animation, by name; the stylesheet's keyframes carry the same name by hand. */
-export const CARET_BLINK_NAME = 'dsh-claude-caret-blink'
-/** The drawn caret's colour, on the element itself: read off the native caret when taking over. */
-export const CARET_COLOR_PROPERTY = '--dsh-claude-caret-color'
+export const CARET_BLINK_NAME = 'dsh-tg-caret-blink'
 /** How long after a focus change to look again: a session switch leaves a few frames between the focus and a selection that is ready. */
 export const CARET_FOCUS_SETTLE_MS = 120
 
@@ -278,23 +276,6 @@ export function createCaretMotion(read: () => string) {
   }
 
   /**
-   * Read the native caret's colour at the moment of taking over, so the drawn
-   * one can be painted with it.
-   *
-   * It is only readable while the mark is not written yet; afterwards the
-   * computed value is transparent. An auto colour follows the text colour.
-   */
-  const adoptCaretColor = (input: HTMLElement, layer: CaretLayer) => {
-    const style = getComputedStyle(input)
-    // A transparent computed colour means the native caret is already pressed
-    // down — another plugin's caret took this surface over first. Copying that
-    // would draw nothing at all, so the text colour stands in; it is also what
-    // an auto colour means.
-    const color = style.caretColor === 'auto' || style.caretColor === 'rgba(0, 0, 0, 0)' ? style.color : style.caretColor
-    layer.caret.style.setProperty(CARET_COLOR_PROPERTY, color)
-  }
-
-  /**
    * Put the drawn caret on this viewport box.
    * @param hostRect - the host's box, read in the pass's read phase; null when
    * the layer was rebuilt onto another host and it has to be read here.
@@ -444,7 +425,6 @@ export function createCaretMotion(read: () => string) {
       hide(layer)
       return
     }
-    if (!target.hasAttribute(CARET_ATTR)) adoptCaretColor(target, layer)
     // A plain surface's own scrolled-away part is not drawn. That is not a
     // failed measurement — the native caret is invisible there too — so the
     // mark still stands. The clip goes by the box the measurement read.

@@ -2,30 +2,30 @@ diff --git a/packages/client/src/features/composer/inline.css b/packages/client/
 index a9e18cc..d3b3035 100644
 --- a/packages/client/src/features/composer/inline.css
 +++ b/packages/client/src/features/composer/inline.css
-@@ -390,8 +390,9 @@ body[data-dsh-claude-style] [data-composer-card][data-composer-variant="inline"]
- body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-claude-control="stop"]:hover:not(:disabled) {
-   background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08)) !important;
+@@ -390,8 +390,9 @@ body[data-dsh-telegram-style] [data-composer-card][data-composer-variant="inline"]
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-tg-control="stop"]:hover:not(:disabled) {
+   background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08)) !important;
  }
 -/* The ring the host's square sits in: drawn here, since the shipped glyph is the
 -   square alone. */
 +/* Ring and square are both drawn here: the host ships the square alone, as an SVG
 +   glyph, and a scaled glyph rasterizes on a subpixel phase of its own, so at 125%
 +   and 150% scalings it lands visibly off the ring's centre. */
- body[data-dsh-claude-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-claude-control="stop"]::before,
- body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-claude-control="stop"]::before {
+ body[data-dsh-telegram-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-tg-control="stop"]::before,
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-tg-control="stop"]::before {
    content: "";
-@@ -408,14 +409,19 @@ body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-c
+@@ -408,14 +409,19 @@ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-c
  }
- body[data-dsh-claude-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-claude-control="stop"] svg,
- body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-claude-control="stop"] svg {
+ body[data-dsh-telegram-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-tg-control="stop"] svg,
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-tg-control="stop"] svg {
 -  display: block;
 -  width: 7px;
 -  height:  7px;
 -  border-radius: 1.5px;
 +  display: none;
  }
- body[data-dsh-claude-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-claude-control="stop"]::after,
- body[data-dsh-claude-style] [data-dsh-claude-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-claude-control="stop"]::after {
+ body[data-dsh-telegram-style] [data-composer-card][data-composer-variant="inline"] button[data-dsh-tg-control="stop"]::after,
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="composer-stack"]:not([data-composer-variant="hero"]) [data-composer-card] button[data-dsh-tg-control="stop"]::after {
 -  display: none;
 +  content: "";
 +  display: block;

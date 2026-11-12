@@ -1,112 +1,62 @@
-<div align="center">
+# dsh-telegram-style
 
-# DSH Claude Style
+DeepSeek Harness 的 Telegram 网页版风格主题：墙纸上的浮动聊天列表、会话行、消息气泡、悬浮输入条和三套配色。
 
-**为 DeepSeek Harness 复刻 Claude Code Desktop 风格与交互体验的主题插件。**
-
-> **你的下一个 Claude Code Desktop ，何必是Claude Code。**
-
-[![简体中文](https://img.shields.io/badge/lang-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-red.svg)](README.md) [![English](https://img.shields.io/badge/lang-English-blue.svg)](README.en.md)
-
-[![version](https://img.shields.io/npm/v/dsh-claude-style?style=flat&label=version&color=D97757)](https://www.npmjs.com/package/dsh-claude-style)
-[![downloads](https://img.shields.io/npm/dm/dsh-claude-style?style=flat&label=downloads&color=D97757)](https://www.npmjs.com/package/dsh-claude-style)
-[![GitHub stars](https://img.shields.io/github/stars/Nwflower/dsh-claude-style?style=flat&label=%E2%98%85&color=08C)](https://github.com/Nwflower/dsh-claude-style)
-[![dsh.so install](https://www.dsh.so/badge/install/dsh-claude-style.svg)](https://www.dsh.so/artifact/dsh-claude-style/)
-[![license](https://img.shields.io/badge/license-MIT-2EA44F?style=flat)](LICENSE)
-
-</div>
-
-## 预览
-
-两套主题在插件设置里切换，亮暗跟随系统。
-
-### Claude
+> 非官方作品，与 Telegram、DeepSeek、Anthropic 均无关联。本项目基于 [dsh-claude-style](https://github.com/Nwflower/dsh-claude-style)（MIT，© 2026 Nwflower）修改。
 
 <table>
   <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-home-light.png" alt="Claude 档工作台首页 —— 亮色" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-home-dark.png" alt="Claude 档工作台首页 —— 暗色" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-home-light.png" alt="经典配色的首页，亮色" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-home-dark.png" alt="经典配色的首页，暗色" /></td>
   </tr>
   <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-conversation-light.png" alt="Claude 档 Markdown 对话 —— 亮色" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/claude-conversation-dark.png" alt="Claude 档 Markdown 对话 —— 暗色" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-conversation-light.png" alt="经典配色的 Markdown 对话，亮色" /></td>
+    <td align="center" width="50%"><img src="./docs/screenshots/telegram-conversation-dark.png" alt="经典配色的 Markdown 对话，暗色" /></td>
   </tr>
 </table>
 
-> 工作台首页（上），对话界面（下）；浅色在左，深色在右。
+## 有什么
 
-### DeepSeek
+- **墙纸**：纯色底，上面铺一层图案，图案按配色染色。在插件设置的"外观"页可以关掉图案，只留纯色。
+- **浮动卡片**：聊天列表、右侧面板、标题栏、输入条都是浮在墙纸上的卡片；窄屏下卡片贴边铺满。
+- **会话行**：彩色首字母头像、时间、第二行状态、角标。
+- **对话**：实色标题栏；气泡有 Telegram 的外形和小尾巴，发出的消息带时间和状态勾；Markdown、代码、表格的样式跟着气泡走。
+- **输入条**：悬浮的圆角输入条，48px 的发送键和停止键，工具行是胶囊，光标取强调色，发送时气泡从输入条飞到对话里。
+- **细节**：线稿图标、Telegram 式的菜单和 Toast、细滚动条、点击波纹。
+- **贴纸桌宠**：一张贴纸站在输入条上沿，跟着会话的状态做动作（思考、干活、等你批准、出错、完成、睡着）；单击冒爱心，双击跳一下。在插件设置的"外观"页可以关掉，也可以只让它出现在首页。
 
-<table>
-  <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-home-light.png" alt="DeepSeek 档工作台首页 —— 亮色" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-home-dark.png" alt="DeepSeek 档工作台首页 —— 暗色" /></td>
-  </tr>
-  <tr>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-conversation-light.png" alt="DeepSeek 档 Markdown 对话 —— 亮色" /></td>
-    <td align="center" width="50%"><img src="./docs/screenshots/deepseek-conversation-dark.png" alt="DeepSeek 档 Markdown 对话 —— 暗色" /></td>
-  </tr>
-</table>
+## 配色
 
-> 输入框上沿站着宠物小鲸鱼 Deepy，八个状态：
+- 经典：Telegram 默认的绿色墙纸，亮色白卡片，暗色紫调。
+- 玻璃：蓝紫墙纸，半透明磨砂卡片。
+- 粉色：浅粉墙纸配深粉图案，气泡和按钮是蓝色系。
 
-<table>
-  <tr>
-    <td align="center" width="25%"><img src="./docs/gifs/idle.gif" width="120" alt="空闲" /><br />空闲</td>
-    <td align="center" width="25%"><img src="./docs/gifs/thinking.gif" width="120" alt="思考" /><br />思考</td>
-    <td align="center" width="25%"><img src="./docs/gifs/typing.gif" width="120" alt="写回答、调用工具" /><br />写回答、调用工具</td>
-    <td align="center" width="25%"><img src="./docs/gifs/conducting.gif" width="120" alt="指挥子代理" /><br />指挥子代理</td>
-  </tr>
-  <tr>
-    <td align="center" width="25%"><img src="./docs/gifs/notification.gif" width="120" alt="等你操作" /><br />等你操作</td>
-    <td align="center" width="25%"><img src="./docs/gifs/error.gif" width="120" alt="失败" /><br />失败</td>
-    <td align="center" width="25%"><img src="./docs/gifs/happy.gif" width="120" alt="完成" /><br />完成</td>
-    <td align="center" width="25%"><img src="./docs/gifs/sleeping.gif" width="120" alt="睡着" /><br />睡着</td>
-  </tr>
-</table>
+三套配色都有亮色和暗色，跟随 DeepSeek Harness 自己的亮暗切换。在插件设置的"外观"页用分段控件挑选。
 
 ## 安装
 
-官方插件页添加这个包名，或从终端安装：
+WebUI：
 
-```
-dsh-claude-style
-```
+    dsh plugin --profile web add <dsh-telegram-style-0.1.0.tgz 的路径>
 
-```bash
-dsh plugin --profile web add dsh-claude-style                    # npm 包（推荐）
-dsh plugin --profile web add Nwflower/dsh-claude-style#dist      # GitHub 发布分支
-```
+桌面版：用桌面版自带的 dsh，路径在 `%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`：
 
-也可从[插件市场](https://github.com/dsh-market/dsh-market)或 dsh-web-all 的皮肤中心安装。同一时刻只启用一个主题，装好后重启 DeepSeek Harness。
+    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add <tgz 路径>
 
-## 字体
+装好后在 DeepSeek Harness 的皮肤中心启用"Telegram Style"。和 dsh-claude-style 可以同时安装，同一时刻启用一个。
 
-> Anthropic 没有公开发行这三款字体；本仓库只提供下载与研究的[副本](https://github.com/Nwflower/dsh-claude-style/tree/master/packages/assets/src/fonts/anthropic)。
+## 已知限制
 
+- 代码块左上角的语言标签没有改样式，保持宿主原样：宿主的代码块标题栏没有稳定的挂点。
+- 工作区行仍是上游的紧凑样式，夹在较高的会话行之间可能不太协调。
+- 与上游相比，会话行的"进行中"指示和侧栏疏密（宽松 / 紧凑）两项偏好已经删除，运行状态改由会话行第二行显示。
+- 玻璃配色用了 `backdrop-filter`，特别长的会话里滚动可能变慢；觉得卡可以换成经典或粉色。
+- 装了 dsh-chat-ux 时，本主题对应的聊天功能（折叠、逐字显示、发送动画、跟随、光标）会让位给它。
 
-启用时二选一：装进系统，或把 `.ttf` 复制到 `$DSH_HOME/dsh-claude-style/fonts/`。
+## 许可
 
-## 文档
-
-| 文档 | 说明 |
-| --- | --- |
-| [设计令牌](docs/STYLE.md) | 配色、字体、形状、动效与层级 |
-| [架构决策](docs/adr/README.md) | 每条方向一页：背景、决定、后果与重审条件 |
-| [更新日志](CHANGELOG.md) | 版本历史 |
-| [贡献指南](CONTRIBUTING.md) | 构建、提交规范与回归工具 |
-
-## 鸣谢
-
-- 消息导航参考 SherUnlocked-4869 的 [dsh-plugin-msg-nav](https://github.com/SherUnlocked-4869/dsh-plugin-msg-nav)（MIT）。
-- Deepy 的动画帧图来自 calmly-eating-bugs（[@wp3171216237](https://github.com/wp3171216237)）绘制的 Deepy 小鲸鱼主题包。
-- 聊天区的增强动效改自 [dsh-chat-ux](https://github.com/alm-allen/dsh-chat-ux)（MIT）。
-- Clawd是 Anthropic 的角色形象。帧图不适用 MIT 许可（见 [LICENSE](LICENSE)）。本插件是非官方爱好者作品，与 Anthropic 没有关联。
-
-## 友链
-
-> 想把 Claude Code / Codex 等外部代理的会话历史导入 DSH 接着聊？推荐作者的另一个插件 [dsh-chat-import](https://github.com/Nwflower/dsh-chat-import)。
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Nwflower/dsh-claude-style&type=Date)](https://star-history.com/#Nwflower/dsh-claude-style&Date)
+- 代码：MIT，见 [LICENSE](LICENSE)。
+- JetBrains Mono：按 SIL OFL 1.1 随包分发。
+- 墙纸图案由项目维护者提供，可再分发，见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+- 贴纸桌宠的图版权归作者，不适用 MIT，见 [LICENSE](LICENSE)。
+- 第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

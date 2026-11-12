@@ -37,14 +37,14 @@
           // The permission control's own two marks. The context statistics took
           // the same switch over once; they answer to `statsPosition` now, and
           // their own case drives that choice.
-          permissionsControl: document.querySelectorAll('.dsh-claude-perm-container').length +
-            (document.body.hasAttribute('data-dsh-claude-permissions') ? 1 : 0),
-          workspaceView: document.querySelectorAll('.dsh-claude-ws-segments').length,
-          sidebarSearch: document.querySelectorAll('[data-dsh-claude-search-row], .dsh-claude-search-trigger').length,
+          permissionsControl: document.querySelectorAll('.dsh-tg-perm-container').length +
+            (document.body.hasAttribute('data-dsh-tg-permissions') ? 1 : 0),
+          workspaceView: document.querySelectorAll('.dsh-tg-ws-segments').length,
+          sidebarSearch: document.querySelectorAll('[data-dsh-tg-search-row], .dsh-tg-search-trigger').length,
           viewTabs: document.querySelectorAll('[data-dsh-view-tabs]').length,
           // The composer restyle's gate: the feature writes it on <body> and
           // takes it off again when its scope choice is off.
-          composerScope: document.body.hasAttribute('data-dsh-claude-composer-active') ? 1 : 0,
+          composerScope: document.body.hasAttribute('data-dsh-tg-composer-active') ? 1 : 0,
         }
       }
       var settleSwitch = async function (patch) {
@@ -67,9 +67,7 @@
       }
       // The sixth switched feature, the file change rows, takes seat keys over
       // rather than drawing marks on the page, so its switch is driven and
-      // checked in its own case ('chat-files': offSeats/backSeats). The header
-      // band needs the desktop caption row, which this page has not: its switch
-      // is driven in its own case too ('header-band': off/back).
+      // checked in its own case ('chat-files': offSeats/backSeats).
       var allSwitches = function (value) {
         var patch = {}
         for (var ki = 0; ki < switchKeys.length; ki++) patch[switchKeys[ki]] = value ? onValue(switchKeys[ki]) : offValue(switchKeys[ki])
@@ -95,8 +93,8 @@
       // leave with the heading and come back with it.
       var railMarks = function () {
         return {
-          segments: document.querySelectorAll('.dsh-claude-ws-segments').length,
-          list: document.querySelectorAll('.dsh-claude-archive-list').length,
+          segments: document.querySelectorAll('.dsh-tg-ws-segments').length,
+          list: document.querySelectorAll('.dsh-tg-archive-list').length,
         }
       }
       var sectionHeader = switchSidebar.querySelector('._sectionHeader_w1_1')

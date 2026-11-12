@@ -98,9 +98,9 @@ for (const file of sources.filter((candidate) => /^packages\/engine\/(?:src|node
   const text = fs.readFileSync(file, 'utf8')
   for (const match of text.matchAll(/from '([^']+)'/g)) {
     const specifier = match[1]
-    const intoSkin = specifier.startsWith('@dsh-claude-style/client')
-      || specifier.startsWith('@dsh-claude-style/host')
-      || specifier.startsWith('virtual:dsh-claude-style/')
+    const intoSkin = specifier.startsWith('@dsh-telegram-style/client')
+      || specifier.startsWith('@dsh-telegram-style/host')
+      || specifier.startsWith('virtual:dsh-telegram-style/')
       || specifier.includes('../client/')
       || specifier.includes('../host/')
     if (intoSkin) problems.push(`${relative(file)}: the engine imports ${specifier}; the skin hands what the engine needs over the seam (packages/engine/src/skin.ts, D73)`)
@@ -343,7 +343,7 @@ const require = createRequire(import.meta.url)
 const { AREAS, specFiles, readHeader } = require('./shared/spec-header.cjs')
 const featureDirs = new Set(fs.readdirSync(path.join(ROOT, 'packages', 'client', 'src', 'features'), { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name))
 /** What a spec may import or require by name; a relative path must stay inside packages/testing/specs/. */
-const SPEC_IMPORTS = [/^vitest$/, /^vitest\/browser$/, /^fast-check$/, /^@dsh-claude-style\/client\/pure$/, /^@dsh-claude-style\/contracts\/[\w-]+$/, /^@dsh-claude-style\/engine\/[\w-]+$/]
+const SPEC_IMPORTS = [/^vitest$/, /^vitest\/browser$/, /^fast-check$/, /^@dsh-telegram-style\/client\/pure$/, /^@dsh-telegram-style\/contracts\/[\w-]+$/, /^@dsh-telegram-style\/engine\/[\w-]+$/]
 /**
  * Calls that put a stand-in where the product's own code runs, or freeze an
  * output instead of judging it. The bracket form is the same call to the
@@ -360,7 +360,7 @@ const SPEC_REFUSED = [
 const SPEC_WATCHES = new RegExp(`\\bvi\\.spyOn\\s*\\(|\\bvi\\[\\s*['"]spyOn['"]\\s*\\]\\s*\\(|\\.prototype\\.\\w+\\s*=(?!=)`)
 /** A skin mark or a host mark spelled out: a skin class or attribute, a host attribute, a host's hashed class name. */
 const SPEC_SPELLED = [
-  { pattern: /(?<![@\w])(?:data-)?dsh-claude-(?!style\/)[a-z][\w-]*/, what: 'a skin mark; read it from packages/testing/surface.json' },
+  { pattern: /(?<![@\w])(?:data-)?dsh-tg-(?!style\/)[a-z][\w-]*/, what: 'a skin mark; read it from packages/testing/surface.json' },
   { pattern: /['"`[]data-(?!test-)[a-z][\w-]*/, what: 'a host attribute; read it from packages/contracts (by constant or by table id)' },
   { pattern: /['"`]\.?_[A-Za-z]+_[A-Za-z0-9]+(?:_\d+)?['"`]/, what: 'a host class name; read it from the engine\'s part tables' },
 ]
@@ -392,7 +392,7 @@ for (const file of specs) {
       continue
     }
     if (file.endsWith('.cjs') && specifier.startsWith('node:')) continue
-    if (!SPEC_IMPORTS.some((allowed) => allowed.test(specifier))) problems.push(`${file}: imports ${specifier}; a spec reaches the product through @dsh-claude-style/client/pure, the contracts and the engine's public modules (D77)`)
+    if (!SPEC_IMPORTS.some((allowed) => allowed.test(specifier))) problems.push(`${file}: imports ${specifier}; a spec reaches the product through @dsh-telegram-style/client/pure, the contracts and the engine's public modules (D77)`)
   }
   lines.forEach((line, at) => {
     if (/^\s*(\*|\/\/|\/\*)/.test(line)) return
@@ -456,7 +456,7 @@ for (const match of clientText.matchAll(/@media[^{]*\((?:max|min)-width:\s*(\d+)
 // predate the surface table: a count per file that only shrinks
 // (packages/testing/skin-literals.json, held against the base by
 // scripts/ci-scope.mjs --ledgers). New code reads the table.
-const SKIN_MARK = /(?<![@\w/.])(?:data-)?dsh-claude-(?!style\b)[a-z][\w-]*/g
+const SKIN_MARK = /(?<![@\w/.])(?:data-)?dsh-tg-(?!style\b)[a-z][\w-]*/g
 const recordedMarks = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages', 'testing', 'skin-literals.json'), 'utf8')).files
 let spelledMarks = 0
 for (const file of sources) {

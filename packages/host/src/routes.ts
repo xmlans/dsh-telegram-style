@@ -3,29 +3,25 @@
  *
  * These are the surfaces D75 describes — the model copy document, the webfonts,
  * the OS user, the HDSL account, the routed assets, session deletion, the
- * usage and search roll-ups, the peak rate catalog and the reader's brand
- * images (packages/host/src/brand.ts) — each registered on the
+ * usage and search roll-ups — each registered on the
  * host's web server under this plugin's route prefix. Every route is
  * registered on its own: one path the web server refuses is reported, and the
  * other routes still register.
  *
- * The paths are the shared contract (`@dsh-claude-style/contracts/routes`, * D73): the browser half addresses the same names.
+ * The paths are the shared contract (`@dsh-telegram-style/contracts/routes`, * D73): the browser half addresses the same names.
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
-import { HDSL_PATH, HDSL_SKIN_PATH, PEAKRATE_PATH, PRICES_PATH, ROUTE_PREFIX, SESSION_COST_PATH, SESSION_DELETE_PATH, SESSION_SEARCH_PATH, USAGE_PATH, USERNAME_PATH } from '@dsh-claude-style/contracts/routes'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
+import { HDSL_PATH, HDSL_SKIN_PATH, PRICES_PATH, ROUTE_PREFIX, SESSION_COST_PATH, SESSION_DELETE_PATH, SESSION_SEARCH_PATH, USAGE_PATH, USERNAME_PATH } from '@dsh-telegram-style/contracts/routes'
 import { existsSync, readFileSync, readdirSync, realpathSync, rmSync, statSync } from 'node:fs'
 import { userInfo } from 'node:os'
 import { dirname, join, resolve, sep } from 'node:path'
-import { brandRoutes } from './brand.js'
-import type { DshContext, DshRequest, DshResponse, DshRoute, DshScope } from '@dsh-claude-style/engine/node/dsh'
-import { harnessPath } from '@dsh-claude-style/engine/node/harness-home'
-import { pluginPath } from './harness-home.js'
-import { fenceRefused, methodRefused, readRequestBody, refusalOf, sendJson } from '@dsh-claude-style/engine/node/http'
-import { createStaticFiles } from '@dsh-claude-style/engine/node/static-files'
+import type { DshContext, DshRequest, DshResponse, DshRoute, DshScope } from '@dsh-telegram-style/engine/node/dsh'
+import { harnessPath } from '@dsh-telegram-style/engine/node/harness-home'
+import { fenceRefused, methodRefused, readRequestBody, refusalOf, sendJson } from '@dsh-telegram-style/engine/node/http'
+import { createStaticFiles } from '@dsh-telegram-style/engine/node/static-files'
 import { createHdslAccount } from './hdsl.js'
 import type { HdslReading } from './hdsl.js'
 import { packageRoot } from './package-root.js'
-import { createPeakRate } from './peakrate.js'
 import { createPrices } from './prices.js'
 import { QUERY_MAX, createSessionSearch } from './search.js'
 import { createSessionCost } from './session-cost.js'
@@ -36,25 +32,16 @@ const COPY_FILE = 'model-descriptions.json'
 /**
  * Webfonts this plugin serves under `${ROUTE_PREFIX}/fonts/`, mapped to their
  * content type. The table is a whitelist: the filename is the whole request
- * contract, so no path outside the two directories below is reachable and no
+ * contract, so no path outside the directory below is reachable and no
  * path traversal is possible.
  *
- * A name is looked up in the user's own drop point first — the harness home's
- * `dsh-claude-style/fonts/` — and then in the package's `lib/fonts/` (D75). The
- * JetBrains Mono files and the two look-alike faces behind the Anthropic ones
- * (Inter, Noto Serif) ship in the npm package; the Anthropic faces do not
- * (copyright), so only a copy the user dropped in answers them. A name neither
- * directory holds is absent: sendFile's ENOENT becomes a 404, which the browser
- * half's font stacks fall back from.
+ * A name is read from the package's `lib/fonts/` (D75), where the JetBrains
+ * Mono files ship. A name that directory does not hold is absent: sendFile's
+ * ENOENT becomes a 404, which the browser half's font stacks fall back from.
  */
 const FONT_FILES = {
   'JetBrainsMonoVariable.ttf': 'font/ttf',
   'JetBrainsMonoItalicVariable.ttf': 'font/ttf',
-  'AnthropicSansWebText.ttf': 'font/ttf',
-  'AnthropicSerifWebText.ttf': 'font/ttf',
-  'AnthropicMonoWeb.ttf': 'font/ttf',
-  'InterVariable.woff2': 'font/woff2',
-  'NotoSerifVariable.woff2': 'font/woff2',
 }
 /**
  * The assets the build routed rather than inlined, served under
@@ -245,13 +232,11 @@ async function deleteSession(ctx: DshContext, req: DshRequest, res: DshResponse)
  */
 export function registerRoutes(ctx: DshContext, scope: DshScope) {
   // The built output and the bundled fonts hang off the plugin package's own
-  // directory; the fonts a user drops in live under the harness home.
+  // directory.
   const root = packageRoot()
   // The copy document is build output beside the client bundle in lib/.
   const file = join(root, 'lib', COPY_FILE)
   const fontsDir = join(root, 'lib', 'fonts')
-  /** Where a user's own faces live; resolved per request, so a file added while the host runs is served. */
-  const userFontsDir = () => pluginPath(ctx, 'fonts')
   const assetsDir = join(root, 'lib', 'assets')
   const { sendFile, sendAsset } = createStaticFiles(ctx, PACKAGE_NAME, assetsDir)
 
@@ -277,7 +262,6 @@ export function registerRoutes(ctx: DshContext, scope: DshScope) {
     const usage = createUsage(ctx)
     const hdsl = createHdslAccount(ctx)
     const sessionSearch = createSessionSearch(ctx)
-    const peakrate = createPeakRate(ctx)
     const prices = createPrices(ctx)
     const sessionCost = createSessionCost(ctx, prices)
     // The listener is what makes a total O(1) after the first read; the
@@ -321,13 +305,11 @@ export function registerRoutes(ctx: DshContext, scope: DshScope) {
         }
         const font = sub.startsWith('/fonts/') ? (FONT_FILES as Record<string, string | undefined>)[sub.slice('/fonts/'.length)] : undefined
         if (font !== undefined) {
-          // The whitelisted name is the whole contract; the user's own copy
-          // wins over the bundled face of the same name.
+          // The whitelisted name is the whole contract.
           const name = sub.slice('/fonts/'.length)
-          const dropped = join(userFontsDir(), name)
           // The filename changes with the package, so a long cache is safe
           // and keeps the code face off the network after first paint.
-          sendFile(res, req.method ?? 'GET', existsSync(dropped) ? dropped : join(fontsDir, name), {
+          sendFile(res, req.method ?? 'GET', join(fontsDir, name), {
             'content-type': font,
             'cache-control': 'public, max-age=86400',
           })
@@ -471,23 +453,6 @@ export function registerRoutes(ctx: DshContext, scope: DshScope) {
       },
     })
 
-    register('peak rate', {
-      kind: 'exact',
-      path: PEAKRATE_PATH,
-      handler: (req: DshRequest, res: DshResponse) => {
-        // The catalog is public data, and the browser half is the only client:
-        // the route runs the same fence as the rest of the plugin's routes so
-        // that only this page can make the host reach the source. `POST` is the
-        // browser half asking for a fresh copy, because it cannot name the
-        // source itself.
-        if (methodRefused(req, res, ['GET', 'POST'])) return
-        if (fenceRefused(ctx, req, res)) return
-        peakrate.ensure()
-        const answer = req.method === 'POST' ? peakrate.refresh().then(() => peakrate.payload()) : Promise.resolve(peakrate.payload())
-        sendPayload(res, answer)
-      },
-    })
-
     register('prices', {
       kind: 'exact',
       path: PRICES_PATH,
@@ -520,11 +485,8 @@ export function registerRoutes(ctx: DshContext, scope: DshScope) {
       },
     })
 
-    for (const { label, route } of brandRoutes(ctx)) register(label, route)
-
     return () => {
       usage.dispose()
-      peakrate.dispose()
       prices.dispose()
       sessionCost.dispose()
       sessionSearch.dispose()

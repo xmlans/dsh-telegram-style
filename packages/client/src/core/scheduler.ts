@@ -1,16 +1,14 @@
-import { installScheduler as installEngineScheduler } from '@dsh-claude-style/engine/scheduler'
-import type { FeatureHandle, SchedulerCalls } from '@dsh-claude-style/engine/scheduler'
+import { installScheduler as installEngineScheduler } from '@dsh-telegram-style/engine/scheduler'
+import type { FeatureHandle, SchedulerCalls } from '@dsh-telegram-style/engine/scheduler'
 import { onHdslLoaded, onUsernameLoaded } from '../shared/identity'
 import { onModelCopyLoaded } from '../features/model/model-copy'
 import { loadPrefs, refreshMotionAttribute, subscribePrefs } from './prefs'
-import type { HostContext } from '@dsh-claude-style/engine/host'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
 import type { FooterHandle } from '../features/account/account-footer'
-import type { BanHandle } from '../features/ban-screen/ban-screen'
 import type { ChatFoldHandle } from '../features/chat-fold/chat-fold'
 import type { ComposerHandle } from '../features/composer/composer'
 import type { ChatSendHandle } from '../features/chat-send/send-flight'
 import type { ModelHandle } from '../features/model/model-picker'
-import type { PeakRateHandle } from '../features/peakrate/peakrate'
 import type { QuickProvidersHandle } from '../features/settings/quick-providers'
 
 /**
@@ -19,35 +17,31 @@ import type { QuickProvidersHandle } from '../features/settings/quick-providers'
  * handle type of its own; the others are plain scheduler hooks.
  */
 export interface Handles {
-  brand: FeatureHandle
   composer: ComposerHandle
   homeLayout: FeatureHandle
-  homeRipple: FeatureHandle
   mascot: FeatureHandle
   permissions: FeatureHandle
   contextStats: FeatureHandle
   model: ModelHandle
-  peakrate: PeakRateHandle
   effort: FeatureHandle
   heroMenu: FeatureHandle
   quickProviders: QuickProvidersHandle
   footer: FooterHandle
-  ban: BanHandle
   workspace: FeatureHandle
   search: FeatureHandle
   turnNav: FeatureHandle
   chatFollow: FeatureHandle
   chatFold: ChatFoldHandle
   chatWait: FeatureHandle
+  chatList: FeatureHandle
   chatReveal: FeatureHandle
   chatFiles: FeatureHandle
   chatSend: ChatSendHandle
+  bubbles: FeatureHandle
   caret: FeatureHandle
   viewTabs: FeatureHandle
-  headerBand: FeatureHandle
   settingsNav: FeatureHandle
-  sodium: FeatureHandle
-  surface: FeatureHandle
+  wallpaper: FeatureHandle
 }
 
 export type HandleName = keyof Handles

@@ -1,0 +1,74 @@
+/* Telegram's dropdown menu on every popover the skin draws and on
+   the host's own menus: 12px corners, the menu ground, 36px items with a 20px
+   icon, opening from the button's corner. */
+body[data-dsh-telegram-style] :is(.dsh-tg-popover-card, [role="menu"]) {
+  border-radius: 12px;
+  background: var(--dsh-tg-menu);
+  border: 0;
+  box-shadow: var(--dsh-tg-menu-shadow);
+  -webkit-backdrop-filter: var(--dsh-tg-card-blur);
+  backdrop-filter: var(--dsh-tg-card-blur);
+  padding: 4px 0;
+}
+/* The entrance plays only on a host-mounted menu and on a skin card while it is
+   open; a closed card keeps shared/popover.css's own closing transition. */
+body[data-dsh-telegram-style] :is([role="menu"], .dsh-tg-popover-card[data-open="true"]) {
+  animation: dsh-tg-menu-in var(--dsh-tg-duration-menu) var(--dsh-tg-ease-out) both;
+}
+body[data-dsh-telegram-style] :is(.dsh-tg-popover-item, [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]) {
+  min-height: 36px;
+  padding: 0 16px;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  color: var(--dsh-tg-ink);
+  font-size: 14px;
+}
+body[data-dsh-telegram-style] :is(.dsh-tg-popover-item, [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]) :is(svg, .dsh-tg-icon) {
+  width: 20px;
+  height: 20px;
+  color: var(--dsh-tg-ink-secondary);
+}
+body[data-dsh-telegram-style] :is(.dsh-tg-popover-item, [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"]):is(:hover, :focus-visible, [data-highlighted]) {
+  background: var(--dsh-tg-hover-bg);
+}
+@keyframes dsh-tg-menu-in {
+  from { opacity: 0; transform: scale(var(--dsh-tg-scale-menu)); }
+  to { opacity: 1; transform: scale(1); }
+}
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] :is(.dsh-tg-popover-card[data-open="true"], [role="menu"]) {
+  animation: none;
+}
+/* Scrollbars: 6px, 8px under the pointer, the palette's thumb. */
+body[data-dsh-telegram-style] ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+body[data-dsh-telegram-style] :hover::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+body[data-dsh-telegram-style] ::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: var(--dsh-tg-scrollbar);
+}
+body[data-dsh-telegram-style] ::-webkit-scrollbar-thumb:hover {
+  background: var(--dsh-tg-scrollbar-hover);
+}
+body[data-dsh-telegram-style] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* The host's toasts as Telegram's dark pill: centred, near the top, white text. */
+body[data-dsh-telegram-style] [role="alert"][style*="--dsh-toast-hold"] {
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #FFFFFF;
+  border: 0;
+  box-shadow: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  top: 16px;
+  bottom: auto;
+}

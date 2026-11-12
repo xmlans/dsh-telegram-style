@@ -1,16 +1,15 @@
 import { PAGE_ZOOM_ATTR } from '../constants'
 
 /**
- * The page's own scale (settings › General): the factor the stylesheet draws
- * the page at, 1 while the page follows the system.
+ * Reads the zoom attribute a skin writes on <body>; this skin writes none, so the factor is 1.
  *
- * The stylesheet's `zoom` scales the space a `left`, a `top` or a length
+ * Where a stylesheet's `zoom` scales the space a `left`, a `top` or a length
  * written into the page is read in, while `getBoundingClientRect` keeps
  * answering in the viewport's own pixels. A feature that turns a measured box
  * into a position or a size therefore divides by this factor, and one that
  * hands the page a number to compare against the viewport converts the
- * window's size the other way. The attribute is the one the preference mirror
- * writes (core/prefs.ts), so a page handed to another skin reads 1 again.
+ * window's size the other way. A skin that scales the page writes the
+ * attribute; without one the factor is 1.
  */
 export function pageZoomFactor() {
   const stored = document.body.getAttribute(PAGE_ZOOM_ATTR)

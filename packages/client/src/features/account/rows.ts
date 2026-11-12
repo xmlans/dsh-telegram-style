@@ -1,22 +1,20 @@
 import { HDSL_SKIN_ROUTE } from '../../constants'
 import { resolveAvatarUrl, resolveDisplayName } from '../../shared/identity'
-import { buildElement } from '@dsh-claude-style/engine/dom'
+import { buildElement } from '@dsh-telegram-style/engine/dom'
 import type { HostAccountMenu } from './host-menu'
 import { copy } from './copy'
 
 /**
- * The account rows: the header with the hold-screen easter egg, the
+ * The account rows: the header with the nickname, the
  * self-built trigger's picture, and the self-built path's settings row.
  *
  * The footer (account-footer.ts) builds the containers and decides which
  * mount point is active (account/surface.ts); this factory builds and syncs
  * the rows that go into them. `options.hostMenu` is the host's account menu
- * (account/host-menu.ts), `options.openBan()` what a press on the header
- * does and `options.banAvailable()` whether there is an easter egg to open;
- * the nickname and the picture come from the identity chain
+ * (account/host-menu.ts); the nickname and the picture come from the identity chain
  * (packages/client/src/core/host.ts).
  */
-export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(): void, banAvailable(): boolean, onChange?(): void }) {
+export function createAccountRows(options: { hostMenu: HostAccountMenu, onChange?(): void }) {
   const hostMenu = options.hostMenu
 
   /**
@@ -81,7 +79,7 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
       let canvas = headCanvas
       if (canvas === null) {
         canvas = document.createElement('canvas')
-        canvas.className = 'dsh-claude-account-skin'
+        canvas.className = 'dsh-tg-account-skin'
         canvas.width = 64
         canvas.height = 64
         canvas.setAttribute('aria-hidden', 'true')
@@ -104,16 +102,16 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
 
   /** Drop the account profile's photo, if one is mounted. */
   function clearAccountPhoto(avatarEl: Element) {
-    const photo = avatarEl.querySelector('.dsh-claude-account-photo')
+    const photo = avatarEl.querySelector('.dsh-tg-account-photo')
     if (photo === null) return
     avatarEl.removeChild(photo)
-    if (avatarEl.hasAttribute('data-dsh-claude-photo')) avatarEl.removeAttribute('data-dsh-claude-photo')
+    if (avatarEl.hasAttribute('data-dsh-tg-photo')) avatarEl.removeAttribute('data-dsh-tg-photo')
   }
 
   /** Take the head's canvas back out of a circle the photo path owns again. */
   function detachLauncherHead(avatarEl: Element) {
     if (headCanvas !== null && headCanvas.parentElement === avatarEl) avatarEl.removeChild(headCanvas)
-    if (avatarEl.hasAttribute('data-dsh-claude-skin')) avatarEl.removeAttribute('data-dsh-claude-skin')
+    if (avatarEl.hasAttribute('data-dsh-tg-skin')) avatarEl.removeAttribute('data-dsh-tg-skin')
   }
 
   /**
@@ -129,7 +127,7 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
       headCanvas.remove()
       avatarEl.appendChild(headCanvas)
     }
-    avatarEl.toggleAttribute('data-dsh-claude-skin', true)
+    avatarEl.toggleAttribute('data-dsh-tg-skin', true)
   }
 
   /**
@@ -153,14 +151,14 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
       return
     }
     detachLauncherHead(avatarEl)
-    let photo = avatarEl.querySelector<HTMLImageElement>('.dsh-claude-account-photo')
+    let photo = avatarEl.querySelector<HTMLImageElement>('.dsh-tg-account-photo')
     if (src === null) {
       clearAccountPhoto(avatarEl)
       return
     }
     if (photo === null) {
       const image = document.createElement('img')
-      image.className = 'dsh-claude-account-photo'
+      image.className = 'dsh-tg-account-photo'
       image.alt = ''
       image.decoding = 'async'
       image.draggable = false
@@ -171,26 +169,24 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
       photo = image
     }
     if (photo.getAttribute('src') !== src) photo.src = src
-    if (!avatarEl.hasAttribute('data-dsh-claude-photo')) avatarEl.setAttribute('data-dsh-claude-photo', '')
+    if (!avatarEl.hasAttribute('data-dsh-tg-photo')) avatarEl.setAttribute('data-dsh-tg-photo', '')
   }
 
   /**
-   * The account header: the nickname and the hold-screen easter egg's entry.
+   * The account header: the nickname.
    * It is the first row of whichever container is active — the injected
    * container on the host path, the popover's own header on the self-built
    * one. The header is only a WRAPPER: the clickable strip is the inner row,
    * so the hover plate covers the name and not the divider that follows it.
-   * Whether that row is a button is the header sync's business (syncBanEntry).
    */
   function buildAccountHeader(username: string) {
-    const header = buildElement('div', 'dsh-claude-account-popover-header')
-    header.setAttribute('data-dsh-claude-ban-row', '')
+    const header = buildElement('div', 'dsh-tg-account-popover-header')
 
-    const rowEl = buildElement('div', 'dsh-claude-account-popover-row')
+    const rowEl = buildElement('div', 'dsh-tg-account-popover-row')
 
-    const nameEl = buildElement('div', 'dsh-claude-account-popover-name', username)
+    const nameEl = buildElement('div', 'dsh-tg-account-popover-name', username)
 
-    const divider = buildElement('div', 'dsh-claude-account-popover-divider')
+    const divider = buildElement('div', 'dsh-tg-account-popover-divider')
     // The role is what the shared separator rule reads (shared/popover.css), so
     // this line is the same line as every other separator in a card.
     divider.setAttribute('role', 'separator')
@@ -219,60 +215,18 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
   }
 
   /**
-   * The header's row is the easter egg's button while the easter egg is
-   * installed, and a plain name while it is switched off (or retired): no
-   * role, no stop in the tab order, no hover plate (account-footer.css).
-   */
-  function syncBanEntry(rowEl: HTMLElement) {
-    const available = options.banAvailable()
-    if (available === (rowEl.getAttribute('role') === 'button')) return
-    if (available) {
-      rowEl.setAttribute('role', 'button')
-      rowEl.setAttribute('tabindex', '0')
-      rowEl.setAttribute('aria-haspopup', 'dialog')
-    } else {
-      rowEl.removeAttribute('role')
-      rowEl.removeAttribute('tabindex')
-      rowEl.removeAttribute('aria-haspopup')
-    }
-  }
-
-  /**
-   * Sync the header of the active container: the nickname and the easter
-   * egg's binding. Bound OUTSIDE the build branch so the pass that creates
-   * the container already wires the row; `__dshBanBound` keeps a later pass
-   * from binding it twice, which would open the overlay twice per click.
+   * Sync the header of the active container: the nickname.
    */
   function syncAccountHeader(root: Element | null, hostRow: Element | null) {
     if (root === null) return
-    const nameEl = root.querySelector('.dsh-claude-account-popover-name')
+    const nameEl = root.querySelector('.dsh-tg-account-popover-name')
     const username = accountDisplayName(hostRow)
     if (nameEl && nameEl.textContent !== username) nameEl.textContent = username
-    const rowEl = root.querySelector<HTMLElement>('.dsh-claude-account-popover-row')
-    if (rowEl !== null) syncBanEntry(rowEl)
-    const banRow = root.querySelector<HTMLElement>('[data-dsh-claude-ban-row]')
-    if (banRow && !banRow.__dshBanBound) {
-      banRow.__dshBanBound = true
-      banRow.addEventListener('click', e => {
-        if (!options.banAvailable()) return
-        // The row's gesture is the easter egg, not a menu selection.
-        e.preventDefault()
-        e.stopPropagation()
-        options.openBan()
-      })
-      banRow.addEventListener('keydown', e => {
-        if (e.key !== 'Enter' && e.key !== ' ') return
-        if (!options.banAvailable()) return
-        e.preventDefault()
-        e.stopPropagation()
-        options.openBan()
-      })
-    }
   }
 
   /** The container injected at the head of the host's account menu. */
   function buildHostContainer() {
-    const container = buildElement('div', 'dsh-claude-account-inject')
+    const container = buildElement('div', 'dsh-tg-account-inject')
     container.appendChild(buildAccountHeader(accountDisplayName(hostMenu.trigger())))
     return container
   }
@@ -281,16 +235,16 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
   function buildSettingsItem() {
     const item = document.createElement('button')
     item.type = 'button'
-    item.className = 'dsh-claude-popover-item'
+    item.className = 'dsh-tg-popover-item'
     item.setAttribute('data-action', 'settings')
     item.innerHTML =
-      '<span class="dsh-claude-popover-item-icon">' +
+      '<span class="dsh-tg-popover-item-icon">' +
         '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
           '<circle cx="12" cy="12" r="3"></circle>' +
           '<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>' +
         '</svg>' +
       '</span>' +
-      '<span class="dsh-claude-popover-item-text"></span>'
+      '<span class="dsh-tg-popover-item-text"></span>'
     item.addEventListener('click', e => {
       e.stopPropagation()
       hostMenu.openSettings()
@@ -313,7 +267,7 @@ export function createAccountRows(options: { hostMenu: HostAccountMenu, openBan(
       if (!txt) txt = trigger.getAttribute('aria-label') || ''
       if (txt) labelText = txt
     }
-    const txtEl = settingsItem.querySelector('.dsh-claude-popover-item-text')
+    const txtEl = settingsItem.querySelector('.dsh-tg-popover-item-text')
     if (txtEl && txtEl.textContent !== labelText) txtEl.textContent = labelText
   }
 

@@ -13,8 +13,8 @@
   // session instead: the control reads the running preset from its projection
   // and switches through the host permission command; the case asserts both.
   var permissionCommands = []
-  /** The cases that carry this chat fixture: the waiting line's case and the two feature-switch cases. */
-  var waitFixtureCase = CASE === 'chat-wait' || CASE === 'switches' || CASE === 'switches-off'
+  /** The cases that carry this chat fixture: the waiting line's and the bubbles' cases and the two feature-switch cases. */
+  var waitFixtureCase = CASE === 'chat-wait' || CASE === 'bubbles' || CASE === 'switches' || CASE === 'switches-off'
   // The waiting line's case: one bound session whose chat snapshot (ui-chat's
   // `chat` target of uiConversation) has a failed first turn that ran 12s and
   // reported 300 output tokens, then a running turn — a settled first step

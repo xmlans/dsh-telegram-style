@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * shoot.cjs — capture the README screenshots, light and dark, for one brand and
- * one scene: `docs/screenshots/<brand>-<scene>-light.png` and `-dark.png`.
+ * shoot.cjs — capture the README screenshots, light and dark, for one palette and
+ * one scene: `docs/screenshots/<palette>-<scene>-light.png` and `-dark.png`.
  *
  * Drives a headless Chrome against a running DSH web GUI with this
  * theme loaded, replaces personal data in the DOM (workspace / session titles,
@@ -23,12 +23,12 @@
  *                 must be a stand-in: send DEMO_PROMPT in a scratch instance
  *                 to make one.
  *
- * The brand is the instance's own (the settings page's Theme style); `--brand`
- * names the one expected, and a page carrying another fails the run.
+ * The palette is the instance's own (the settings page's appearance tab);
+ * `--palette` names the one expected, and a page wearing another fails the run.
  *
  * Usage:
  *   node packages/testing/shoot.cjs --token <launch-token> [--url http://127.0.0.1:3080]
- *     [--brand claude|deepseek] [--scene home|conversation] [--session <title>]
+ *     [--palette telegram|glass|trans] [--scene home|conversation] [--session <title>]
  *
  * The launch token comes from the `dsh web` banner (GUI URL `/?token=…`) or
  * the DSH_WEB_TOKEN env var. Chrome comes from packages/testing/browser.cjs and
@@ -50,16 +50,7 @@ const HEIGHTS = { home: 900, conversation: 1240 }
 const DEMO_PROMPT = '用一段简短的示例，展示你支持的 Markdown 格式。'
 const DEMO_TITLE = 'Markdown rendering tour'
 
-/**
- * Canvas colors that identify the resolved palette, per brand. Host builtin
- * themes carry empty token maps, so every color comes from the stylesheets
- * branching on `data-ds-dark-theme`: dark tokens are the base, light overrides
- * sit under `:not([data-ds-dark-theme])`, and the DeepSeek brand rewrites both.
- */
-const CANVAS = {
-  claude: { light: 'rgb(252, 252, 251)', dark: 'rgb(20, 20, 19)' },
-  deepseek: { light: 'rgb(247, 250, 255)', dark: 'rgb(19, 22, 29)' },
-}
+const PALETTES = ['telegram', 'glass', 'trans']
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -70,8 +61,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 async function openDemoConversation(page, title) {
   if (!SESSION_NAMES.includes(title)) throw new Error(`"${title}" is not a stand-in title — refusing to open it`)
   const opened = await page.evaluate(`(() => {
-    const row = [...document.querySelectorAll('[data-dsh-claude-part~="session-row"]')]
-      .find((el) => { const t = el.querySelector('[data-dsh-claude-part~="row-title"]'); return t && t.textContent.trim() === ${JSON.stringify(title)} })
+    const row = [...document.querySelectorAll('[data-dsh-tg-part~="session-row"]')]
+      .find((el) => { const t = el.querySelector('[data-dsh-tg-part~="row-title"]'); return t && t.textContent.trim() === ${JSON.stringify(title)} })
     if (!row) return false
     row.click()
     return true
@@ -84,21 +75,21 @@ async function openDemoConversation(page, title) {
   if (!Array.isArray(prompts) || prompts.length === 0) throw new Error('the conversation shows no user message — is it the demo?')
   const foreign = prompts.filter((text) => text !== DEMO_PROMPT)
   if (foreign.length > 0) throw new Error(`the conversation holds user messages other than the demo prompt — refusing to screenshot it: ${JSON.stringify(foreign.map((t) => t.slice(0, 40)))}`)
-  await page.evaluate(`document.querySelectorAll('[data-dsh-claude-part~="scroll-body"]').forEach((el) => { el.scrollTop = 0 })`)
+  await page.evaluate(`document.querySelectorAll('[data-dsh-tg-part~="scroll-body"]').forEach((el) => { el.scrollTop = 0 })`)
   await sleep(500)
 }
 
 async function captureOnce(page, options, scheme, outFile) {
-  const { scene, brand, startUrl } = options
+  const { scene, palette, startUrl } = options
   await page.setViewportSize({ width: WIDTH, height: HEIGHTS[scene] })
   await page.goto(startUrl, { waitUntil: 'domcontentloaded' })
   await sleep(12000)
 
-  if (!(await page.evaluate(`!!document.body.hasAttribute('data-dsh-claude-style')`))) {
+  if (!(await page.evaluate(`!!document.body.hasAttribute('data-dsh-telegram-style')`))) {
     throw new Error('theme not applied — is the plugin active in this profile?')
   }
-  const pageBrand = await page.evaluate(`document.body.getAttribute('data-dsh-claude-brand')`)
-  if (pageBrand !== brand) throw new Error(`the page carries brand "${pageBrand}", expected "${brand}" — switch the Theme style in settings`)
+  const pagePalette = await page.evaluate(`document.body.getAttribute('data-dsh-tg-palette')`)
+  if (pagePalette !== palette) throw new Error(`the page wears palette "${pagePalette}", expected "${palette}" — pick it on the settings page's appearance tab`)
 
   if (scene === 'conversation') {
     await openDemoConversation(page, options.session)
@@ -114,11 +105,10 @@ async function captureOnce(page, options, scheme, outFile) {
     // snapshot; no durable preference is read or written.
     await page.evaluate(`document.body.setAttribute('data-ds-dark-theme', '')`)
   }
-  const wantBg = CANVAS[brand][scheme]
-  const bg = await page.evaluate(`getComputedStyle(document.body).backgroundColor`)
-  if (bg !== wantBg) {
-    throw new Error(`${scheme} palette did not take effect (body bg ${bg}, expected ${wantBg})`)
-  }
+  // The wallpaper is a pattern over a flat colour, so there is no single canvas
+  // colour to compare: the scheme is whether the body wears the dark flag.
+  const isDark = () => page.evaluate(`document.body.hasAttribute('data-ds-dark-theme')`)
+  if ((await isDark()) !== (scheme === 'dark')) throw new Error(`${scheme} scheme did not take effect (the body's dark flag disagrees)`)
 
   const { swapped, caught, visibleText } = await sanitizePage((expression) => page.evaluate(expression))
 
@@ -127,35 +117,34 @@ async function captureOnce(page, options, scheme, outFile) {
   // dark-mode screenshot.
   if (scheme === 'dark') {
     await page.evaluate(`document.body.setAttribute('data-ds-dark-theme', '')`)
-    const bgAgain = await page.evaluate(`getComputedStyle(document.body).backgroundColor`)
-    if (bgAgain !== wantBg) throw new Error(`dark palette was reverted before capture (${bgAgain})`)
+    if (!(await isDark())) throw new Error('the dark flag was reverted before capture')
   }
 
   const buf = await page.screenshot({ path: outFile })
-  console.log(`captured ${outFile} (${buf.length} bytes, brand=${brand}, scene=${scene}, scheme=${scheme}, sanitized ${swapped} nodes, sweep caught ${caught.length})`)
+  console.log(`captured ${outFile} (${buf.length} bytes, palette=${palette}, scene=${scene}, scheme=${scheme}, sanitized ${swapped} nodes, sweep caught ${caught.length})`)
   console.log('--- visible text ---')
   console.log(visibleText.replace(/\n{2,}/g, '\n').slice(0, 1200))
   console.log('--- end text ---')
 }
 
 /**
- * Capture one brand and scene in light and dark.
+ * Capture one palette and scene in light and dark.
  *
- * @param options - `{ token, url, out, brand, scene, session, name, prepare }`:
- *   `name` is the file stem (default `<brand>-<scene>`), `prepare(page)` an
+ * @param options - `{ token, url, out, palette, scene, session, name, prepare }`:
+ *   `name` is the file stem (default `<palette>-<scene>`), `prepare(page)` an
  *   optional hook that stages the page before the sanitize.
  * @returns the two files written.
  */
 async function shoot(options) {
-  const brand = options.brand || 'claude'
+  const palette = options.palette || 'telegram'
   const scene = options.scene || 'home'
-  if (!CANVAS[brand]) throw new Error(`unknown brand "${brand}" (claude or deepseek)`)
+  if (!PALETTES.includes(palette)) throw new Error(`unknown palette "${palette}" (${PALETTES.join(', ')})`)
   if (!HEIGHTS[scene]) throw new Error(`unknown scene "${scene}" (home or conversation)`)
   const base = (options.url || 'http://127.0.0.1:3080').replace(/\/+$/, '')
   const out = path.resolve(options.out || path.join(__dirname, '..', '..', 'docs', 'screenshots'))
-  const name = options.name || `${brand}-${scene}`
+  const name = options.name || `${palette}-${scene}`
   const run = {
-    brand,
+    palette,
     scene,
     session: options.session || DEMO_TITLE,
     prepare: options.prepare,
@@ -173,7 +162,12 @@ async function shoot(options) {
   return files
 }
 
-module.exports = { shoot, DEMO_PROMPT, DEMO_TITLE, CANVAS }
+module.exports = { shoot, DEMO_PROMPT, DEMO_TITLE, PALETTES }
+
+const USAGE = `usage: node packages/testing/shoot.cjs --token <launch-token> [--url <base>] [--palette telegram|glass|trans] [--scene home|conversation] [--session <title>] [--out <dir>]
+  --palette  the palette the instance wears (default telegram); a page wearing another fails the run
+  --scene    home (default) or conversation
+  files      <out>/<palette>-<scene>-light.png and -dark.png (default out: docs/screenshots)`
 
 if (require.main === module) {
   const args = process.argv.slice(2)
@@ -181,12 +175,16 @@ if (require.main === module) {
     const i = args.indexOf('--' + name)
     return i === -1 ? undefined : args[i + 1]
   }
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(USAGE)
+    process.exit(0)
+  }
   const token = argOf('token') || process.env.DSH_WEB_TOKEN
   if (!token) {
-    console.error('usage: node packages/testing/shoot.cjs --token <launch-token> [--url <base>] [--brand claude|deepseek] [--scene home|conversation] [--session <title>]')
+    console.error(USAGE)
     process.exit(2)
   }
-  shoot({ token, url: argOf('url'), out: argOf('out'), brand: argOf('brand'), scene: argOf('scene'), session: argOf('session') })
+  shoot({ token, url: argOf('url'), out: argOf('out'), palette: argOf('palette'), scene: argOf('scene'), session: argOf('session') })
     .then(() => console.log('\nSCREENSHOTS CAPTURED'))
     .catch((e) => { console.error(e.message || e); process.exitCode = 1 })
 }

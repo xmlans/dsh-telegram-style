@@ -1,6 +1,6 @@
 /* ---------- Sidebar search box ---------- */
 /* packages/client/src/features/search/search.ts places the box by the `searchStyle`
-   preference, which rides <body> as data-dsh-claude-search-style: `overlay`
+   preference, which rides <body> as data-dsh-tg-search-style: `overlay`
    (the default, everything below) puts it in the host's logo row, `standalone`
    gives it a row of its own under that row, and `icon` draws no box of the
    skin's at all — the host's own search button stands, and search.ts takes its
@@ -17,7 +17,7 @@
    at 28px with no padding of its own. The host gives that row no top margin
    and a 4px bottom margin; the row's own 6px foot is what puts the box on the
    rows' rhythm, and it replaces the host's 4px rather than adding to it. */
-body[data-dsh-claude-style] [data-dsh-claude-search-row] {
+body[data-dsh-telegram-style] [data-dsh-tg-search-row] {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -25,18 +25,18 @@ body[data-dsh-claude-style] [data-dsh-claude-search-row] {
   padding: 0;
   margin-bottom: 6px;
 }
-body[data-dsh-claude-style] [data-dsh-claude-search-row] > :is([data-dsh-claude-part~="brand-button"], .dsh-claude-search-trigger) {
+body[data-dsh-telegram-style] [data-dsh-tg-search-row] > :is([data-dsh-tg-part~="brand-button"], .dsh-tg-search-trigger) {
   grid-area: 1 / 1;
 }
-body[data-dsh-claude-style] [data-dsh-claude-search-row] > [data-dsh-claude-part~="brand-button"] {
-  transition: opacity var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard), visibility var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard);
+body[data-dsh-telegram-style] [data-dsh-tg-search-row] > [data-dsh-tg-part~="brand-button"] {
+  transition: opacity var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard), visibility var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard);
 }
-body[data-dsh-claude-style] .dsh-claude-search-trigger {
+body[data-dsh-telegram-style] .dsh-tg-search-trigger {
   display: flex;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard), visibility var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard);
+  transition: opacity var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard), visibility var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard);
   min-width: 0;
   height: 28px;
   margin: 0;
@@ -45,7 +45,7 @@ body[data-dsh-claude-style] .dsh-claude-search-trigger {
   gap: 8px;
   border: 1px solid var(--dsw-alias-border-l1, #e8e6dc);
   border-radius: 8px;
-  background: var(--dsh-claude-canvas, #fcfcfb);
+  background: var(--dsh-tg-canvas, #fcfcfb);
   color: var(--dsw-alias-label-tertiary, #8f8d84);
   font-family: var(--dsw-font-family);
   font-size: 14px;
@@ -55,30 +55,29 @@ body[data-dsh-claude-style] .dsh-claude-search-trigger {
   box-shadow: none;
   -webkit-app-region: no-drag;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-trigger {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-trigger {
   border-color: var(--dsw-alias-border-l2);
-  background: var(--dsh-claude-raised);
+  background: var(--dsh-tg-raised);
 }
-body[data-dsh-claude-style] [data-slot="sidebar"]:hover [data-dsh-claude-search-row] > .dsh-claude-search-trigger,
-body[data-dsh-claude-style] [data-dsh-claude-search-row] > .dsh-claude-search-trigger:focus-visible {
+body[data-dsh-telegram-style] [data-slot="sidebar"]:hover [data-dsh-tg-search-row] > .dsh-tg-search-trigger,
+body[data-dsh-telegram-style] [data-dsh-tg-search-row] > .dsh-tg-search-trigger:focus-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
-body[data-dsh-claude-style] [data-slot="sidebar"]:hover [data-dsh-claude-search-row] > [data-dsh-claude-part~="brand-button"],
-body[data-dsh-claude-style] [data-dsh-claude-search-row] > [data-dsh-claude-part~="brand-button"]:has(~ .dsh-claude-search-trigger:focus-visible) {
+body[data-dsh-telegram-style] [data-slot="sidebar"]:hover [data-dsh-tg-search-row] > [data-dsh-tg-part~="brand-button"],
+body[data-dsh-telegram-style] [data-dsh-tg-search-row] > [data-dsh-tg-part~="brand-button"]:has(~ .dsh-tg-search-trigger:focus-visible) {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 /* A box too narrow for its word and its key hints together keeps the word:
-   the web's Chat / Code switch (features/surface) takes a cell of the brand
-   row, and the reader can drag the sidebar narrow. */
-body[data-dsh-claude-style] .dsh-claude-search-trigger {
+   the reader can drag the sidebar narrow. */
+body[data-dsh-telegram-style] .dsh-tg-search-trigger {
   container-type: inline-size;
 }
 @container (width < 200px) {
-  body[data-dsh-claude-style] .dsh-claude-search-trigger > .dsh-claude-search-keys {
+  body[data-dsh-telegram-style] .dsh-tg-search-trigger > .dsh-tg-search-keys {
     display: none;
   }
 }
@@ -89,21 +88,16 @@ body[data-dsh-claude-style] .dsh-claude-search-trigger {
    inline padding of its own: the column's own inset is what the New session
    plate under it starts from, so the box's border stands on that plate's two
    edges and the box is exactly as wide as the rows it sits among. */
-body[data-dsh-claude-style][data-dsh-claude-search-style="standalone"] .dsh-claude-search-bar {
+body[data-dsh-telegram-style][data-dsh-tg-search-style="standalone"] .dsh-tg-search-bar {
   display: flex;
   padding: 0;
   margin: 0 0 6px 0;
 }
-body[data-dsh-claude-style][data-dsh-claude-search-style="standalone"] .dsh-claude-search-trigger {
+body[data-dsh-telegram-style][data-dsh-tg-search-style="standalone"] .dsh-tg-search-trigger {
   flex: 1 1 auto;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-}
-/* The sidebar's own layout choice takes that foot down with the rows below it
-   (theme/sidebar.css), so the search row keeps the same rhythm as them. */
-body[data-dsh-claude-style][data-dsh-claude-search-style="standalone"][data-dsh-claude-sidebar-layout="compact"] .dsh-claude-search-bar {
-  margin-bottom: 2px;
 }
 /* The Windows desktop shell's sidebar column starts under its 40px titlebar,
    which left the brand a titlebar's height lower than on the web; the row rises
@@ -114,7 +108,7 @@ body[data-dsh-claude-style][data-dsh-claude-search-style="standalone"][data-dsh-
    offset: the host pads nothing around the traffic lights, and its own
    `_topStrip + _logoRow` margin (-12px) already seats the row's content where
    the 48px it declares for --dsh-frame-top-clearance wants it. */
-html[data-windows-titlebar] body[data-dsh-claude-style] [data-slot="sidebar"] [data-dsh-claude-part~="logo-row"] {
+html[data-windows-titlebar] body[data-dsh-telegram-style] [data-slot="sidebar"] [data-dsh-tg-part~="logo-row"] {
   margin-top: -6px !important;
 }
 /* Where no desktop shell owns the column's top — a browser page — the row is the
@@ -122,22 +116,22 @@ html[data-windows-titlebar] body[data-dsh-claude-style] [data-slot="sidebar"] [d
    against the window's top edge. A step of the rows' own 6px, rounded to the
    row's 8px inline padding, lifts it clear. The attribute is what the collapsed
    rail lacks, so it keeps the host's 18px. */
-html:not([data-windows-titlebar]):not([data-platform="darwin"]) body[data-dsh-claude-style] [data-dsh-claude-search-row] {
+html:not([data-windows-titlebar]):not([data-platform="darwin"]) body[data-dsh-telegram-style] [data-dsh-tg-search-row] {
   margin-top: 8px;
 }
 /* The host gives its own logo row a 4px leading edge, and the brand another 4px
    under the Windows caption row; the row's zeroed padding drops both, so the
    brand takes the row's 8px and its mark's left edge lands on the new-session
    chip's. */
-html:not([data-windows-titlebar]):not([data-platform="darwin"]) body[data-dsh-claude-style] [data-dsh-claude-search-row] > [data-dsh-claude-part~="brand-button"] {
+html:not([data-windows-titlebar]):not([data-platform="darwin"]) body[data-dsh-telegram-style] [data-dsh-tg-search-row] > [data-dsh-tg-part~="brand-button"] {
   padding-left: 8px;
 }
 /* On both desktop shells the host's toggle takes no cell in the row: macOS
    renders it inside its own 52px `_topStrip`, Windows fixes it into the caption
    overlay. The row keeps a single column there — a second, empty one would
    still cost the brand and the box the host logo row's 8px gap. */
-html[data-windows-titlebar] body[data-dsh-claude-style] [data-dsh-claude-search-row],
-html[data-platform=darwin] body[data-dsh-claude-style] [data-dsh-claude-search-row] {
+html[data-windows-titlebar] body[data-dsh-telegram-style] [data-dsh-tg-search-row],
+html[data-platform=darwin] body[data-dsh-telegram-style] [data-dsh-tg-search-row] {
   grid-template-columns: minmax(0, 1fr) !important;
 }
 /* The host's own sidebar search stays mounted while the box stands in for it:
@@ -148,10 +142,10 @@ html[data-platform=darwin] body[data-dsh-claude-style] [data-dsh-claude-search-r
    The header packs its children to the right and relied on that slot's flex to
    hold the heading at the left, so the heading now takes the free space
    itself. */
-body[data-dsh-claude-style] [data-slot="sidebar"] [data-dsh-claude-part~="section-header"] > [data-dsh-claude-part~="section-label"] {
+body[data-dsh-telegram-style] [data-slot="sidebar"] [data-dsh-tg-part~="section-header"] > [data-dsh-tg-part~="section-label"] {
   margin-right: auto;
 }
-body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-slot="sidebar"] [data-dsh-claude-part~="search-slot"] {
+body[data-dsh-telegram-style]:not([data-dsh-tg-search-style="icon"]) [data-slot="sidebar"] [data-dsh-tg-part~="search-slot"] {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -164,7 +158,7 @@ body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-slo
 /* Expanding that search would clear the header's actions (view options, add
    workspace) out of its way for the moment before the palette folds it back;
    with the search out of sight they have nothing to make room for. */
-body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-slot="sidebar"] [data-dsh-claude-part~="section-actions-hidden"] {
+body[data-dsh-telegram-style]:not([data-dsh-tg-search-style="icon"]) [data-slot="sidebar"] [data-dsh-tg-part~="section-actions-hidden"] {
   opacity: 1 !important;
   visibility: visible !important;
   max-width: 60px !important;
@@ -185,7 +179,7 @@ body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-slo
    focuses its field, and that focus is what opens the palette. The `icon`
    style is the exception — there the host's own button is the reader's way in,
    and it keeps its place. */
-body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-sidebar-collapsed] [data-dsh-claude-holds~="rail-search"] {
+body[data-dsh-telegram-style]:not([data-dsh-tg-search-style="icon"]) [data-sidebar-collapsed] [data-dsh-tg-holds~="rail-search"] {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -195,7 +189,7 @@ body[data-dsh-claude-style]:not([data-dsh-claude-search-style="icon"]) [data-sid
   opacity: 0;
   pointer-events: none;
 }
-body[data-dsh-claude-style] [data-sidebar-collapsed] [data-dsh-claude-part~="logo-row"] + .dsh-claude-search-trigger {
+body[data-dsh-telegram-style] [data-sidebar-collapsed] [data-dsh-tg-part~="logo-row"] + .dsh-tg-search-trigger {
   display: flex;
   flex: none;
   justify-content: center;
@@ -213,32 +207,32 @@ body[data-dsh-claude-style] [data-sidebar-collapsed] [data-dsh-claude-part~="log
      settles (its own 150 ms step over 49 px); the box is the skin's own
      element standing in that column, so it enters the same way instead of
      standing still while its neighbours travel. */
-  animation: dsh-claude-rail-in var(--dsh-claude-duration-surface) var(--dsh-claude-ease-in-out) backwards;
+  animation: dsh-tg-rail-in var(--dsh-tg-duration-surface) var(--dsh-tg-ease-in-out) backwards;
 }
-@keyframes dsh-claude-rail-in {
+@keyframes dsh-tg-rail-in {
   from {
     opacity: 0;
     transform: translate(49px);
   }
 }
-body[data-dsh-claude-style] [data-sidebar-collapsed] [data-dsh-claude-part~="logo-row"] + .dsh-claude-search-trigger > :is(.dsh-claude-search-trigger-label, .dsh-claude-search-keys) {
+body[data-dsh-telegram-style] [data-sidebar-collapsed] [data-dsh-tg-part~="logo-row"] + .dsh-tg-search-trigger > :is(.dsh-tg-search-trigger-label, .dsh-tg-search-keys) {
   display: none;
 }
 /* A button, like the New session and Plugins rows under it: the same hover
    plate, laid over the box's own opaque fill so the brand behind it never
    shows through. */
-body[data-dsh-claude-style] .dsh-claude-search-trigger:hover {
-  background-image: linear-gradient(var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08)), var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08)));
+body[data-dsh-telegram-style] .dsh-tg-search-trigger:hover {
+  background-image: linear-gradient(var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08)), var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08)));
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-trigger:hover {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-trigger:hover {
   background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-trigger-icon {
+body[data-dsh-telegram-style] .dsh-tg-search-trigger-icon {
   display: inline-flex;
   flex: none;
   color: var(--dsw-alias-label-secondary, #787672);
 }
-body[data-dsh-claude-style] .dsh-claude-search-trigger-label {
+body[data-dsh-telegram-style] .dsh-tg-search-trigger-label {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
@@ -250,11 +244,11 @@ body[data-dsh-claude-style] .dsh-claude-search-trigger-label {
    only re-cut the card: wider, set high in the window, no inner gaps, and the
    skin's own rows inside. It fades and settles in; on close search.ts marks
    the overlay and keeps it mounted while card and mask fade out together. */
-body[data-dsh-claude-style] .dsh-claude-search-dialog {
+body[data-dsh-telegram-style] .dsh-tg-search-dialog {
   /* The card is set high in the window, so it settles down into place; the
      shared entrance preset travels that way with a negative start (D9). */
-  --dsh-claude-surface-from: calc(-1 * var(--dsh-claude-distance-nudge));
-  animation: dsh-claude-surface-in var(--dsh-claude-duration-surface) var(--dsh-claude-ease-glide);
+  --dsh-tg-surface-from: calc(-1 * var(--dsh-tg-distance-nudge));
+  animation: dsh-tg-surface-in var(--dsh-tg-duration-surface) var(--dsh-tg-ease-glide);
   width: min(760px, 100%);
   max-height: 100%;
   margin: 8vh 0 auto;
@@ -262,37 +256,37 @@ body[data-dsh-claude-style] .dsh-claude-search-dialog {
   gap: 0;
   border: 1px solid var(--dsw-alias-border-l1, #e8e6dc);
   border-radius: 16px;
-  background: var(--dsh-claude-card);
+  background: var(--dsh-tg-card);
   box-shadow: 0 16px 48px rgba(20, 20, 19, 0.14), 0 2px 8px rgba(20, 20, 19, 0.06);
 }
-body[data-dsh-claude-style] [data-dsh-claude-search-closing] > .dsh-claude-search-dialog {
-  animation: dsh-claude-surface-out var(--dsh-claude-duration-exit) var(--dsh-claude-ease-standard) forwards !important;
+body[data-dsh-telegram-style] [data-dsh-tg-search-closing] > .dsh-tg-search-dialog {
+  animation: dsh-tg-surface-out var(--dsh-tg-duration-exit) var(--dsh-tg-ease-standard) forwards !important;
 }
-body[data-dsh-claude-style] [data-dsh-claude-search-closing] > [data-dsh-claude-part~="mask"] {
-  animation: dsh-claude-fade-out var(--dsh-claude-duration-exit) var(--dsh-claude-ease-standard) forwards !important;
+body[data-dsh-telegram-style] [data-dsh-tg-search-closing] > [data-dsh-tg-part~="mask"] {
+  animation: dsh-tg-fade-out var(--dsh-tg-duration-exit) var(--dsh-tg-ease-standard) forwards !important;
 }
-body[data-dsh-claude-style] [data-dsh-claude-search-closing] {
+body[data-dsh-telegram-style] [data-dsh-tg-search-closing] {
   pointer-events: none !important;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-dialog {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-dialog {
   border-color: var(--dsw-alias-border-l2) !important;
-  background: var(--dsh-claude-raised) !important;
+  background: var(--dsh-tg-raised) !important;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search {
+body[data-dsh-telegram-style] .dsh-tg-search {
   display: flex;
   flex-direction: column;
   min-height: 0;
   font-family: var(--dsw-font-family);
   color: var(--dsw-alias-label-primary, #141413);
 }
-body[data-dsh-claude-style] .dsh-claude-search-head {
+body[data-dsh-telegram-style] .dsh-tg-search-head {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 18px 16px 10px 24px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-input {
+body[data-dsh-telegram-style] .dsh-tg-search-input {
   flex: 1 1 auto;
   min-width: 0;
   height: 32px;
@@ -305,10 +299,10 @@ body[data-dsh-claude-style] .dsh-claude-search-input {
   font-family: var(--dsw-font-family);
   font-size: 17px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-input::placeholder {
+body[data-dsh-telegram-style] .dsh-tg-search-input::placeholder {
   color: var(--dsw-alias-label-tertiary, #8f8d84);
 }
-body[data-dsh-claude-style] .dsh-claude-search-close {
+body[data-dsh-telegram-style] .dsh-tg-search-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -322,13 +316,13 @@ body[data-dsh-claude-style] .dsh-claude-search-close {
   color: var(--dsw-alias-label-secondary, #787672);
   cursor: pointer;
 }
-body[data-dsh-claude-style] .dsh-claude-search-close:hover {
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.06)) !important;
+body[data-dsh-telegram-style] .dsh-tg-search-close:hover {
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.06)) !important;
   color: var(--dsw-alias-label-primary, #141413) !important;
 }
 
 /* Filters: a segmented control whose highlight slides (shared/sliding-pill). */
-body[data-dsh-claude-style] .dsh-claude-search-filters {
+body[data-dsh-telegram-style] .dsh-tg-search-filters {
   position: relative;
   display: flex;
   align-self: flex-start;
@@ -336,16 +330,16 @@ body[data-dsh-claude-style] .dsh-claude-search-filters {
   gap: 2px;
   margin: 0 16px 8px 14px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-filters[data-dsh-claude-pill]::before {
+body[data-dsh-telegram-style] .dsh-tg-search-filters[data-dsh-tg-pill]::before {
   top: 0;
   height: 100%;
   border-radius: 8px;
   background: rgba(20, 20, 19, 0.06);
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-filters[data-dsh-claude-pill]::before {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-filters[data-dsh-tg-pill]::before {
   background: rgba(250, 249, 245, 0.08) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-filter {
+body[data-dsh-telegram-style] .dsh-tg-search-filter {
   height: 32px;
   padding: 0 10px;
   border: none !important;
@@ -356,23 +350,23 @@ body[data-dsh-claude-style] .dsh-claude-search-filter {
   font-size: 14px;
   white-space: nowrap;
   cursor: pointer;
-  transition: color var(--dsh-claude-timing-feedback);
+  transition: color var(--dsh-tg-timing-feedback);
   user-select: none;
   -webkit-user-select: none;
 }
-body[data-dsh-claude-style] .dsh-claude-search-filter:hover {
+body[data-dsh-telegram-style] .dsh-tg-search-filter:hover {
   color: var(--dsw-alias-label-secondary, #787672) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-filter[aria-checked="true"] {
+body[data-dsh-telegram-style] .dsh-tg-search-filter[aria-checked="true"] {
   color: var(--dsw-alias-label-primary, #141413);
 }
-body[data-dsh-claude-style] .dsh-claude-search-filters:not([data-dsh-claude-pill]) .dsh-claude-search-filter[aria-checked="true"] {
+body[data-dsh-telegram-style] .dsh-tg-search-filters:not([data-dsh-tg-pill]) .dsh-tg-search-filter[aria-checked="true"] {
   background: rgba(20, 20, 19, 0.06) !important;
 }
 
 /* Results: section captions over rows; the highlighted row carries the fill
    and the Enter glyph. */
-body[data-dsh-claude-style] .dsh-claude-search-list {
+body[data-dsh-telegram-style] .dsh-tg-search-list {
   flex: 1 1 auto;
   min-height: 0;
   max-height: min(520px, 62vh);
@@ -380,18 +374,18 @@ body[data-dsh-claude-style] .dsh-claude-search-list {
   padding: 4px 12px 10px;
   overscroll-behavior: contain;
 }
-body[data-dsh-claude-style] .dsh-claude-search-section {
+body[data-dsh-telegram-style] .dsh-tg-search-section {
   padding: 14px 12px 6px;
   color: var(--dsw-alias-label-tertiary, #8f8d84);
   font-size: 13px;
   line-height: 18px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-status {
+body[data-dsh-telegram-style] .dsh-tg-search-status {
   padding: 18px 12px !important;
   color: var(--dsw-alias-label-tertiary, #8f8d84) !important;
   font-size: 14px !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item {
+body[data-dsh-telegram-style] .dsh-tg-search-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -403,13 +397,13 @@ body[data-dsh-claude-style] .dsh-claude-search-item {
   font-size: 15px;
   line-height: 20px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item[data-active] {
+body[data-dsh-telegram-style] .dsh-tg-search-item[data-active] {
   background: rgba(20, 20, 19, 0.05);
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-item[data-active] {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-item[data-active] {
   background: rgba(250, 249, 245, 0.07) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-icon {
+body[data-dsh-telegram-style] .dsh-tg-search-item-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -418,33 +412,33 @@ body[data-dsh-claude-style] .dsh-claude-search-item-icon {
   height: 18px;
   color: var(--dsw-alias-label-secondary, #787672);
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-image {
+body[data-dsh-telegram-style] .dsh-tg-search-item-image {
   width: 18px !important;
   height: 18px !important;
   border-radius: 4px !important;
   object-fit: contain !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-text {
+body[data-dsh-telegram-style] .dsh-tg-search-item-text {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-width: 0;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-line {
+body[data-dsh-telegram-style] .dsh-tg-search-item-line {
   display: flex;
   align-items: baseline;
   gap: 10px;
   min-width: 0;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-name {
+body[data-dsh-telegram-style] .dsh-tg-search-item-name {
   flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-detail,
-body[data-dsh-claude-style] .dsh-claude-search-item-snippet {
+body[data-dsh-telegram-style] .dsh-tg-search-item-detail,
+body[data-dsh-telegram-style] .dsh-tg-search-item-snippet {
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;
@@ -452,26 +446,26 @@ body[data-dsh-claude-style] .dsh-claude-search-item-snippet {
   color: var(--dsw-alias-label-tertiary, #8f8d84);
   font-size: 13px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-detail {
+body[data-dsh-telegram-style] .dsh-tg-search-item-detail {
   flex: 1 1 0;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-snippet {
+body[data-dsh-telegram-style] .dsh-tg-search-item-snippet {
   line-height: 18px !important;
 }
 /* The query inside a message excerpt: the primary label ink at medium weight,
    no fill, so the excerpt stays one quiet line. */
-body[data-dsh-claude-style] .dsh-claude-search-item-match {
+body[data-dsh-telegram-style] .dsh-tg-search-item-match {
   background: none !important;
   color: var(--dsw-alias-label-primary) !important;
   font-weight: 500 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item-enter {
+body[data-dsh-telegram-style] .dsh-tg-search-item-enter {
   display: inline-flex;
   flex: none;
   color: var(--dsw-alias-label-tertiary, #8f8d84);
   visibility: hidden;
 }
-body[data-dsh-claude-style] .dsh-claude-search-item[data-active] .dsh-claude-search-item-enter {
+body[data-dsh-telegram-style] .dsh-tg-search-item[data-active] .dsh-tg-search-item-enter {
   visibility: visible;
 }
 
@@ -479,14 +473,14 @@ body[data-dsh-claude-style] .dsh-claude-search-item[data-active] .dsh-claude-sea
    New session shortcut deliberately wears this same cap (theme/sidebar.css
    drops the host's `+` separator, as the box does): one keycap look across the
    sidebar (docs/STYLE.md "Sidebar box"). */
-body[data-dsh-claude-style] .dsh-claude-search-keys {
+body[data-dsh-telegram-style] .dsh-tg-search-keys {
   display: inline-flex;
   flex: none;
   align-items: center;
   gap: 3px;
 }
-body[data-dsh-claude-style] .dsh-claude-search-key,
-body[data-dsh-claude-style] button[data-dsh-claude-part~="new-session"] [data-dsh-claude-part~="new-session-shortcut"] kbd:not([data-dsh-claude-part~="key-separator"]) {
+body[data-dsh-telegram-style] .dsh-tg-search-key,
+body[data-dsh-telegram-style] button[data-dsh-tg-part~="new-session"] [data-dsh-tg-part~="new-session-shortcut"] kbd:not([data-dsh-tg-part~="key-separator"]) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -503,14 +497,14 @@ body[data-dsh-claude-style] button[data-dsh-claude-part~="new-session"] [data-ds
   line-height: 1;
 }
 /* The New session row's own weight is 500; its cap reads at the regular weight. */
-body[data-dsh-claude-style] button[data-dsh-claude-part~="new-session"] [data-dsh-claude-part~="new-session-shortcut"] kbd:not([data-dsh-claude-part~="key-separator"]) {
+body[data-dsh-telegram-style] button[data-dsh-tg-part~="new-session"] [data-dsh-tg-part~="new-session-shortcut"] kbd:not([data-dsh-tg-part~="key-separator"]) {
   font-weight: 400;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-key,
-body[data-dsh-claude-style][data-ds-dark-theme] button[data-dsh-claude-part~="new-session"] [data-dsh-claude-part~="new-session-shortcut"] kbd:not([data-dsh-claude-part~="key-separator"]) {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-key,
+body[data-dsh-telegram-style][data-ds-dark-theme] button[data-dsh-tg-part~="new-session"] [data-dsh-tg-part~="new-session-shortcut"] kbd:not([data-dsh-tg-part~="key-separator"]) {
   border-color: var(--dsw-alias-border-l3);
 }
-body[data-dsh-claude-style] .dsh-claude-search-foot {
+body[data-dsh-telegram-style] .dsh-tg-search-foot {
   display: flex;
   align-items: center;
   gap: 24px;
@@ -519,10 +513,10 @@ body[data-dsh-claude-style] .dsh-claude-search-foot {
   color: var(--dsw-alias-label-secondary, #787672);
   font-size: 13px;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-foot {
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-foot {
   border-top-color: var(--dsw-alias-border-l2) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-search-hint {
+body[data-dsh-telegram-style] .dsh-tg-search-hint {
   display: inline-flex;
   align-items: center;
   gap: 8px;

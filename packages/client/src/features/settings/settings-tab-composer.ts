@@ -6,7 +6,7 @@ import type { SettingsTab, SettingsView } from './settings-controls'
 /**
  * The settings page's Composer tab: the quick-provider trigger, the one row
  * this page draws itself. The restyle's scope, the model picker with its
- * descriptions, the peak rate meter and the permission control are the
+ * descriptions and the permission control are the
  * features' own rows, placed here by their manifests (D72); the picker and the
  * permission control are drawn into the restyled composer, so their rows wait
  * for the restyle (their manifests' `requires`).
@@ -34,7 +34,7 @@ export function createSettingsComposerTab(): SettingsTab {
           React.createElement('button', {
             type: 'button',
             ref: quickTrigger,
-            className: 'dsh-claude-settings-picker',
+            className: 'dsh-tg-settings-picker',
             disabled: !pickerOn,
             'aria-haspopup': 'menu',
             'aria-expanded': 'false',

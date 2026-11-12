@@ -10,7 +10,7 @@
  */
 import { afterEach, expect, test } from 'vitest'
 import { userEvent } from 'vitest/browser'
-import { HEAT_TIP_EDGE_ATTR, HEAT_TIP_SIDE_ATTR, HEAT_TIP_SIDE_BELOW, HOME_OVERVIEW_SHEET, placeHeatTip } from '@dsh-claude-style/client/pure'
+import { HEAT_TIP_EDGE_ATTR, HEAT_TIP_SIDE_ATTR, HEAT_TIP_SIDE_BELOW, HOME_OVERVIEW_SHEET, placeHeatTip } from '@dsh-telegram-style/client/pure'
 import { surfaceAttribute, surfaceClass } from '../../fixtures/surface'
 
 const ROOT = surfaceAttribute('skin.root')

@@ -1,7 +1,7 @@
-import { subscribeMutations } from '@dsh-claude-style/engine/bus'
+import { subscribeMutations } from '@dsh-telegram-style/engine/bus'
 import { notifyEnvironmentChange } from '../core/prefs'
 import { parkForeignSheets } from '../core/stylesheet'
-import { notifyAll } from '@dsh-claude-style/engine/notify'
+import { notifyAll } from '@dsh-telegram-style/engine/notify'
 import type { PeerPlugin } from '../core/feature'
 
 /**

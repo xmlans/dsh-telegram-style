@@ -1,9 +1,9 @@
 import type * as React from 'react'
 import type { Prefs } from '../constants'
 import { peerPresent } from '../shared/peer-plugin'
-import type { HostContext } from '@dsh-claude-style/engine/host'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
 import type { CopyEntries } from './i18n'
-import type { SchedulerCalls } from '@dsh-claude-style/engine/scheduler'
+import type { SchedulerCalls } from '@dsh-telegram-style/engine/scheduler'
 import type { HandleName, Handles, Ui } from './scheduler'
 
 /**
@@ -88,12 +88,6 @@ export interface FeatureStylesheetFile {
   rank: number
   /** The composer rules are gated (D9). */
   gate?: boolean
-  /**
-   * `'surface'`: the sheet is scoped to `body[data-dsh-claude-surface]` and
-   * ships apart from the theme's sheet, so it stays while ds-bot's surface has
-   * the page (D74).
-   */
-  scope?: 'surface'
 }
 
 /** A sheet of one rule per entry of a table the code reads too: its generator's name in scripts/feature-sheets.mjs. */

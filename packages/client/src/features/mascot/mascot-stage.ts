@@ -29,10 +29,7 @@ export interface MascotStage {
   quietSince: number
   nextExtraAt: number
   current: (MascotPick & { start: number, done?: boolean }) | null
-  animation: Animation | null
   timer: ReturnType<typeof setTimeout> | null
-  clicks: number[]
-  press: { id: number, x: number, y: number, lifted: boolean } | null
 }
 
 /**
@@ -53,7 +50,7 @@ export const SLEEP_AFTER_MS = 60000
 /** The quiet spell between two idle extras. */
 export const EXTRA_MIN_MS = 20000
 export const EXTRA_SPAN_MS = 20000
-/** Moments hold for two rounds of their animation, as Clawd's auto-return does. */
+/** Moments hold for about two rounds of their act: 4.8 s for an error, 5.2 s for a turn that ends well. */
 export const MOMENTS: Record<MascotMoment, MascotLevel & { holdMs: number }> = {
   error: { state: 'error', animation: 'error', priority: 8, holdMs: 4800 },
   attention: { state: 'attention', animation: 'happy', priority: 5, holdMs: 5200 },
@@ -83,11 +80,7 @@ export function freshStage(now: number): MascotStage {
     nextExtraAt: 0,
     /** The animation on screen: `{ key, mode, priority, start, done? }`. */
     current: null,
-    /** The WAAPI animation playing on the strip; null while a still frame is pinned. */
-    animation: null,
     timer: null,
-    clicks: [],
-    press: null,
   }
 }
 

@@ -14,11 +14,11 @@
  * replaced price table clears every total: the next ask re-prices the log
  * against the table in force, the way the plugins that keep a ledger do not.
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
-import { costMicro, priceFor, priceTierAt } from '@dsh-claude-style/contracts/prices'
-import type { PriceDocument, PriceUsage, SessionCostAnswer } from '@dsh-claude-style/contracts/prices'
-import type { DshContext } from '@dsh-claude-style/engine/node/dsh'
-import { readEvents } from '@dsh-claude-style/engine/node/session-events'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
+import { costMicro, priceFor, priceTierAt } from '@dsh-telegram-style/contracts/prices'
+import type { PriceDocument, PriceUsage, SessionCostAnswer } from '@dsh-telegram-style/contracts/prices'
+import type { DshContext } from '@dsh-telegram-style/engine/node/dsh'
+import { readEvents } from '@dsh-telegram-style/engine/node/session-events'
 import { modelOf, usageOf } from './usage-fold.js'
 import type { UsageEvent } from './usage-fold.js'
 import type { PriceStore } from './prices.js'

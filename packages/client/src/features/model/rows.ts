@@ -3,11 +3,11 @@ import { MODEL_OFFICIAL_GROUP } from './copy-fallbacks'
 import { readPrefs } from '../../core/prefs'
 import { buildModelLabel, modelBrand } from './brand'
 import { modelDescription } from './copy-lookup'
-import { buildElement } from '@dsh-claude-style/engine/dom'
+import { buildElement } from '@dsh-telegram-style/engine/dom'
 import { POPOVER_CHECK_SVG, buildPopoverItem } from '../../shared/popover'
 import type { createHoverIntent } from '../../shared/popover'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import type { HostModelEntry, HostModelGroup } from '@dsh-claude-style/contracts/services'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import type { HostModelEntry, HostModelGroup } from '@dsh-telegram-style/contracts/services'
 
 /**
  * Model picker rows: the row/cell builders and the two level-1 list selectors,
@@ -35,8 +35,6 @@ export function createModelRows(options: {
   closeSub: () => void
   /** @param focusField - whether the press is the reader asking to look a model up. */
   openSub: (focusField?: boolean) => void
-  /** The peak rate meter's badge for one row, or null (features/peakrate). */
-  rate: (provider: string, modelId: string) => HTMLElement | null
 }) {
   const ctx = options.ctx
   const pickModel = options.pickModel
@@ -44,7 +42,6 @@ export function createModelRows(options: {
   const isSubOpen = options.isSubOpen
   const closeSub = options.closeSub
   const openSub = options.openSub
-  const rate = options.rate
 
   /**
    * The rule that separates one provider's models from the next. The provider
@@ -53,14 +50,14 @@ export function createModelRows(options: {
    * stay clean.
    */
   function buildProviderRule(name: string) {
-    const rule = buildElement('div', 'dsh-claude-model-rule')
-    if (name) rule.appendChild(buildElement('span', 'dsh-claude-model-rule-name', name))
+    const rule = buildElement('div', 'dsh-tg-model-rule')
+    if (name) rule.appendChild(buildElement('span', 'dsh-tg-model-rule-name', name))
     return rule
   }
 
   /**
    * One model row, the skeleton every level builds from: brand mark, name, an
-   * optional description line, the peak rate meter and a check when the model is
+   * optional description line, and a check when the model is
    * in force. `onPick` is the whole difference between the rows — a list row
    * puts its model in force, the current seat's own row only folds the picker.
    *
@@ -70,14 +67,14 @@ export function createModelRows(options: {
   function buildModelRow(group: HostModelGroup, model: HostModelEntry, selected: boolean, withDescription: boolean, onPick: () => void) {
     // The shared row skeleton; the copy block keeps its own class, and
     // the vendor typography rides on the label inside it.
-    const built = buildPopoverItem({ className: 'dsh-claude-model-option', role: 'menuitemradio', textClass: 'dsh-claude-model-copy', check: true })
+    const built = buildPopoverItem({ className: 'dsh-tg-model-option', role: 'menuitemradio', textClass: 'dsh-tg-model-copy', check: true })
     const item = built.row
     item.setAttribute('aria-checked', selected ? 'true' : 'false')
     const brand = modelBrand(model.id, model.name)
     // The brand id is the row's styling hook — it is what gives a vendor's rows
-    // their own typography (see .dsh-claude-model-name in
-    // features/model/model-picker.css). The vendor's mark rides inside the
-    // label's lockup. The scheduler's attributeFilter
+    // their own typography (see .dsh-tg-model-name in
+    // features/model/model-picker.css). The vendor's initial rides inside the
+    // label. The scheduler's attributeFilter
     // does not watch data-*, so this write cannot re-trigger a pass.
     if (brand) item.setAttribute('data-brand', brand)
     const copy = built.text
@@ -92,12 +89,7 @@ export function createModelRows(options: {
     // line has its own switch under the picker's settings row, and a row built
     // without it is the same row with the copy block left as the name alone.
     const desc = withDescription && readPrefs().modelDescriptions !== false ? modelDescription(ctx, group.id, model) : ''
-    if (desc) copy.appendChild(buildElement('span', 'dsh-claude-model-desc', desc))
-    // The peak rate meter rides in front of the check: the row is compared by
-    // its rate before it is picked, and a model whose provider bills on no
-    // clock carries no badge at all (packages/client/src/features/peakrate/).
-    const meter = rate(group.id, model.id)
-    if (meter !== null) item.insertBefore(meter, built.check)
+    if (desc) copy.appendChild(buildElement('span', 'dsh-tg-model-desc', desc))
     built.check!.innerHTML = selected ? POPOVER_CHECK_SVG : ''
     item.addEventListener('click', (e: MouseEvent) => {
       e.stopPropagation()
@@ -122,11 +114,11 @@ export function createModelRows(options: {
 
   /** The More-models row: label + chevron, hover opens the second level. */
   function buildModelCell(label: string) {
-    const cell = buildElement('button', 'dsh-claude-model-cell')
+    const cell = buildElement('button', 'dsh-tg-model-cell')
     cell.type = 'button'
     cell.setAttribute('role', 'menuitem')
-    cell.appendChild(buildElement('span', 'dsh-claude-model-cell-label', label))
-    const chevron = buildElement('span', 'dsh-claude-model-cell-chevron')
+    cell.appendChild(buildElement('span', 'dsh-tg-model-cell-label', label))
+    const chevron = buildElement('span', 'dsh-tg-model-cell-chevron')
     chevron.innerHTML = MODEL_CHEVRON_SVG
     cell.appendChild(chevron)
     cell.addEventListener('mouseenter', () => {

@@ -1,7 +1,6 @@
 /**
- * The host-palette case: the host's own colours and type, the tokens and frames
- * the skin must leave alone, and what a wallpaper plugin's cleared canvas
- * reaches. Then the settings case: the section rendered through the stand-in
+ * The host-palette case: what a wallpaper plugin's cleared canvas reaches under
+ * the skin's palette. Then the settings case: the section rendered through the stand-in
  * React, tab by tab, with the sub-rows that grey out behind a parent, and the
  * heading's link to the plugin's repository.
  */
@@ -11,11 +10,10 @@
   var r = probe.report
 
   probe.step(async function () {
-    // Following the host's colours and type: with the host's palette in the
-    // page, the skin writes none of the host's tokens, paints none of the
-    // host's frame, and its own surfaces read the host's tokens; a wallpaper
-    // plugin's cleared canvas and glass then reach both. Back on Claude the
-    // skin's own palette returns.
+    // A wallpaper plugin's cleared canvas and glass over the skin's own
+    // palette: the shell stands down under one mask, the base canvas and the
+    // skin's own faces keep their fill, and taking the wallpaper away brings
+    // the fills back.
     await probe.onlyFor(['host-palette'], async function () {
       var hostProbe = function (html) {
         var holder = document.createElement('div')
@@ -26,11 +24,9 @@
       var hostNodes = {
         sidebar: hostProbe('<div data-pane="sidebar">s</div>'),
         conversation: hostProbe('<div data-pane="conversation">c</div>'),
-        popover: hostProbe('<div class="dsh-claude-popover-card" data-open="true">p</div>'),
-        search: hostProbe('<div class="dsh-claude-search-dialog">q</div>'),
-        group: hostProbe('<span class="dsh-claude-model-group">g</span>'),
-        heading: hostProbe('<h1>h</h1>'),
-        code: hostProbe('<pre><code>c</code></pre>'),
+        popover: hostProbe('<div class="dsh-tg-popover-card" data-open="true">p</div>'),
+        search: hostProbe('<div class="dsh-tg-search-dialog">q</div>'),
+        group: hostProbe('<span class="dsh-tg-model-group">g</span>'),
       }
       var readHost = async function (patch, wallpaper) {
         if (patch !== null) window.__pushForm(patch)
@@ -40,37 +36,32 @@
         var bodyStyle = getComputedStyle(document.body)
         return {
           base: bodyStyle.getPropertyValue('--dsw-alias-bg-base').trim(),
-          family: bodyStyle.getPropertyValue('--dsw-font-family').trim(),
           body: bodyStyle.backgroundColor,
-          // The mask the Claude palette lays over a wallpaper
+          // The mask the palette lays over a wallpaper
           mask: getComputedStyle(document.body, '::after').backgroundColor,
           maskPosition: getComputedStyle(document.body, '::after').position,
           html: getComputedStyle(document.documentElement).backgroundColor,
           sidebar: getComputedStyle(hostNodes.sidebar).backgroundColor,
-          // The sidebar element carries this token itself: the Claude canvas
+          // The sidebar element carries this token itself: the skin's canvas
           // while the palette paints it, cleared while a wallpaper is up.
           sidebarFill: getComputedStyle(hostNodes.sidebar).getPropertyValue('--dsw-specific-sidebar-fill').trim(),
           conversation: getComputedStyle(hostNodes.conversation).backgroundColor,
           popover: getComputedStyle(hostNodes.popover).backgroundColor,
           popoverBlur: getComputedStyle(hostNodes.popover).backdropFilter,
           // The account drawer the footer feature built (it sweeps any other copy).
-          account: getComputedStyle(document.querySelector('.dsh-claude-account-popover')).backgroundColor,
+          account: getComputedStyle(document.querySelector('.dsh-tg-account-popover')).backgroundColor,
           search: getComputedStyle(hostNodes.search).backgroundColor,
           group: getComputedStyle(hostNodes.group).backgroundColor,
           groupInk: getComputedStyle(hostNodes.group).color,
-          heading: getComputedStyle(hostNodes.heading).fontFamily,
-          code: getComputedStyle(hostNodes.code.firstChild).fontFamily,
         }
       }
       await sleep(300)
       r.hostPalette = {
-        host: await readHost({ palette: 'host', typeface: 'host' }, false),
-        wallpaper: await readHost(null, true),
-        claude: await readHost({ palette: 'claude', typeface: 'claude' }, false),
-        // The wallpaper plugin showing one under the Claude palette: the
+        classic: await readHost(null, false),
+        // The wallpaper plugin showing one under the classic palette: the
         // shell stands down, one mask lies over the wallpaper, and the base
         // canvas and the skin's own faces keep their fill.
-        claudeWallpaper: await readHost(null, true),
+        classicWallpaper: await readHost(null, true),
       }
       document.body.removeAttribute('data-we-wallpaper')
       await sleep(120)
@@ -81,7 +72,7 @@
     // out while their parent is off. A tab is opened by standing the tab state
     // in for a click (the stand-in's `states`).
     await probe.onlyFor(['settings'], async function () {
-      var Section = (window.__slotComponents || {})['claude-style']
+      var Section = (window.__slotComponents || {})['telegram-style']
       var walk = function (node, visit) {
         if (node === null || node === undefined || typeof node !== 'object') return
         if (Array.isArray(node)) { node.forEach(function (child) { walk(child, visit) }); return }
@@ -102,19 +93,19 @@
             out.tabs.push(props.key)
             if (props['aria-selected'] === 'true') out.selected = props.key
           }
-          if (typeof props.className === 'string' && /(^| )dsh-claude-settings-row( |$)/.test(props.className)) {
+          if (typeof props.className === 'string' && /(^| )dsh-tg-settings-row( |$)/.test(props.className)) {
             var rowKey = props.key
             out.rows.push(rowKey)
             if (props['data-disabled'] === '') out.disabled.push(rowKey)
             walk(props.children, function (child) {
-              if (((child.props || {}).className || '') === 'dsh-claude-settings-row-note' && out.notes.indexOf(rowKey) < 0) out.notes.push(rowKey)
+              if (((child.props || {}).className || '') === 'dsh-tg-settings-row-note' && out.notes.indexOf(rowKey) < 0) out.notes.push(rowKey)
             })
           }
-          if (typeof props.className === 'string' && /(^| )dsh-claude-settings-tab-notice( |$)/.test(props.className)) {
+          if (typeof props.className === 'string' && /(^| )dsh-tg-settings-tab-notice( |$)/.test(props.className)) {
             out.notice = [].concat(props.children).filter(function (child) { return typeof child === 'string' }).join('')
           }
-          if (props.className === 'dsh-claude-settings-repo') {
-            out.link = { href: props.href, target: props.target, rel: props.rel, label: props['aria-label'] }
+          if (props.className === 'dsh-tg-settings-repo') {
+            out.link = { href: props.href, target: props.target, rel: props.rel, label: props['aria-label'], text: props.children }
           }
         })
         return out
@@ -134,11 +125,10 @@
         var tabIds = ['general', 'appearance', 'composer', 'sidebar', 'conversation', 'motion']
         for (var ti = 0; ti < tabIds.length; ti++) r.settings.pages[tabIds[ti]] = renderTab(tabIds[ti])
         r.settings.link = r.settings.pages.general.link
-        // The heading's mark: the build inlines the asset into the token sheet
-        // and the rule paints it as a mask over the link's own box, so the
-        // address and the size are read off the rendered pseudo-element.
+        // The heading's link is plain text: the rendered pseudo-element must
+        // carry no mask icon.
         var linkNode = document.createElement('a')
-        linkNode.className = 'dsh-claude-settings-repo'
+        linkNode.className = 'dsh-tg-settings-repo'
         document.body.appendChild(linkNode)
         var markStyle = getComputedStyle(linkNode, '::before')
         r.settings.mark = {
@@ -157,7 +147,7 @@
           var tree = renderMotion()
           walk(tree, function (node) {
             var props = node.props || {}
-            if (typeof props.className === 'string' && /(^| )dsh-claude-motion-card( |$)/.test(props.className)) {
+            if (typeof props.className === 'string' && /(^| )dsh-tg-motion-card( |$)/.test(props.className)) {
               var kids = [].concat(props.children || [])
               var sample = kids[0] || {}
               var sampleProps = sample.props || {}
@@ -170,7 +160,7 @@
               var bands = []
               walk(sampleProps.children, function (word) {
                 var wordProps = word.props || {}
-                if (!/(^| )dsh-claude-motion-word( |$)/.test(wordProps.className || '')) return
+                if (!/(^| )dsh-tg-motion-word( |$)/.test(wordProps.className || '')) return
                 var parts = [].concat(wordProps.children || [])
                 words.push(parts.filter(function (part) { return typeof part === 'string' }).join(''))
                 var band = parts.filter(function (part) { return part !== null && typeof part === 'object' })[0]
@@ -184,7 +174,7 @@
                 pressed: props['aria-pressed'],
                 // The card's only content is its sample: the choice carries no
                 // text of its own, and the sample is the words taking turns.
-                sample: kids.length === 1 && /(^| )dsh-claude-motion-sample( |$)/.test(sampleProps.className || ''),
+                sample: kids.length === 1 && /(^| )dsh-tg-motion-sample( |$)/.test(sampleProps.className || ''),
                 words: words,
                 bands: bands,
                 sampleHidden: sampleProps['aria-hidden'] === 'true',
@@ -197,12 +187,12 @@
             // Inside a card, where the sample is a flex item: its box then takes
             // the room the card gives it, as it does on the page.
             var card = document.createElement('button')
-            card.className = 'dsh-claude-motion-card'
+            card.className = 'dsh-tg-motion-card'
             var box = document.createElement('span')
-            box.className = 'dsh-claude-motion-sample'
+            box.className = 'dsh-tg-motion-sample'
             for (var wi = 0; wi < wordings.length; wi += 1) {
               var word = document.createElement('span')
-              word.className = 'dsh-claude-motion-word dsh-claude-' + kinds[ki]
+              word.className = 'dsh-tg-motion-word dsh-tg-' + kinds[ki]
               word.setAttribute('data-text', wordings[wi])
               word.textContent = wordings[wi]
               // The band stands up the way the card's own tree carries it.
@@ -223,7 +213,7 @@
             var nodes = [].slice.call(box.children)
             var style = nodes.length === 0 ? null : getComputedStyle(nodes[0])
             var paint = nodes.length === 0 ? null : getComputedStyle(nodes[0], '::before')
-            var bandOf = nodes.length === 0 ? null : nodes[0].querySelector('.dsh-claude-sweep-band')
+            var bandOf = nodes.length === 0 ? null : nodes[0].querySelector('.dsh-tg-sweep-band')
             var round = function (value) { return Math.round(value) }
             var centreOf = function (node) {
               var rect = node.getBoundingClientRect()
@@ -262,23 +252,23 @@
         caretHost.style.cssText = 'position:absolute;left:-10000px;top:-10000px'
         var caretCard = function (kind, typing) {
           var card = document.createElement('span')
-          card.className = 'dsh-claude-caret-card'
+          card.className = 'dsh-tg-caret-card'
           var sample = document.createElement('span')
-          sample.className = 'dsh-claude-caret-sample'
-          sample.style.setProperty('--dsh-claude-caret-x', '34px')
+          sample.className = 'dsh-tg-caret-sample'
+          sample.style.setProperty('--dsh-tg-caret-x', '34px')
           var text = document.createElement('span')
-          text.className = 'dsh-claude-caret-sample-text'
+          text.className = 'dsh-tg-caret-sample-text'
           var typed = document.createElement('span')
-          typed.className = 'dsh-claude-caret-piece'
+          typed.className = 'dsh-tg-caret-piece'
           typed.setAttribute('data-in', '')
           typed.textContent = 'H'
           var waiting = document.createElement('span')
-          waiting.className = 'dsh-claude-caret-piece'
+          waiting.className = 'dsh-tg-caret-piece'
           waiting.textContent = 'i'
           text.appendChild(typed)
           text.appendChild(waiting)
           var bar = document.createElement('span')
-          bar.className = 'dsh-claude-caret-sample-bar dsh-claude-caret-' + kind
+          bar.className = 'dsh-tg-caret-sample-bar dsh-tg-caret-' + kind
           if (typing) bar.setAttribute('data-typing', '')
           sample.appendChild(text)
           sample.appendChild(bar)
@@ -317,11 +307,11 @@
         revealHost.style.cssText = 'position:absolute;left:-10000px;top:-10000px'
         var revealCard = function (fade) {
           var card = document.createElement('button')
-          card.className = 'dsh-claude-reveal-card'
+          card.className = 'dsh-tg-reveal-card'
           if (fade) card.setAttribute('data-fade', '')
           var piece = function (inTurn) {
             var span = document.createElement('span')
-            span.className = 'dsh-claude-reveal-piece'
+            span.className = 'dsh-tg-reveal-piece'
             if (inTurn) span.setAttribute('data-in', '')
             span.textContent = 'x'
             card.appendChild(span)
@@ -340,70 +330,9 @@
         }
         r.settings.revealPreview = { fade: readPiece(fadePiece), waiting: readPiece(waitingPiece), plain: readPiece(plainPiece) }
         revealHost.remove()
-        // The ongoing-mark row's cards: one sidebar row per card, led by the
-        // mark its choice gives it, and the reader's stored choice repainting
-        // the running row's own mark on the page. The mark's paint is the
-        // sidebar's (theme/sidebar.css), so the cards are read through their own
-        // boxes and the session row's box is read under each stored value.
-        r.settings.ongoingCards = (function () {
-          var out = { cards: [] }
-          var tree = renderMotion()
-          walk(tree, function (node) {
-            var props = node.props || {}
-            if (typeof props.className !== 'string' || !/(^| )dsh-claude-ongoing-card( |$)/.test(props.className)) return
-            var sample = [].concat(props.children || [])[0] || {}
-            var sampleProps = sample.props || {}
-            var parts = [].concat(sampleProps.children || [])
-            var mark = parts[0] || {}
-            var title = parts[1] || {}
-            out.cards.push({
-              label: props['aria-label'],
-              active: props['data-active'] === '',
-              pressed: props['aria-pressed'],
-              sample: sampleProps['aria-hidden'] === 'true' && /(^| )dsh-claude-ongoing-sample( |$)/.test(sampleProps.className || ''),
-              look: (mark.props || {})['data-look'],
-              title: [].concat((title.props || {}).children || []).join(''),
-            })
-          })
-          return out
-        })()
-        var marksHost = document.createElement('div')
-        marksHost.style.cssText = 'position:absolute;left:-10000px;top:-10000px'
-        var markOf = function (look) {
-          var mark = document.createElement('span')
-          mark.className = 'dsh-claude-ongoing-mark'
-          mark.setAttribute('data-look', look)
-          marksHost.appendChild(mark)
-          return mark
-        }
-        var breatheMark = markOf('breathe')
-        var ringMark = markOf('ring')
-        document.body.appendChild(marksHost)
-        var readMark = function (mark) {
-          var style = getComputedStyle(mark)
-          return { width: style.width, border: style.borderTopWidth, animation: style.animationName, duration: style.animationDuration }
-        }
-        r.settings.ongoingMarks = { breathe: readMark(breatheMark), ring: readMark(ringMark) }
-        marksHost.remove()
-        var runningMark = document.querySelector('[data-dsh-claude-part~="session-row"] svg[data-state="ongoing"]')
-        var readRunning = function () {
-          var style = getComputedStyle(runningMark)
-          return {
-            attribute: document.body.getAttribute('data-dsh-claude-ongoing-indicator'),
-            width: style.width,
-            border: style.borderTopWidth,
-            animation: style.animationName,
-          }
-        }
-        window.__pushForm({ ongoingIndicator: 'ring' })
-        await sleep(120)
-        var ringRunning = readRunning()
-        window.__pushForm({ ongoingIndicator: 'breathe' })
-        await sleep(120)
-        r.settings.ongoingStored = { ring: ringRunning, breathe: readRunning() }
-        window.__pushForm({ modelPicker: false, mascot: 'off', sidebarSearch: false, palette: 'host' })
+        window.__pushForm({ modelPicker: false, mascot: false, sidebarSearch: false })
         r.settings.parentsOff = { appearance: renderTab('appearance'), composer: renderTab('composer'), sidebar: renderTab('sidebar') }
-        window.__pushForm({ modelPicker: true, mascot: 'brand', sidebarSearch: true, palette: 'claude' })
+        window.__pushForm({ modelPicker: true, mascot: true, sidebarSearch: true })
         // The rows that wait for another setting: the composer restyle off greys
         // the picker, its sub-rows, the permission control and the statistics'
         // position; the footer takeover off greys the easter egg under it. Home
@@ -413,30 +342,6 @@
         window.__pushForm({ composerScope: 'hero', collapseFooter: true })
         r.settings.heroOnly = { composer: renderTab('composer'), conversation: renderTab('conversation') }
         window.__pushForm({ composerScope: 'all' })
-        // Page zoom reaches the document through the preference mirror and the
-        // sheet draws the page at it, above and below the page's own size; the
-        // page the layout fills is read back in the sheet's dialogs and menus
-        // too, so the whole document is what stands on show.
-        var readZoom = function () {
-          return {
-            attr: document.body.getAttribute('data-dsh-claude-page-zoom'),
-            zoom: getComputedStyle(document.body).zoom,
-          }
-        }
-        window.__pushForm({ pageZoom: '1.5' })
-        await sleep(120)
-        var zoomed = readZoom()
-        window.__pushForm({ pageZoom: '0.8' })
-        await sleep(120)
-        var shrunk = readZoom()
-        window.__pushForm({ pageZoom: 'system' })
-        await sleep(120)
-        r.settings.pageZoom = { zoomed: zoomed, shrunk: shrunk, following: readZoom() }
-        // On the Windows window the title-bar row takes input; everywhere else
-        // it stays greyed with its note.
-        document.documentElement.setAttribute('data-windows-titlebar', '')
-        r.settings.onWindows = renderTab('conversation')
-        document.documentElement.removeAttribute('data-windows-titlebar')
       }
     })
   })

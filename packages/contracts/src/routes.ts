@@ -5,7 +5,7 @@
  */
 
 /** Route prefix this plugin owns. */
-export const ROUTE_PREFIX = '/dsh-claude-style'
+export const ROUTE_PREFIX = '/dsh-telegram-style'
 
 /** One-shot host OS user route; the browser half caches the response and never polls. */
 export const USERNAME_PATH = `${ROUTE_PREFIX}/username`
@@ -41,25 +41,6 @@ export const USAGE_PATH = `${ROUTE_PREFIX}/usage`
  * without one the route only brings its message cache up to date.
  */
 export const SESSION_SEARCH_PATH = `${ROUTE_PREFIX}/session-search`
-
-/**
- * The reader's own brand images (D30): `GET` answers which of them are in
- * place, each with a version that changes with its bytes.
- */
-export const BRAND_PATH = `${ROUTE_PREFIX}/brand`
-
-/** The custom mark's bytes: `GET` serves them, `PUT` replaces them, `DELETE` removes them. */
-export const BRAND_MARK_PATH = `${ROUTE_PREFIX}/brand/mark`
-
-/** The custom wordmark's bytes, answered the same three ways as the mark. */
-export const BRAND_WORDMARK_PATH = `${ROUTE_PREFIX}/brand/wordmark`
-
-/**
- * The model peak / off-peak catalog the host half keeps. `GET` answers the
- * document it holds; `POST` makes it fetch the source first, so the browser
- * half can ask for a fresh copy without knowing the source's address.
- */
-export const PEAKRATE_PATH = `${ROUTE_PREFIX}/peakrate`
 
 /**
  * The price snapshot the host half holds. `GET` answers the document; `POST`

@@ -1,5 +1,5 @@
 import fc from 'fast-check'
-import { adoptSkin } from '@dsh-claude-style/engine/skin'
+import { adoptSkin } from '@dsh-telegram-style/engine/skin'
 import { TEST_SKIN } from './vocabulary'
 
 // Every spec file runs against the specs' own vocabulary (D73); a spec that

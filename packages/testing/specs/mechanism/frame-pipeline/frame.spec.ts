@@ -10,7 +10,7 @@
  * @risk The page thrashes layout (a read after a write in one frame) and stutters on a long conversation, or one feature's error freezes every animation on the page.
  */
 import { expect, test } from 'vitest'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 
 const nextFrame = () => new Promise<number>(resolve => requestAnimationFrame(resolve))
 

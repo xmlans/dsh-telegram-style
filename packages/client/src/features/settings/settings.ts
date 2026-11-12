@@ -4,9 +4,9 @@ import { SEGMENT_CLASS } from '../../shared/segment-control'
 import { loadModelCopy, onModelCopyLoaded } from '../model/model-copy'
 import { createHostAccountMenu } from '../account/host-menu'
 import { adoptSettingsForm, motionReduced, readPrefs, savePrefs, subscribePrefs } from '../../core/prefs'
-import { cacheFirstMatch, hostSlots } from '@dsh-claude-style/engine/host'
+import { cacheFirstMatch, hostSlots } from '@dsh-telegram-style/engine/host'
 import { motionMs } from '../../shared/motion'
-import { ClaudeStyleSegmentGroup, createSettingsControls, tabRows } from './settings-controls'
+import { TelegramStyleSegmentGroup, createSettingsControls, tabRows } from './settings-controls'
 import { createSettingsAppearanceTab } from './settings-tab-appearance'
 import { createSettingsComposerTab } from './settings-tab-composer'
 import { createSettingsConversationTab } from './settings-tab-conversation'
@@ -16,8 +16,8 @@ import { createSettingsSidebarTab } from './settings-tab-sidebar'
 import { installThemeFlip } from './theme-flip'
 import type { Prefs } from '../../constants'
 import type { SettingsTabId } from '../../core/feature'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import type { HostSlotsService } from '@dsh-claude-style/contracts/services'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import type { HostSlotsService } from '@dsh-telegram-style/contracts/services'
 import type { FeatureUi } from '../../core/feature'
 import type manifest from './settings.manifest'
 import type { SettingsTab, SettingsView } from './settings-controls'
@@ -27,9 +27,9 @@ import { copy } from './copy'
 /** Pause after the last keystroke before the username is written to the settings store. */
 const USERNAME_SAVE_DEBOUNCE_MS = 600
 /** On the open tab's rows: the way it arrived, which the stylesheet slides it in from. */
-const PAGE_ENTER_ATTR = 'data-dsh-claude-page-enter'
+const PAGE_ENTER_ATTR = 'data-dsh-tg-page-enter'
 /** On the still copy of the tab being replaced: the way it leaves. */
-const PAGE_LEAVE_ATTR = 'data-dsh-claude-page-leave'
+const PAGE_LEAVE_ATTR = 'data-dsh-tg-page-leave'
 
 /** Which way a tab change reads along the strip. */
 type PageDirection = 'forward' | 'back'
@@ -74,7 +74,7 @@ let quickProviderHandle: (() => QuickProvidersHandle | null) | null = null
 export let slotsApi: HostSlotsService | null = null
 
 /** The host's own id for the settings section this plugin registers. */
-export const SETTINGS_SECTION_ID = 'claude-style'
+export const SETTINGS_SECTION_ID = 'telegram-style'
 
 /** The page's tabs, in strip order, and the controls their rows are built from. */
 export const SETTINGS_TABS: SettingsTab[] = [
@@ -88,7 +88,7 @@ export const SETTINGS_TABS: SettingsTab[] = [
 export const SETTINGS_CONTROLS = createSettingsControls()
 
 /** The strip that picks the open tab: a segmented control with tab semantics. */
-export function ClaudeStyleSettingsTabStrip(props: { active: SettingsTabId, onPick(id: SettingsTabId): void }) {
+export function TelegramStyleSettingsTabStrip(props: { active: SettingsTabId, onPick(id: SettingsTabId): void }) {
   const buttons = SETTINGS_TABS.map(tab => React.createElement(
     'button',
     {
@@ -102,7 +102,7 @@ export function ClaudeStyleSettingsTabStrip(props: { active: SettingsTabId, onPi
     },
     tab.label(),
   ))
-  return React.createElement(ClaudeStyleSegmentGroup, { role: 'tablist', className: 'dsh-claude-settings-tabs' }, buttons)
+  return React.createElement(TelegramStyleSegmentGroup, { role: 'tablist', className: 'dsh-tg-settings-tabs' }, buttons)
 }
 
 /**
@@ -113,24 +113,24 @@ export function ClaudeStyleSettingsTabStrip(props: { active: SettingsTabId, onPi
  * the system's browser, so the GUI page keeps its state. The mark's own
  * address and paint are the stylesheet's business (settings.css).
  */
-function ClaudeStyleSettingsHeading() {
+function TelegramStyleSettingsHeading() {
   const label = copy('repository')
   return React.createElement(
     'div',
-    { className: 'dsh-claude-settings-title' },
+    { className: 'dsh-tg-settings-title' },
     React.createElement('span', null, copy('title')),
     React.createElement('a', {
-      className: 'dsh-claude-settings-repo',
+      className: 'dsh-tg-settings-repo',
       href: REPOSITORY_URL,
       target: '_blank',
       rel: 'noopener noreferrer',
       title: label,
       'aria-label': label,
-    }),
+    }, label),
   )
 }
 
-export function ClaudeStyleSettingsSection(props: { embed?: boolean }) {
+export function TelegramStyleSettingsSection(props: { embed?: boolean }) {
   const state = React.useState(readPrefs())
   const prefs = state[0]
   const setPrefs = state[1]
@@ -171,7 +171,7 @@ export function ClaudeStyleSettingsSection(props: { embed?: boolean }) {
       still.setAttribute('inert', '')
       still.setAttribute(PAGE_LEAVE_ATTR, direction)
       holder.replaceChildren(still)
-      window.setTimeout(() => still.remove(), motionMs('--dsh-claude-duration-open'))
+      window.setTimeout(() => still.remove(), motionMs('--dsh-tg-duration-open'))
     }
     enterState[1](direction)
     setActiveTab(next)
@@ -284,18 +284,18 @@ export function ClaudeStyleSettingsSection(props: { embed?: boolean }) {
   const embedded = !!(props && props.embed)
   return React.createElement(
     'div',
-    { ref: pageRef, className: embedded ? 'dsh-claude-settings dsh-claude-settings-embedded' : 'dsh-claude-settings' },
-    embedded ? null : React.createElement(ClaudeStyleSettingsHeading),
-    React.createElement(ClaudeStyleSettingsTabStrip, { active: activeTab, onPick: pickTab }),
+    { ref: pageRef, className: embedded ? 'dsh-tg-settings dsh-tg-settings-embedded' : 'dsh-tg-settings' },
+    embedded ? null : React.createElement(TelegramStyleSettingsHeading),
+    React.createElement(TelegramStyleSettingsTabStrip, { active: activeTab, onPick: pickTab }),
     React.createElement(
       'div',
-      { className: 'dsh-claude-settings-pages' },
+      { className: 'dsh-tg-settings-pages' },
       // The leaving page's holder renders no children of its own: the still
       // copy pickTab puts there is never one React has to reconcile.
-      React.createElement('div', { ref: leavingRef, className: 'dsh-claude-settings-leaving' }),
-      React.createElement('fieldset', { ref: rowsRef, className: 'dsh-claude-settings-rows', role: 'tabpanel', key: tab.id, [PAGE_ENTER_ATTR]: enterState[0] ?? undefined }, tabRows(tab, view)),
+      React.createElement('div', { ref: leavingRef, className: 'dsh-tg-settings-leaving' }),
+      React.createElement('fieldset', { ref: rowsRef, className: 'dsh-tg-settings-rows', role: 'tabpanel', key: tab.id, [PAGE_ENTER_ATTR]: enterState[0] ?? undefined }, tabRows(tab, view)),
     ),
-    error === null ? null : React.createElement('div', { className: 'dsh-claude-settings-error' }, error),
+    error === null ? null : React.createElement('div', { className: 'dsh-tg-settings-error' }, error),
   )
 }
 
@@ -309,11 +309,11 @@ export function ClaudeStyleSettingsSection(props: { embed?: boolean }) {
  * every other surface in the skin, which is where the official form is
  * bound.
  */
-export function ClaudeStyleBundleConfig(props: { view?: string }) {
+export function TelegramStyleBundleConfig(props: { view?: string }) {
   if (props && props.view === 'summary') {
     return React.createElement('span', null, copy('title'))
   }
-  return React.createElement(ClaudeStyleSettingsSection, { embed: true })
+  return React.createElement(TelegramStyleSettingsSection, { embed: true })
 }
 
 /**
@@ -323,11 +323,11 @@ export function ClaudeStyleBundleConfig(props: { view?: string }) {
  * asked for it every frame while the answer moves only when the host rebuilds
  * the dialog or opens the overlay the list lives in.
  */
-const settingsNavList = cacheFirstMatch<HTMLElement>(':is([data-dsh-claude-part~="settings-area"], [data-dsh-claude-part~="overlay"], [class*="SettingsRoot"]) [data-dsh-claude-part~="nav-list"]')
+const settingsNavList = cacheFirstMatch<HTMLElement>(':is([data-dsh-tg-part~="settings-area"], [data-dsh-tg-part~="overlay"], [class*="SettingsRoot"]) [data-dsh-tg-part~="nav-list"]')
 
 /**
- * Stamped onto the Claude Style nav button in the settings dialog so CSS
- * can replace the host's default settings gear with the black Claude mark.
+ * Stamped onto the Telegram Style nav button in the settings dialog so CSS
+ * can replace the host's default settings gear with the skin's mark.
  */
 export function syncSettingsNav() {
   const navList = settingsNavList()
@@ -411,8 +411,8 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
         key: PACKAGE_NAME,
         label() { return copy('title') },
       },
-      ClaudeStyleBundleConfig,
-    )), 'dsh-claude-style: plugin page')
+      TelegramStyleBundleConfig,
+    )), 'dsh-telegram-style: plugin page')
     // The full-page section registers on every host that declares the
     // slot. On an older host it is the only seat; on 0.1.7+ the same page
     // also renders on the plugin page, and this tab keeps a route to it
@@ -427,8 +427,8 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
         // document has arrived; the literal is the pre-fetch fallback.
         label() { return copy('title') },
       },
-      ClaudeStyleSettingsSection,
-    )), 'dsh-claude-style: settings section')
+      TelegramStyleSettingsSection,
+    )), 'dsh-telegram-style: settings section')
   })
   return () => {
     stopThemeFlip()

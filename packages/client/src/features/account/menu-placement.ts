@@ -1,4 +1,4 @@
-import { observeSize, subscribeMutations } from '@dsh-claude-style/engine/bus'
+import { observeSize, subscribeMutations } from '@dsh-telegram-style/engine/bus'
 import { positionAnchoredPopover } from '../../shared/popover'
 
 /**
@@ -31,7 +31,7 @@ export function createHostMenuPlacement(options: { trigger(): HTMLElement | null
 
   /** The sidebar collapsed into its rail, where a card opens beside the row. */
   function inRail(element: Element) {
-    return element.closest('[data-dsh-claude-part~="sidebar-collapsed"]') !== null
+    return element.closest('[data-dsh-tg-part~="sidebar-collapsed"]') !== null
   }
 
   /** Put the card where the host meant it. */

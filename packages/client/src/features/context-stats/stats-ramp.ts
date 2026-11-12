@@ -1,4 +1,4 @@
-import { setAttributeIfChanged } from '@dsh-claude-style/engine/dom'
+import { setAttributeIfChanged } from '@dsh-telegram-style/engine/dom'
 
 /**
  * The colour ramp a reading takes, after dsh-chat-ux's design: a reading
@@ -10,10 +10,10 @@ import { setAttributeIfChanged } from '@dsh-claude-style/engine/dom'
  */
 
 /** The mark naming which ramp an element follows, and the segment within it. */
-export const RAMP_ATTRIBUTE = 'data-dsh-claude-ramp'
-export const RAMP_SPAN_ATTRIBUTE = 'data-dsh-claude-ramp-span'
+export const RAMP_ATTRIBUTE = 'data-dsh-tg-ramp'
+export const RAMP_SPAN_ATTRIBUTE = 'data-dsh-tg-ramp-span'
 /** Where inside that segment the reading sits, as a percentage. */
-export const RAMP_POSITION_VAR = '--dsh-claude-ramp-position'
+export const RAMP_POSITION_VAR = '--dsh-tg-ramp-position'
 /** Below the first stop: both ends of the reading are the same colour. */
 export const RAMP_SPAN_LOW = 'low'
 /** From the last stop on: the same, at the other end. */

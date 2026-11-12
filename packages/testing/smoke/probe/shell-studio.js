@@ -1,6 +1,6 @@
 /**
  * The studio case: the registered home panel rendered per tab the way its dock
- * seat would, the crab on the hero card with its poke and its reduced-motion
+ * seat would, the sticker on the hero card with its click and its reduced-motion
  * frame, the cold start screen without a dock, and where the studio stylesheet
  * lets a panel draw.
  */
@@ -33,12 +33,12 @@
       // The studio hero draws its composer in the conversation's form, so the
       // permission control there is the conversation's trigger and card: the
       // segment group belongs to the classic hero alone.
-      var heroModes = document.querySelector('[data-composer-card] [data-dsh-claude-part~="modes"]')
-      var heroTrigger = heroModes === null ? null : heroModes.querySelector('.dsh-claude-perm-btn')
-      var heroLabel = heroTrigger === null ? null : heroTrigger.querySelector('.dsh-claude-perm-label')
+      var heroModes = document.querySelector('[data-composer-card] [data-dsh-tg-part~="modes"]')
+      var heroTrigger = heroModes === null ? null : heroModes.querySelector('.dsh-tg-perm-btn')
+      var heroLabel = heroTrigger === null ? null : heroTrigger.querySelector('.dsh-tg-perm-label')
       r.heroPerm = {
         trigger: heroTrigger !== null,
-        segments: heroModes === null ? -1 : heroModes.querySelectorAll('.dsh-claude-segments').length,
+        segments: heroModes === null ? -1 : heroModes.querySelectorAll('.dsh-tg-segments').length,
         label: heroLabel === null ? null : heroLabel.textContent,
         disabled: heroTrigger === null ? null : heroTrigger.disabled,
       }
@@ -67,7 +67,7 @@
             if (node.props && typeof node.props.className === 'string') classes.push(node.props.className)
             if (node.props && typeof node.props['data-tip'] === 'string') tips.push(node.props['data-tip'])
             if (node.props) collect(node.props.children)
-          })(window.__slotComponents['claude-style-usage']({}))
+          })(window.__slotComponents['telegram-style-usage']({}))
           r.panelRenders[tab] = { error: null, classes: classes, texts: texts, tips: tips }
         } catch (e) {
           r.panelRenders[tab] = { error: String((e && e.stack) || e), classes: [], texts: [], tips: [] }
@@ -76,50 +76,37 @@
           react.states = null
         }
       }
-      // The crab rides the hero card, idling, drawn from its inlined sheet and
-      // ink mask. A click on its left half pokes it, and the poke plays out
-      // back to idle on the browser's animation engine, so no frame wakes a
-      // pass. With the animation choice on "reduced" it holds the idle
-      // sheet's still frame; a click still plays the poke.
-      var crab = document.querySelector('[data-composer-card] > .dsh-claude-crab')
-      r.mascot = { mounted: crab !== null }
-      if (crab !== null) {
-        var crabStrip = crab.querySelector('.dsh-claude-crab-strip')
-        var crabHit = crab.querySelector('.dsh-claude-crab-hit')
-        r.mascot.ready = crab.hasAttribute('data-ready')
-        r.mascot.animation = crab.getAttribute('data-animation')
-        r.mascot.body = getComputedStyle(crabStrip).backgroundImage.indexOf('data:image/png') !== -1
-        r.mascot.ink = getComputedStyle(crabStrip, '::after').maskImage.indexOf('data:image/png') !== -1
-        // A real press has to reach the crab: nothing on the page may cover it.
-        crab.scrollIntoView({ block: 'center' })
-        var crabBox = crabHit.getBoundingClientRect()
-        var topmost = document.elementFromPoint(crabBox.left + crabBox.width / 2, crabBox.top + crabBox.height / 2)
-        r.mascot.reachable = topmost === crabHit
-        var crabPress = { pointerId: 1, pointerType: 'mouse', isPrimary: true, button: 0, clientX: crabBox.left + 6, clientY: crabBox.top + crabBox.height / 2, bubbles: true }
-        var pokeCrab = function () {
-          crabHit.dispatchEvent(new PointerEvent('pointerdown', Object.assign({ buttons: 1 }, crabPress)))
-          crabHit.dispatchEvent(new PointerEvent('pointerup', Object.assign({ buttons: 0 }, crabPress)))
-        }
-        // The press settles focus (and the caret motion's own frames with it),
-        // so the count starts once that is over: what is measured is the poke's
-        // animation running on the browser's engine.
-        pokeCrab()
+      // The sticker stands on the hero card, idling, drawn from its image. A
+      // click lets hearts float up, and the act plays back to idle on the
+      // stylesheet's keyframes. With the animation choice on "reduced" it
+      // holds still; a click still names its act.
+      var stickerState = 'data-dsh-tg-mascot-state'
+      var stickerSelector = '.dsh-tg-sticker'
+      var sticker = document.querySelector('[data-composer-card] > ' + stickerSelector)
+      r.mascot = { mounted: sticker !== null }
+      if (sticker !== null) {
+        var stickerBody = sticker.firstElementChild
+        r.mascot.state = sticker.getAttribute(stickerState)
+        r.mascot.image = /\.webp/.test(getComputedStyle(stickerBody).backgroundImage)
+        // A real click has to reach the sticker: nothing on the page may cover it.
+        sticker.scrollIntoView({ block: 'center' })
+        var stickerBox = stickerBody.getBoundingClientRect()
+        var topmost = document.elementFromPoint(stickerBox.left + stickerBox.width / 2, stickerBox.top + stickerBox.height / 2)
+        r.mascot.reachable = topmost === stickerBody
+        stickerBody.click()
         await sleep(300)
-        r.mascot.poked = crab.getAttribute('data-animation')
-        var passesBefore = window.__passes
+        r.mascot.clicked = sticker.getAttribute(stickerState)
         await sleep(1150)
-        r.mascot.afterPoke = crab.getAttribute('data-animation')
-        r.mascot.passesDuring = window.__passes - passesBefore
+        r.mascot.afterClick = sticker.getAttribute(stickerState)
         // The choice is pushed through the host form, which is what the
         // settings row does.
         window.__pushForm({ motion: 'reduced' })
         await sleep(150)
-        r.mascot.reducedAttr = document.body.getAttribute('data-dsh-claude-motion')
-        r.mascot.stillFrame = crabStrip.style.transform
-        r.mascot.stillAnimations = crabStrip.getAnimations().length
-        pokeCrab()
+        r.mascot.reducedAttr = document.body.getAttribute('data-dsh-tg-motion')
+        r.mascot.stillAnimations = stickerBody.getAnimations().length
+        stickerBody.click()
         await sleep(150)
-        r.mascot.reducedClick = crab.getAttribute('data-animation')
+        r.mascot.reducedClick = sticker.getAttribute(stickerState)
         await sleep(1300)
         window.__pushForm({ motion: 'full' })
       }
@@ -137,16 +124,16 @@
         '<div class="_row_x_1"><div class="_tools_x_1"><div class="_modes_x_1"></div></div></div></div>'
       heroScroll.appendChild(coldStack)
       await sleep(200)
-      var coldSeat = coldStack.querySelector(':scope > .dsh-claude-home-seat')
+      var coldSeat = coldStack.querySelector(':scope > .dsh-tg-home-seat')
       var coldRoot = window.__roots.filter(function (root) { return root.element === coldSeat })[0]
-      var coldTrigger = coldStack.querySelector('._modes_x_1 > .dsh-claude-perm-container > .dsh-claude-perm-btn')
-      var coldLabel = coldTrigger === null ? null : coldTrigger.querySelector('.dsh-claude-perm-label')
+      var coldTrigger = coldStack.querySelector('._modes_x_1 > .dsh-tg-perm-container > .dsh-tg-perm-btn')
+      var coldLabel = coldTrigger === null ? null : coldTrigger.querySelector('.dsh-tg-perm-label')
       r.coldStart = {
         seat: coldSeat !== null,
         rendered: coldRoot !== undefined && coldRoot.renders > 0,
-        segments: coldStack.querySelectorAll('._modes_x_1 > .dsh-claude-segments').length,
+        segments: coldStack.querySelectorAll('._modes_x_1 > .dsh-tg-segments').length,
         trigger: coldTrigger === null ? null : { label: coldLabel === null ? null : coldLabel.textContent, disabled: coldTrigger.disabled },
-        openCard: document.querySelectorAll('.dsh-claude-perm-popover[data-open="true"]').length,
+        openCard: document.querySelectorAll('.dsh-tg-perm-popover[data-open="true"]').length,
       }
       // The session arrives: the host renders its dock, and the skin's seat
       // gives the panel back.
@@ -154,12 +141,12 @@
       coldDock.setAttribute('data-slot', 'conversation.input.dock')
       coldStack.insertBefore(coldDock, coldStack.firstChild)
       await sleep(200)
-      r.coldStart.seatAfterDock = coldStack.querySelector('.dsh-claude-home-seat') !== null
+      r.coldStart.seatAfterDock = coldStack.querySelector('.dsh-tg-home-seat') !== null
       r.coldStart.unmountedAfterDock = coldRoot !== undefined && coldRoot.unmounted
       coldStack.remove()
       accessParent.appendChild(access)
       await sleep(200)
-      r.homeHero = { onHero: heroRoot.hasAttribute('data-dsh-claude-home-hero') }
+      r.homeHero = { onHero: heroRoot.hasAttribute('data-dsh-tg-home-hero') }
       // The panel reads the roll-up again rather than standing on the figures it
       // opened with, and the two asks are told apart by the page's own clock: the
       // window's focus reads once the numbers have aged past the floor, and the
@@ -200,13 +187,13 @@
       studioStack.className = '_composerStack_x_1 _composerHero_x_1'
       heroScroll.appendChild(studioStack)
       // The stack's parts land on the pass after it arrives (D3).
-      for (var studioWait = 0; studioWait < 40 && !studioStack.hasAttribute('data-dsh-claude-part'); studioWait++) await sleep(50)
+      for (var studioWait = 0; studioWait < 40 && !studioStack.hasAttribute('data-dsh-tg-part'); studioWait++) await sleep(50)
       r.homeHero.stackMaxWidth = getComputedStyle(studioStack).maxWidth
       studioStack.remove()
       heroRoot.remove()
       await sleep(200)
-      r.homeHero.offHero = document.querySelector('[data-dsh-claude-home-hero]') !== null
-      r.mascot.afterHero = document.querySelector('.dsh-claude-crab') !== null
+      r.homeHero.offHero = document.querySelector('[data-dsh-tg-home-hero]') !== null
+      r.mascot.afterHero = document.querySelector(stickerSelector) !== null
       // The stylesheet alone decides where a panel may draw: under the hero
       // stack's dock it shows, and the moment the host drops the stack's hero
       // class (the first message sent) it is gone, before any pass runs. The
@@ -218,15 +205,15 @@
         var stack = document.createElement('div')
         stack.className = stackClass
         var dock = document.createElement('div')
-        if (coldStart) dock.className = 'dsh-claude-home-seat'
+        if (coldStart) dock.className = 'dsh-tg-home-seat'
         else dock.setAttribute('data-slot', 'conversation.input.dock')
         var panel = document.createElement('section')
-        panel.className = 'dsh-claude-home-panel'
+        panel.className = 'dsh-tg-home-panel'
         dock.appendChild(panel)
         stack.appendChild(dock)
         holder.appendChild(stack)
         document.body.appendChild(holder)
-        for (var wait = 0; wait < 40 && !stack.hasAttribute('data-dsh-claude-part'); wait++) await sleep(50)
+        for (var wait = 0; wait < 40 && !stack.hasAttribute('data-dsh-tg-part'); wait++) await sleep(50)
         var display = getComputedStyle(panel).display
         holder.remove()
         return display

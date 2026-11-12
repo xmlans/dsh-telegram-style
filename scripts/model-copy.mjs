@@ -27,28 +27,19 @@ const validateModelCopyShape = addFormats(new Ajv2020({ allErrors: true }), ['re
  *
  * The document's shape is declared in packages/client/data/model-descriptions.schema.json: the
  * tables, the `{locale: text}` lines and a rule's compilable `match` with the
- * line it carries. What a schema cannot see is checked after it: every brand
- * id must be a vendored lockup under packages/assets/src/icons/combine/ (a typo
- * would render as a silently missing mark on one row), and the document must
- * carry at least two locales.
+ * line it carries. What a schema cannot see is checked after it: the document
+ * must carry at least two locales.
  *
  * @param doc - parsed `packages/client/data/model-descriptions.json`.
- * @param lobeBrands - the vendored lockups keyed by brand id (loadCombines).
  * @returns the number of family rules, for the build log.
  */
-export function validateModelCopy(doc, lobeBrands) {
+export function validateModelCopy(doc) {
   const fail = (message) => {
     throw new Error(`build: ${MODEL_COPY} ${message}`)
   }
   if (!validateModelCopyShape(doc)) {
     fail(validateModelCopyShape.errors.map((error) => `${error.instancePath || '/'} ${error.message}`).join('; '))
   }
-
-  const requireBrand = (where, brand) => {
-    if (!(brand in lobeBrands)) fail(`${where} names brand "${brand}", which has no vendored lockup in packages/assets/src/icons/combine/`)
-  }
-  for (const [provider, brand] of Object.entries(doc.brands.providers ?? {})) requireBrand(`brands.providers["${provider}"]`, brand)
-  for (const [index, rule] of doc.brands.models.entries()) requireBrand(`brands.models[${index}].brand`, rule.brand)
 
   const locales = new Set([doc.fallback])
   const addLocales = (pair) => {

@@ -1,4 +1,3 @@
-import { MASCOT_BRAND, MASCOT_CRAB, MASCOT_DEEPY } from '../../constants'
 import type { FeatureManifest } from '../../core/feature'
 
 export default {
@@ -8,18 +7,13 @@ export default {
   reads: ['composer'],
   contracts: ['chat.think-running', 'composer.fallback-panel', 'composer.seat', 'composer.stack', 'conversation.session', 'conversation.session-attribute'],
   pref: 'mascot',
-  prefValues: [MASCOT_BRAND, MASCOT_CRAB, MASCOT_DEEPY],
-  stylesheets: [
-    { file: 'crab.css', rank: 350 },
-    { file: 'whale.css', rank: 360 },
-  ],
+  stylesheets: [{ file: 'sticker.css', rank: 350 }],
   settingsRows: [{
     tab: 'appearance',
     rank: 30,
     pref: 'mascot',
     title: 'mascotTitle',
     desc: 'mascotDesc',
-    choiceLabels: { brand: 'mascotBrand', crab: 'mascotCrab', deepy: 'mascotDeepy', off: 'mascotOff' },
   }, {
     // It belongs to the mascot switch above it.
     tab: 'appearance',
@@ -29,5 +23,5 @@ export default {
     title: 'mascotScopeTitle',
     choiceLabels: { home: 'mascotScopeHome', all: 'mascotScopeAll' },
   }],
-  cases: ['crab-states', 'deepy', 'hero', 'studio']
+  cases: ['sticker']
 } satisfies FeatureManifest

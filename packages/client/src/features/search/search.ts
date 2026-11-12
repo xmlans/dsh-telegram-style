@@ -1,19 +1,19 @@
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import * as React from 'react'
 import * as primitives from '@deepseek-ai/dsh-client-ui-primitives'
 import * as reactDom from 'react-dom/client'
-import { SIDEBAR_SEARCH_SLOT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { SIDEBAR_SEARCH_SLOT_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 import { SEARCH_STYLE_ICON, SEARCH_STYLE_STANDALONE } from '../../constants'
-import { cacheFirstMatch, conversationSessionId, findConversationSession, findSidebarBrand, findSidebarLogoRow, hostShortcuts, sessionOutline, turnForSeq } from '@dsh-claude-style/engine/host'
+import { cacheFirstMatch, conversationSessionId, findConversationSession, findSidebarBrand, findSidebarLogoRow, hostShortcuts, sessionOutline, turnForSeq } from '@dsh-telegram-style/engine/host'
 import { readPrefs } from '../../core/prefs'
 import { createSearchSources } from './sources'
 import type { ContentHit, SearchFilter, SearchRow } from './sources'
-import { buildElement, createStamp, setAttributeIfChanged } from '@dsh-claude-style/engine/dom'
+import { buildElement, createStamp, setAttributeIfChanged } from '@dsh-telegram-style/engine/dom'
 import { motionMs } from '../../shared/motion'
 import { closeOtherPopovers, registerPopover, unregisterPopover } from '../../shared/popover'
 import { createSlidingPill } from '../../shared/sliding-pill'
 import { createTurnNavHost } from '../turn-nav/turn-nav-host'
-import type { HostContext } from '@dsh-claude-style/engine/host'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
 import type { FeatureUi } from '../../core/feature'
 import type manifest from './search.manifest'
 import { copy } from './copy'
@@ -78,7 +78,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
 
   /** The sidebar box, and the logo row it was placed in. */
   let trigger: HTMLButtonElement | null = null
-  const rowStamp = createStamp('data-dsh-claude-search-row')
+  const rowStamp = createStamp('data-dsh-tg-search-row')
   /** The box's own row in the `standalone` style, under the brand row. */
   let bar: HTMLElement | null = null
   /**
@@ -100,9 +100,9 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   let closeTimer = 0
   let pendingRun: (() => void) | null = null
   /** The fade-out's length, the exit token the closing animations run (D9). */
-  const CLOSE_MS = motionMs('--dsh-claude-duration-exit')
+  const CLOSE_MS = motionMs('--dsh-tg-duration-exit')
   /** The modal's overlay root, marked while it fades out. */
-  const closingStamp = createStamp('data-dsh-claude-search-closing')
+  const closingStamp = createStamp('data-dsh-tg-search-closing')
   /** The host's own sidebar search, which the palette stands in for. */
   const HOST_SEARCH = SIDEBAR_SEARCH_SLOT_SELECTOR
   /**
@@ -130,13 +130,13 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   let disposed = false
 
   function buildTrigger() {
-    const button = buildElement('button', 'dsh-claude-search-trigger')
+    const button = buildElement('button', 'dsh-tg-search-trigger')
     button.type = 'button'
-    const icon = buildElement('span', 'dsh-claude-search-trigger-icon')
+    const icon = buildElement('span', 'dsh-tg-search-trigger-icon')
     icon.innerHTML = ICONS.search
     button.appendChild(icon)
-    button.appendChild(buildElement('span', 'dsh-claude-search-trigger-label'))
-    button.appendChild(buildElement('span', 'dsh-claude-search-keys'))
+    button.appendChild(buildElement('span', 'dsh-tg-search-trigger-label'))
+    button.appendChild(buildElement('span', 'dsh-tg-search-keys'))
     button.addEventListener('click', event => {
       event.preventDefault()
       event.stopPropagation()
@@ -197,7 +197,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     }
     if (trigger === null) trigger = buildTrigger()
     if (style === SEARCH_STYLE_STANDALONE) {
-      if (bar === null) bar = buildElement('div', 'dsh-claude-search-bar')
+      if (bar === null) bar = buildElement('div', 'dsh-tg-search-bar')
       // The box's row stands under the brand row, in the sidebar's own list;
       // the host may re-render around it, so the pass re-seats it.
       if (bar.parentElement !== row.parentElement || bar.previousElementSibling !== row) row.after(bar)
@@ -262,7 +262,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     if (joined === triggerKeys && group.childNodes.length === keys.length) return
     triggerKeys = joined
     while (group.firstChild) group.removeChild(group.firstChild)
-    for (let k = 0; k < keys.length; k++) group.appendChild(buildElement('kbd', 'dsh-claude-search-key', keys[k]))
+    for (let k = 0; k < keys.length; k++) group.appendChild(buildElement('kbd', 'dsh-tg-search-key', keys[k]))
   }
 
   function sync() {
@@ -289,7 +289,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     requestFrame({
       write() {
         if (disposed) return
-        const clear = document.querySelector<HTMLElement>(`${HOST_SEARCH} [data-dsh-claude-part~="clear-button"]`)
+        const clear = document.querySelector<HTMLElement>(`${HOST_SEARCH} [data-dsh-tg-part~="clear-button"]`)
         if (clear !== null) {
           clear.click()
           return
@@ -308,9 +308,9 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       onClose: closePalette,
       title: copy('searchPlaceholder'),
       headless: true,
-      shortcutModal: 'dsh-claude-search',
-      className: 'dsh-claude-search-dialog',
-    }, React.createElement('div', { className: 'dsh-claude-search', ref: adoptCard })))
+      shortcutModal: 'dsh-tg-search',
+      className: 'dsh-tg-search-dialog',
+    }, React.createElement('div', { className: 'dsh-tg-search', ref: adoptCard })))
   }
 
   /**
@@ -336,8 +336,8 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
 
   /** @returns the query field. */
   function buildPalette(card: HTMLElement) {
-    const head = buildElement('div', 'dsh-claude-search-head')
-    const field = buildElement('input', 'dsh-claude-search-input')
+    const head = buildElement('div', 'dsh-tg-search-head')
+    const field = buildElement('input', 'dsh-tg-search-input')
     input = field
     field.type = 'text'
     field.spellcheck = false
@@ -354,7 +354,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     })
     field.addEventListener('keydown', onKeyDown)
     head.appendChild(field)
-    const close = buildElement('button', 'dsh-claude-search-close')
+    const close = buildElement('button', 'dsh-tg-search-close')
     close.type = 'button'
     close.setAttribute('aria-label', copy('searchClose'))
     close.innerHTML = ICONS.close
@@ -362,11 +362,11 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     head.appendChild(close)
     card.appendChild(head)
 
-    const chips = buildElement('div', 'dsh-claude-search-filters')
+    const chips = buildElement('div', 'dsh-tg-search-filters')
     filterBar = chips
     chips.setAttribute('role', 'radiogroup')
     for (let i = 0; i < FILTERS.length; i++) {
-      const chip = buildElement('button', 'dsh-claude-search-filter', copy(FILTERS[i].key))
+      const chip = buildElement('button', 'dsh-tg-search-filter', copy(FILTERS[i].key))
       chip.type = 'button'
       chip.tabIndex = -1
       chip.setAttribute('role', 'radio')
@@ -379,12 +379,12 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     }
     card.appendChild(chips)
 
-    const listbox = buildElement('div', 'dsh-claude-search-list')
+    const listbox = buildElement('div', 'dsh-tg-search-list')
     list = listbox
     listbox.setAttribute('role', 'listbox')
     card.appendChild(listbox)
 
-    const foot = buildElement('div', 'dsh-claude-search-foot')
+    const foot = buildElement('div', 'dsh-tg-search-foot')
     foot.appendChild(footHint(copy('searchClose'), ['Esc']))
     foot.appendChild(footHint(copy('searchFilterHint'), ['Tab']))
     foot.appendChild(footHint(copy('searchOpenHint'), ['↵']))
@@ -393,16 +393,16 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   }
 
   function footHint(text: string, keys: string[]) {
-    const hint = buildElement('span', 'dsh-claude-search-hint', text)
+    const hint = buildElement('span', 'dsh-tg-search-hint', text)
     hint.appendChild(keycaps(keys))
     return hint
   }
 
   /** One cap per key; the host's key lists carry `+` between the keys of a chord, which the caps' spacing already says. */
   function keycaps(keys: string[]) {
-    const group = buildElement('span', 'dsh-claude-search-keys')
+    const group = buildElement('span', 'dsh-tg-search-keys')
     for (let i = 0; i < keys.length; i++) {
-      if (keys[i] !== '+') group.appendChild(buildElement('kbd', 'dsh-claude-search-key', keys[i]))
+      if (keys[i] !== '+') group.appendChild(buildElement('kbd', 'dsh-tg-search-key', keys[i]))
     }
     return group
   }
@@ -475,7 +475,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
         if (controller.signal.aborted) return
         // A deployment can switch the index off; the title matches stand
         // alone, and the list stops saying it is still searching.
-        console.warn('dsh-claude-style: session content search failed:', reason)
+        console.warn('dsh-telegram-style: session content search failed:', reason)
         contentHits = []
         contentQuery = q
         render()
@@ -484,13 +484,13 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   }
 
   function buildRow(row: SearchRow, index: number) {
-    const item = buildElement('div', 'dsh-claude-search-item')
+    const item = buildElement('div', 'dsh-tg-search-item')
     item.setAttribute('role', 'option')
     item.setAttribute('data-kind', row.kind)
     item.setAttribute('data-index', String(index))
-    const icon = buildElement('span', 'dsh-claude-search-item-icon')
+    const icon = buildElement('span', 'dsh-tg-search-item-icon')
     if (row.image) {
-      const image = buildElement('img', 'dsh-claude-search-item-image')
+      const image = buildElement('img', 'dsh-tg-search-item-image')
       image.alt = ''
       image.src = row.image
       icon.appendChild(image)
@@ -500,16 +500,16 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       if (svg !== undefined) icon.innerHTML = svg
     }
     item.appendChild(icon)
-    const text = buildElement('span', 'dsh-claude-search-item-text')
-    const line = buildElement('span', 'dsh-claude-search-item-line')
-    line.appendChild(buildElement('span', 'dsh-claude-search-item-name', row.title))
-    if (row.detail) line.appendChild(buildElement('span', 'dsh-claude-search-item-detail', row.detail))
+    const text = buildElement('span', 'dsh-tg-search-item-text')
+    const line = buildElement('span', 'dsh-tg-search-item-line')
+    line.appendChild(buildElement('span', 'dsh-tg-search-item-name', row.title))
+    if (row.detail) line.appendChild(buildElement('span', 'dsh-tg-search-item-detail', row.detail))
     text.appendChild(line)
     if (row.snippet) {
-      const snippet = buildElement('span', 'dsh-claude-search-item-snippet')
+      const snippet = buildElement('span', 'dsh-tg-search-item-snippet')
       if (row.snippetMatch) {
         const [start, end] = row.snippetMatch
-        snippet.append(row.snippet.slice(0, start), buildElement('mark', 'dsh-claude-search-item-match', row.snippet.slice(start, end)), row.snippet.slice(end))
+        snippet.append(row.snippet.slice(0, start), buildElement('mark', 'dsh-tg-search-item-match', row.snippet.slice(start, end)), row.snippet.slice(end))
       } else {
         snippet.textContent = row.snippet
       }
@@ -517,7 +517,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     }
     item.appendChild(text)
     if (row.keys && row.keys.length > 0) item.appendChild(keycaps(row.keys))
-    const enter = buildElement('span', 'dsh-claude-search-item-enter')
+    const enter = buildElement('span', 'dsh-tg-search-item-enter')
     enter.innerHTML = ICONS.enter
     item.appendChild(enter)
     item.addEventListener('mousemove', () => {
@@ -531,7 +531,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
 
   function paintActive(reveal: boolean) {
     if (list === null) return
-    const items = list.querySelectorAll('.dsh-claude-search-item')
+    const items = list.querySelectorAll('.dsh-tg-search-item')
     for (let i = 0; i < items.length; i++) {
       const on = i === active
       if (items[i].hasAttribute('data-active') !== on) items[i].toggleAttribute('data-active', on)
@@ -554,7 +554,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     while (list.firstChild) list.removeChild(list.firstChild)
     for (let s = 0; s < sections.length; s++) {
       const section = sections[s]
-      list.appendChild(buildElement('div', 'dsh-claude-search-section', section.title))
+      list.appendChild(buildElement('div', 'dsh-tg-search-section', section.title))
       for (let r = 0; r < section.rows.length; r++) {
         list.appendChild(buildRow(section.rows[r], rows.length))
         rows.push(section.rows[r])
@@ -562,7 +562,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     }
     if (rows.length === 0) {
       const waiting = sources.pending(filter) || (q !== '' && contentQuery !== q && (filter === 'all' || filter === 'session'))
-      list.appendChild(buildElement('div', 'dsh-claude-search-status', waiting ? copy('searchLoading') : copy('searchEmpty')))
+      list.appendChild(buildElement('div', 'dsh-tg-search-status', waiting ? copy('searchLoading') : copy('searchEmpty')))
     }
     if (active >= rows.length) active = Math.max(0, rows.length - 1)
     paintActive(true)

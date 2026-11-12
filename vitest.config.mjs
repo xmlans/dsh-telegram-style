@@ -43,10 +43,10 @@ export default defineConfig({
   // from tsconfig.json's paths.
   resolve: {
     alias: {
-      '@dsh-claude-style/client/pure': path.join(SRC, 'pure.ts'),
-      '@dsh-claude-style/contracts': path.resolve(import.meta.dirname, 'packages/contracts/src'),
-      '@dsh-claude-style/engine': path.resolve(import.meta.dirname, 'packages/engine/src'),
-      'virtual:dsh-claude-style/generated': GENERATED_FILE,
+      '@dsh-telegram-style/client/pure': path.join(SRC, 'pure.ts'),
+      '@dsh-telegram-style/contracts': path.resolve(import.meta.dirname, 'packages/contracts/src'),
+      '@dsh-telegram-style/engine': path.resolve(import.meta.dirname, 'packages/engine/src'),
+      'virtual:dsh-telegram-style/generated': GENERATED_FILE,
     },
   },
   test: {

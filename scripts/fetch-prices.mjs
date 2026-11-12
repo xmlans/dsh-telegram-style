@@ -10,10 +10,11 @@
  *
  * Both official tables are kept: the Chinese page's CNY prices and the English
  * page's USD prices are published independently (their per-model ratios differ),
- * so neither may be derived from the other. The peak clock and the Chinese
- * public holidays come from the peak rate catalog the same workflow refreshes;
- * a run without them keeps every day at the off-peak rate, which would overprice
- * holidays, so they are required.
+ * so neither may be derived from the other. The peak windows below are fixed;
+ * the Chinese public holidays are carried over from the committed snapshot and
+ * next year's dates are added to prices.json by hand. Without them a holiday
+ * would be priced as an ordinary weekday, which overprices it, so they are
+ * required.
  *
  *   node scripts/fetch-prices.mjs
  */
@@ -24,7 +25,6 @@ import { PRICES_FILE, validatePrices } from './prices.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const TARGET = path.join(ROOT, 'packages', 'host', 'data', PRICES_FILE)
-const CATALOG = path.join(ROOT, 'packages', 'host', 'data', 'peakrate-catalog.json')
 const SOURCE = {
   zh: 'https://api-docs.deepseek.com/zh-cn/quick_start/pricing/',
   en: 'https://api-docs.deepseek.com/quick_start/pricing/',
@@ -47,7 +47,7 @@ const MODEL_ID = /deepseek-[a-z0-9_.-]+/i
 async function load(url) {
   const response = await fetch(url, {
     signal: AbortSignal.timeout(15_000),
-    headers: { accept: 'text/html', 'user-agent': 'dsh-claude-style price snapshot' },
+    headers: { accept: 'text/html', 'user-agent': 'dsh-telegram-style price snapshot' },
   })
   if (!response.ok) throw new Error(`${url} answered ${response.status}`)
   return response.text()
@@ -159,14 +159,12 @@ function parsePage(html, url) {
   return { currency, models: found }
 }
 
-/** The Chinese public holidays the peak rate catalog carries for DeepSeek. */
+/** The Chinese public holidays the committed snapshot already carries; a new year's dates are added to prices.json by hand. */
 function holidays() {
-  if (!fs.existsSync(CATALOG)) throw new Error(`fetch-prices: ${CATALOG} is missing; run scripts/fetch-peakrate-catalog.mjs first`)
-  const catalog = JSON.parse(fs.readFileSync(CATALOG, 'utf8'))
-  const profile = (catalog.profiles ?? []).find(entry => entry?.id === 'deepseek-v4')
-  const dates = profile?.schedule?.publicHolidayDates
+  if (!fs.existsSync(TARGET)) throw new Error(`fetch-prices: ${TARGET} is missing; the holidays are carried over from it`)
+  const dates = JSON.parse(fs.readFileSync(TARGET, 'utf8')).schedule?.holidays
   if (!Array.isArray(dates) || dates.length === 0) {
-    throw new Error('fetch-prices: the peak rate catalog carries no Chinese public holidays for DeepSeek')
+    throw new Error(`fetch-prices: ${TARGET} carries no Chinese public holidays; add them to prices.json by hand`)
   }
   return [...new Set(dates.filter(day => typeof day === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(day)))].sort()
 }

@@ -11,20 +11,25 @@
   var r = probe.report
 
   probe.step(async function () {
+    await probe.onlyFor(['wallpaper'], async function () {
+      // The wallpaper: the palette's plain colour on <body>, the pattern layer over it
+      // and that layer's mask.
+      r.wallpaper = {
+        layer: getComputedStyle(document.body, '::before').content,
+        plain: getComputedStyle(document.body).backgroundImage === 'none' && getComputedStyle(document.body).backgroundColor !== 'rgba(0, 0, 0, 0)',
+        mask: String(getComputedStyle(document.body, '::before').maskImage || getComputedStyle(document.body, '::before').webkitMaskImage || '').indexOf('url(') >= 0,
+      }
+    })
     await probe.onlyFor(['brand'], async function () {
-      // The Claude palette, light and dark: the ivory and warm-black canvases,
-      // the clay accent, the raised card fill.
+      // The classic palette, light and dark: the canvas and the raised card fill.
       var claudeLight = getComputedStyle(document.body)
       r.claudePalette = {
-        canvas: claudeLight.backgroundColor,
-        accent: claudeLight.getPropertyValue('--dsw-alias-brand-primary').trim(),
+        canvas: getComputedStyle(document.documentElement).backgroundColor,
       }
       document.body.setAttribute('data-ds-dark-theme', '')
       var claudeDark = getComputedStyle(document.body)
       r.claudePalette.dark = {
-        canvas: claudeDark.backgroundColor,
-        accent: claudeDark.getPropertyValue('--dsw-alias-brand-primary').trim(),
-        raised: claudeDark.getPropertyValue('--dsh-claude-raised').trim(),
+        raised: claudeDark.getPropertyValue('--dsh-tg-raised').trim(),
       }
       document.body.removeAttribute('data-ds-dark-theme')
     })
@@ -58,28 +63,12 @@
       // The classic hero's permission control is the segment group; the studio
       // hero's is the conversation's trigger
       // (packages/client/src/features/permissions/permissions.ts).
-      var heroModes = document.querySelector('[data-composer-card] [data-dsh-claude-part~="modes"]')
+      var heroModes = document.querySelector('[data-composer-card] [data-dsh-tg-part~="modes"]')
       r.classicSegments = heroModes === null ? null
-        : Array.prototype.map.call(heroModes.querySelectorAll('.dsh-claude-segments > .dsh-claude-segment'), function (item) { return item.textContent })
-      r.classicPermTrigger = heroModes !== null && heroModes.querySelector('.dsh-claude-perm-btn') !== null
-      // The crab stands on the classic home page's card too, as Deepy does.
-      r.classicCrab = document.querySelector('[data-composer-card] > .dsh-claude-crab') !== null
-      // The glyph field stands in the hero root, under its content, and takes no
-      // press; its switch, off as the page opens, mounts it and takes it back off.
-      r.ripple = { off: greetRoot.querySelector('.dsh-claude-ripple-canvas') === null && !greetRoot.hasAttribute('data-dsh-claude-ripple') }
-      window.__pushForm({ homeRipple: true })
-      await sleep(150)
-      var rippleCanvas = greetRoot.querySelector(':scope > .dsh-claude-ripple-canvas')
-      r.ripple.stamped = greetRoot.hasAttribute('data-dsh-claude-ripple')
-      r.ripple.canvas = rippleCanvas !== null
-      r.ripple.pointerEvents = rippleCanvas === null ? null : getComputedStyle(rippleCanvas).pointerEvents
-      r.ripple.order = rippleCanvas === null ? null : getComputedStyle(rippleCanvas).zIndex
-      window.__pushForm({ homeRipple: false })
-      await sleep(150)
-      r.ripple.gone = !greetRoot.hasAttribute('data-dsh-claude-ripple') && greetRoot.querySelector('.dsh-claude-ripple-canvas') === null
-      window.__pushForm({ homeRipple: true })
-      await sleep(150)
-      r.ripple.back = greetRoot.hasAttribute('data-dsh-claude-ripple') && greetRoot.querySelector(':scope > .dsh-claude-ripple-canvas') !== null
+        : Array.prototype.map.call(heroModes.querySelectorAll('.dsh-tg-segments > .dsh-tg-segment'), function (item) { return item.textContent })
+      r.classicPermTrigger = heroModes !== null && heroModes.querySelector('.dsh-tg-perm-btn') !== null
+      // The sticker stands on the classic home page's card too.
+      r.classicSticker = document.querySelector('[data-composer-card] > .dsh-tg-sticker') !== null
       document.body.appendChild(document.createElement('i'))
       await sleep(150)
       r.greeting.held = greetSpan.textContent
@@ -122,7 +111,7 @@
         for (var ruleIndex = 0; ruleIndex < sheetRules.length; ruleIndex++) {
           var mediaRule = sheetRules[ruleIndex]
           if (mediaRule instanceof CSSMediaRule && /prefers-reduced-motion/.test(mediaRule.conditionText) &&
-            mediaRule.cssText.indexOf('data-dsh-claude-pill') !== -1) r.viewPill.reducedMotionRules++
+            mediaRule.cssText.indexOf('data-dsh-tg-pill') !== -1) r.viewPill.reducedMotionRules++
         }
       }
     })
@@ -130,29 +119,28 @@
       // The composer's host controls are marked by what they are, read from
       // the host's structure; the submit button turning into stop (its glyph
       // becomes a rect) moves its mark with it.
-      var controlOf = function (id) { var el = document.getElementById(id); return el && el.getAttribute('data-dsh-claude-control') }
+      var controlOf = function (id) { var el = document.getElementById(id); return el && el.getAttribute('data-dsh-tg-control') }
       // The host's own access button, skipping the skin's controls by their own
       // class namespace, read as whole class tokens.
-      var accessButton = document.querySelector('[data-slot="conversation.input.permission"] button:not([class^="dsh-claude-"], [class*=" dsh-claude-"])')
-      r.controls = { commands: controlOf('commands'), send: controlOf('send'), access: accessButton && accessButton.getAttribute('data-dsh-claude-control') }
+      var accessButton = document.querySelector('[data-slot="conversation.input.permission"] button:not([class^="dsh-tg-"], [class*=" dsh-tg-"])')
+      r.controls = { commands: controlOf('commands'), send: controlOf('send'), access: accessButton && accessButton.getAttribute('data-dsh-tg-control') }
       var sendButton = document.getElementById('send')
       var sendSvg = sendButton.querySelector('svg')
       var sendGlyph = sendSvg.innerHTML
+      var planeMask = getComputedStyle(sendButton, '::before').webkitMaskImage
       sendSvg.innerHTML = '<rect x="3" y="3" width="10" height="10"></rect>'
       await sleep(60)
       r.controls.stopping = controlOf('send')
-      // The stop glyph is the skin's own: the host's square is a scaled SVG glyph
-      // whose rasterization lands on a subpixel phase of its own, so the ring and
-      // the square are drawn as two boxes the browser snaps alike.
-      var ring = getComputedStyle(sendButton, '::before')
-      var square = getComputedStyle(sendButton, '::after')
+      // The stop glyph is the skin's own: the host's SVG is hidden and the button
+      // draws the shared stop icon, a mask filled with the button's ink, where the
+      // send state draws the plane.
+      var icon = getComputedStyle(sendButton, '::before')
       r.stopGlyph = {
         hostGlyph: getComputedStyle(sendSvg).display,
-        ring: ring.width,
-        squareWidth: square.width,
-        squareHeight: square.height,
-        fill: square.backgroundColor,
+        icon: icon.width,
+        fill: icon.backgroundColor,
         ink: getComputedStyle(sendButton).color,
+        swapped: icon.webkitMaskImage !== 'none' && icon.webkitMaskImage !== planeMask,
       }
       sendSvg.innerHTML = sendGlyph
       await sleep(60)
@@ -184,8 +172,8 @@
         '<input class="_searchInput_n_1" type="text" tabindex="-1"></div></div></div>'
       document.body.appendChild(sidebarSlot)
       await sleep(150)
-      var logoRow = sidebarSlot.querySelector('[data-dsh-claude-part~="logo-row"]')
-      var searchTrigger = logoRow.querySelector('.dsh-claude-search-trigger')
+      var logoRow = sidebarSlot.querySelector('[data-dsh-tg-part~="logo-row"]')
+      var searchTrigger = logoRow.querySelector('.dsh-tg-search-trigger')
       var rootsBefore = window.__roots.length
       if (searchTrigger) searchTrigger.click()
       await sleep(60)
@@ -196,12 +184,12 @@
         window.__pushForm({ searchStyle: style })
         sidebarSlot.appendChild(document.createElement('i'))
         await sleep(200)
-        var box = document.querySelector('.dsh-claude-search-trigger')
-        var ownRow = document.querySelector('.dsh-claude-search-bar')
-        var slot = sidebarSlot.querySelector('[data-dsh-claude-part~="search-slot"]')
+        var box = document.querySelector('.dsh-tg-search-trigger')
+        var ownRow = document.querySelector('.dsh-tg-search-bar')
+        var slot = sidebarSlot.querySelector('[data-dsh-tg-part~="search-slot"]')
         return {
-          triggerInRow: !!logoRow.querySelector('.dsh-claude-search-trigger'),
-          rowMarked: logoRow.hasAttribute('data-dsh-claude-search-row'),
+          triggerInRow: !!logoRow.querySelector('.dsh-tg-search-trigger'),
+          rowMarked: logoRow.hasAttribute('data-dsh-tg-search-row'),
           barAfterRow: !!ownRow && ownRow.parentElement === logoRow.parentElement && ownRow.previousElementSibling === logoRow,
           triggerInBar: !!ownRow && !!box && box.parentElement === ownRow,
           triggerVisibility: box ? getComputedStyle(box).visibility : null,
@@ -213,7 +201,7 @@
       }
       r.search = {
         placed: !!searchTrigger && searchTrigger.previousElementSibling === logoRow.firstElementChild,
-        rowMarked: logoRow.hasAttribute('data-dsh-claude-search-row'),
+        rowMarked: logoRow.hasAttribute('data-dsh-tg-search-row'),
         resting: searchTrigger ? getComputedStyle(searchTrigger).visibility : null,
         modalRendered: !!probe.searchRoot && probe.searchRoot.renders > 0,
       }
@@ -222,7 +210,7 @@
       // The host's own button is live again in the icon style; a listener on an
       // ancestor stands in for the host's own click handling, which the skin's
       // takeover must keep from running.
-      var hostButton = sidebarSlot.querySelector('[data-dsh-claude-part~="search-button"]')
+      var hostButton = sidebarSlot.querySelector('[data-dsh-tg-part~="search-button"]')
       var reachedHost = 0
       var countHost = function () { reachedHost++ }
       sidebarSlot.addEventListener('click', countHost)
@@ -246,10 +234,10 @@
         }
       }
       var sample = document.createElement('kbd')
-      sample.className = 'dsh-claude-search-key'
+      sample.className = 'dsh-tg-search-key'
       sample.textContent = 'Ctrl'
       sidebarSlot.appendChild(sample)
-      var shortcutCaps = [].slice.call(sidebarSlot.querySelectorAll('[data-dsh-claude-part~="new-session-shortcut"] kbd'))
+      var shortcutCaps = [].slice.call(sidebarSlot.querySelectorAll('[data-dsh-tg-part~="new-session-shortcut"] kbd'))
       r.search.keycaps = {
         shortcut: shortcutCaps.filter(function (cap) { return !/separator/.test(cap.className) }).map(capStyle),
         separators: shortcutCaps.filter(function (cap) { return /separator/.test(cap.className) }).map(function (cap) { return getComputedStyle(cap).display }),

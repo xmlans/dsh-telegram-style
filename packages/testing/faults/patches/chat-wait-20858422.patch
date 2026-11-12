@@ -2,7 +2,7 @@ diff --git a/packages/client/src/features/chat-wait/chat-wait.css b/packages/cli
 index 7fcd06a..48285a8 100644
 --- a/packages/client/src/features/chat-wait/chat-wait.css
 +++ b/packages/client/src/features/chat-wait/chat-wait.css
-@@ -100,12 +100,13 @@ body[data-dsh-claude-style][data-dsh-claude-brand="claude"] .dsh-claude-chat-wai
+@@ -100,12 +100,13 @@ body[data-dsh-telegram-style][data-dsh-tg-brand="claude"] .dsh-tg-chat-wai
    margin-right: 6px;
  }
  
@@ -18,16 +18,16 @@ index 7fcd06a..48285a8 100644
 +   the box never draws two motions at once (features/chat-wait/wait-loader.ts).
 +   A lane out of play is taken out of the page, which is what lets the lane
 +   coming back start its motion from the top. */
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane {
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane {
    position: absolute;
    inset: 0;
-@@ -318,27 +319,30 @@ body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-bounce .dsh-claude-cha
-   animation-delay: calc(-2 * var(--dsh-claude-period-dot-bounce) / 5);
+@@ -318,27 +319,30 @@ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-bounce .dsh-tg-cha
+   animation-delay: calc(-2 * var(--dsh-tg-period-dot-bounce) / 5);
  }
  
 -/* The walking lane: each dot walks its own line through one point, a damped
 -   simple harmonic — it slows into either end and gathers speed back through the
--   middle (--dsh-claude-ease-damped-out, -damped-in) — and it is the dot's own
+-   middle (--dsh-tg-ease-damped-out, -damped-in) — and it is the dot's own
 -   size at either end, so the walking dot never draws larger than the bouncing
 -   one. Its four legs are a quarter of the period each, so a dot takes as long
 -   going out to an end as coming back, and the second half of the walk is the
@@ -42,31 +42,31 @@ index 7fcd06a..48285a8 100644
 +   walking dot never draws larger than the bouncing one. The walk's keyframes
 +   stand at the two ends only and its size's at the ends and the middle, so every
 +   stretch between two of them runs end to end on the animation's own curve,
-+   --dsh-claude-ease-harmonic; a curve written into a keyframe would be dropped
++   --dsh-tg-ease-harmonic; a curve written into a keyframe would be dropped
 +   for linear. The three dots stand a third of the period apart, the first a
 +   quarter in, crossing the middle, and every delay is negative: each is already
 +   at its own place on its line instead of waiting at an end for its turn. A
 +   third apart is what keeps the two lines that are mirrors of each other from
 +   drawing the same motion twice — a half period would, and so would no offset
 +   at all. */
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-line .dsh-claude-chat-wait-dot {
--  animation: dsh-claude-wait-dot-line var(--dsh-claude-period-dot-line) linear infinite;
-+  animation: dsh-claude-wait-dot-line var(--dsh-claude-period-dot-line) var(--dsh-claude-ease-harmonic) infinite;
-+  animation-delay: calc(-1 * var(--dsh-claude-period-dot-line) / 4);
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-line .dsh-tg-chat-wait-dot {
+-  animation: dsh-tg-wait-dot-line var(--dsh-tg-period-dot-line) linear infinite;
++  animation: dsh-tg-wait-dot-line var(--dsh-tg-period-dot-line) var(--dsh-tg-ease-harmonic) infinite;
++  animation-delay: calc(-1 * var(--dsh-tg-period-dot-line) / 4);
  }
  
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-line .dsh-claude-chat-wait-dot:nth-child(2) {
--  animation-delay: calc(-1 * var(--dsh-claude-period-dot-line) / 3);
-+  animation-delay: calc(-7 * var(--dsh-claude-period-dot-line) / 12);
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-line .dsh-tg-chat-wait-dot:nth-child(2) {
+-  animation-delay: calc(-1 * var(--dsh-tg-period-dot-line) / 3);
++  animation-delay: calc(-7 * var(--dsh-tg-period-dot-line) / 12);
  }
  
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-line .dsh-claude-chat-wait-dot:nth-child(3) {
--  animation-delay: calc(-2 * var(--dsh-claude-period-dot-line) / 3);
-+  animation-delay: calc(-11 * var(--dsh-claude-period-dot-line) / 12);
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-line .dsh-tg-chat-wait-dot:nth-child(3) {
+-  animation-delay: calc(-2 * var(--dsh-tg-period-dot-line) / 3);
++  animation-delay: calc(-11 * var(--dsh-tg-period-dot-line) / 12);
  }
  
  /* What a hand-over needs to know about a lane's own motion, read by
-@@ -346,8 +350,8 @@ body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-line .dsh-claude-chat-
+@@ -346,8 +350,8 @@ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-line .dsh-tg-chat-
     of it arrives and leaves, and how long one of its fades takes as a share of
     the motion's own turn. The bounce's dot arrives at the top of its hop and
     leaves off the floor the instant it rebounds; the walk's arrives at the middle
@@ -75,20 +75,20 @@ index 7fcd06a..48285a8 100644
 +   of its line, and leaves at the end it turns at — a share each, since it
 +   crosses the middle and turns at an end twice a turn. Which curve each fade
     runs on is the browser half's, read from the token sheet (D9). */
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-bounce {
-   --dsh-claude-dot-arrives: 1;
-@@ -356,8 +360,8 @@ body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-bounce {
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-bounce {
+   --dsh-tg-dot-arrives: 1;
+@@ -356,8 +360,8 @@ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-bounce {
  }
  
- body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-line {
--  --dsh-claude-dot-arrives: 0 0.5;
--  --dsh-claude-dot-leaves: 0.25 0.75;
-+  --dsh-claude-dot-arrives: 0.25 0.75;
-+  --dsh-claude-dot-leaves: 0 0.5;
-   --dsh-claude-dot-fade: 0.25;
+ body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-line {
+-  --dsh-tg-dot-arrives: 0 0.5;
+-  --dsh-tg-dot-leaves: 0.25 0.75;
++  --dsh-tg-dot-arrives: 0.25 0.75;
++  --dsh-tg-dot-leaves: 0 0.5;
+   --dsh-tg-dot-fade: 0.25;
  }
  
-@@ -386,9 +390,9 @@ body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-chat-w
+@@ -386,9 +390,9 @@ body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-chat-w
     The stops at two and three fifths are added for the hand-over: they are the
     places the wave's second and third dots stand when the bounce takes over, and
     the arriving table above writes the same two values. The rise runs straight
@@ -101,43 +101,43 @@ index 7fcd06a..48285a8 100644
     clamps to the same curve the dot already carries, so a radius among the
     keyframes would be no part of the motion and would keep the whole animation
     off the compositor, repainting the dot every frame. */
-@@ -407,7 +411,6 @@ body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-chat-w
+@@ -407,7 +411,6 @@ body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-chat-w
  
    60% {
-     translate: 0 calc(-3 * var(--dsh-claude-distance-travel) / 5);
--    animation-timing-function: var(--dsh-claude-ease-standard);
+     translate: 0 calc(-3 * var(--dsh-tg-distance-travel) / 5);
+-    animation-timing-function: var(--dsh-tg-ease-standard);
    }
  
    100% {
-@@ -416,23 +419,19 @@ body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-chat-w
+@@ -416,23 +419,19 @@ body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-chat-w
  }
  
- @keyframes dsh-claude-wait-dot-line {
+ @keyframes dsh-tg-wait-dot-line {
 -  0%, 50%, 100% {
--    translate: var(--dsh-claude-dot-centre) calc(-1 * var(--dsh-claude-distance-travel));
--    scale: var(--dsh-claude-scale-dot-mid);
--    animation-timing-function: var(--dsh-claude-ease-damped-out);
+-    translate: var(--dsh-tg-dot-centre) calc(-1 * var(--dsh-tg-distance-travel));
+-    scale: var(--dsh-tg-scale-dot-mid);
+-    animation-timing-function: var(--dsh-tg-ease-damped-out);
 +  0%, 100% {
-+    translate: calc(2 * var(--dsh-claude-dot-centre) - var(--dsh-claude-dot-end-x))
-+      calc(-2 * var(--dsh-claude-distance-travel) - var(--dsh-claude-dot-end-y));
++    translate: calc(2 * var(--dsh-tg-dot-centre) - var(--dsh-tg-dot-end-x))
++      calc(-2 * var(--dsh-tg-distance-travel) - var(--dsh-tg-dot-end-y));
 +    scale: 1;
    }
  
 -  25% {
--    translate: var(--dsh-claude-dot-end-x) var(--dsh-claude-dot-end-y);
+-    translate: var(--dsh-tg-dot-end-x) var(--dsh-tg-dot-end-y);
 -    scale: 1;
--    animation-timing-function: var(--dsh-claude-ease-damped-in);
+-    animation-timing-function: var(--dsh-tg-ease-damped-in);
 +  25%, 75% {
-+    scale: var(--dsh-claude-scale-dot-mid);
++    scale: var(--dsh-tg-scale-dot-mid);
    }
  
 -  75% {
--    translate: calc(2 * var(--dsh-claude-dot-centre) - var(--dsh-claude-dot-end-x))
--      calc(-2 * var(--dsh-claude-distance-travel) - var(--dsh-claude-dot-end-y));
+-    translate: calc(2 * var(--dsh-tg-dot-centre) - var(--dsh-tg-dot-end-x))
+-      calc(-2 * var(--dsh-tg-distance-travel) - var(--dsh-tg-dot-end-y));
 +  50% {
-+    translate: var(--dsh-claude-dot-end-x) var(--dsh-claude-dot-end-y);
++    translate: var(--dsh-tg-dot-end-x) var(--dsh-tg-dot-end-y);
      scale: 1;
--    animation-timing-function: var(--dsh-claude-ease-damped-in);
+-    animation-timing-function: var(--dsh-tg-ease-damped-in);
    }
  }
  
@@ -213,8 +213,8 @@ index a131156..75b2f79 100644
    }
  }
  
-@@ -196,38 +197,43 @@ function easesOf(motion: WaitLoaderMotion, leaving: boolean): '--dsh-claude-ease
-   return leaving ? '--dsh-claude-ease-damped-in' : '--dsh-claude-ease-damped-out'
+@@ -196,38 +197,43 @@ function easesOf(motion: WaitLoaderMotion, leaving: boolean): '--dsh-tg-ease
+   return leaving ? '--dsh-tg-ease-damped-in' : '--dsh-tg-ease-damped-out'
  }
  
 +/**
@@ -298,22 +298,22 @@ index 2a733f4..052b810 100644
        "note": "The host's own TextShimmer curve, beside its period."
      },
 +    {
-+      "token": "--dsh-claude-ease-harmonic",
++      "token": "--dsh-tg-ease-harmonic",
 +      "value": "cubic-bezier(0.37, 0, 0.63, 1)",
 +      "use": "a loader dot walking its line from one end to the other, and its size between an end and the middle: a sine's simple harmonic, at rest at either end and fastest halfway",
 +      "note": "The cubic that follows (1 − cos πt) / 2."
 +    },
      {
-       "token": "--dsh-claude-ease-damped-out",
+       "token": "--dsh-tg-ease-damped-out",
        "value": "cubic-bezier(0.33, 1, 0.68, 1)",
 -      "use": "a loader dot slowing into the end of its line: the damping the line motion carries, so a dot dwells at its turning point before it comes back"
 +      "use": "a loader dot's fade in a hand-over that does most of its change early: a walking or swapping dot coming in, a bouncing one going out"
      },
      {
-       "token": "--dsh-claude-ease-damped-in",
+       "token": "--dsh-tg-ease-damped-in",
        "value": "cubic-bezier(0.32, 0, 0.67, 0)",
 -      "use": "a loader dot leaving the end of its line and gathering speed towards the middle"
 +      "use": "a loader dot's fade in a hand-over that does most of its change late: a walking or swapping dot going out, a bouncing one coming in"
      },
      {
-       "token": "--dsh-claude-distance-nudge",
+       "token": "--dsh-tg-distance-nudge",

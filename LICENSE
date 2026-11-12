@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2026 Nwflower
+Copyright (c) 2026 xmlans
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +23,15 @@ SOFTWARE.
 
 ---
 
-Font files notice:
+Sticker artwork notice: the sticker mascot's images —
+`packages/assets/src/mascot/sticker/sticker.webp`,
+`packages/assets/src/mascot/sticker/sticker-source.png` and their copies inlined
+into or served from `lib/` — are the work of xmlans, all rights reserved. They
+are distributed with this plugin but are **not** covered by the MIT license
+above.
 
-- `packages/assets/src/fonts/anthropic/AnthropicSansWebText.ttf`,
-  `packages/assets/src/fonts/anthropic/AnthropicSerifWebText.ttf` and
-  `packages/assets/src/fonts/anthropic/AnthropicMonoWeb.ttf` are
-  proprietary typefaces of Anthropic, extracted from Anthropic's web products.
-  They are included in this repository for personal use only and are **not**
-  covered by the MIT license above; all rights remain with Anthropic. The npm
-  package does not ship these files.
-
-- `packages/assets/src/fonts/JetBrainsMonoVariable.ttf` and
-  `packages/assets/src/fonts/JetBrainsMonoItalicVariable.ttf` are JetBrains Mono,
-  distributed under the SIL Open Font License
-  (`packages/assets/src/fonts/OFL.txt`; the package carries them under
-  `lib/fonts/`). They may be redistributed with this plugin.
-
-Crab artwork notice: the pixel crab (Clawd) is a character of Anthropic, and
-all rights in it remain with Anthropic. `packages/assets/src/mascot/crab-laptop-body.png`
-and `packages/assets/src/mascot/crab-laptop-ink.png` are frames of Claude Code's own
-animation; the sheets under `packages/assets/src/mascot/crab/` are drawn by this project
-after that character (by `scripts/draw-crab.py`, which carries the drawings).
-These files, and their copies inlined into `lib/client.js`, are **not** covered
-by the MIT license above. This plugin is an unofficial fan work, not affiliated
-with or endorsed by Anthropic.
-
-
+Font files notice: `packages/assets/src/fonts/JetBrainsMonoVariable.ttf` and
+`packages/assets/src/fonts/JetBrainsMonoItalicVariable.ttf` are JetBrains Mono,
+distributed under the SIL Open Font License 1.1
+(`packages/assets/src/fonts/OFL.txt`; the package carries them under
+`lib/fonts/`).

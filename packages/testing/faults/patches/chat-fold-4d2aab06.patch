@@ -57,7 +57,7 @@ index 76f7409..95a6149 100644
 +  /** What a text measures now: its own height under the cap, and how far it can still rise there. */
 +  function measureOf(state: WindowState): Measure {
 +    const style = getComputedStyle(state.window)
-+    const capPx = Math.round(tokenNumber(style.getPropertyValue('--dsh-claude-reason-window-cap'), FALLBACKS.cap))
++    const capPx = Math.round(tokenNumber(style.getPropertyValue('--dsh-tg-reason-window-cap'), FALLBACKS.cap))
 +    const textHeight = state.text.offsetHeight
 +    const height = Math.min(textHeight, capPx)
 +    return {
@@ -74,8 +74,8 @@ index 76f7409..95a6149 100644
      if (current === null || current !== state.text) return null
      const style = getComputedStyle(state.window)
      const lineHeight = lineHeightOf(state.text)
--    const capPx = Math.round(tokenNumber(style.getPropertyValue('--dsh-claude-reason-window-cap'), FALLBACKS.cap))
-     const stepPx = Math.round(lineHeight * tokenNumber(style.getPropertyValue('--dsh-claude-reason-lines'), FALLBACKS.lines))
+-    const capPx = Math.round(tokenNumber(style.getPropertyValue('--dsh-tg-reason-window-cap'), FALLBACKS.cap))
+     const stepPx = Math.round(lineHeight * tokenNumber(style.getPropertyValue('--dsh-tg-reason-lines'), FALLBACKS.lines))
 -    const textHeight = state.text.offsetHeight
 -    const height = Math.min(textHeight, capPx)
 -    const capped = height >= capPx

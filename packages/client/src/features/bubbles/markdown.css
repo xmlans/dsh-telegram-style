@@ -1,0 +1,44 @@
+/* The answer's Markdown inside its bubble. */
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) blockquote {
+  margin: 6px 0;
+  padding: 4px 10px;
+  border-left: 3px solid var(--dsh-tg-accent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--dsh-tg-accent) 10%, transparent);
+  color: inherit;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) :not(pre) > code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--dsh-tg-inline-code-bg);
+  color: var(--dsh-tg-inline-code-fg);
+  font-family: var(--dsh-tg-font-code);
+  font-size: 0.9em;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) pre {
+  border-radius: 10px;
+  background: var(--dsh-tg-code-block);
+  overflow-x: auto;
+  font-family: var(--dsh-tg-font-code);
+  font-size: 13px;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) thead th {
+  background: var(--dsh-tg-table-head);
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) :is(th, td) {
+  padding: 6px 10px;
+  border: 1px solid var(--dsh-tg-line);
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) a {
+  color: var(--dsh-tg-accent-text);
+  text-decoration: none;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) a:hover {
+  text-decoration: underline;
+}

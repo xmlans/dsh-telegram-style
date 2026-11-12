@@ -179,14 +179,14 @@ module.exports = {
     check('the usage panel registers into the dock list seat with an id',
       Array.isArray(r.slotRegistrations) && r.slotRegistrations.length === 1 &&
         r.slotRegistrations[0].key === 'conversation.input.dock' &&
-        r.slotRegistrations[0].id === 'claude-style-usage' &&
+        r.slotRegistrations[0].id === 'telegram-style-usage' &&
         r.slotRegistrations[0].component === 'function',
       JSON.stringify(r.slotRegistrations))
     const renders = r.panelRenders || {}
     const drew = (tab, className) => renders[tab] !== undefined && renders[tab].error === null &&
       renders[tab].classes.includes(className)
     check('the usage panel renders its Overview tab: stat cells and heat grid',
-      drew('overview', 'dsh-claude-home-stat') && drew('overview', 'dsh-claude-home-heat'),
+      drew('overview', 'dsh-tg-home-stat') && drew('overview', 'dsh-tg-home-heat'),
       JSON.stringify(renders.overview))
     // The heat grid's cells: 26 weeks of days, every one of them naming its
     // own day's tokens, whichever source the panel drew from.
@@ -202,25 +202,24 @@ module.exports = {
       said('overview-7d', /^3 PM$/) && said('overview-7d', /^You've used ~1× the tokens in Dracula\.$/),
       JSON.stringify(renders['overview-7d'] && renders['overview-7d'].texts))
     check('the usage panel renders its Models tab: stacked chart and ranked list',
-      drew('models', 'dsh-claude-home-chart-seg') && drew('models', 'dsh-claude-home-model'),
+      drew('models', 'dsh-tg-home-chart-seg') && drew('models', 'dsh-tg-home-model'),
       JSON.stringify(renders.models))
     const rows = (tab) => (renders[tab] === undefined ? 0
-      : renders[tab].classes.filter((name) => name === 'dsh-claude-home-model').length)
+      : renders[tab].classes.filter((name) => name === 'dsh-tg-home-model').length)
     check('the folded model list shows six rows and a "Show 2 more" row',
       rows('models') === 6 && said('models', /^Show 2 more$/),
       JSON.stringify({ rows: rows('models'), texts: renders.models && renders.models.texts.slice(-3) }))
     const mascot = r.mascot || {}
-    check('the crab stands on the hero card idling, drawn from its inlined sheet and ink mask',
-      mascot.mounted === true && mascot.ready === true && mascot.animation === 'idle' && mascot.body === true && mascot.ink === true,
+    check('the sticker stands on the hero card idling, drawn from its image',
+      mascot.mounted === true && mascot.state === 'idle' && mascot.image === true,
       JSON.stringify(mascot))
-    check('a click on its left half reaches the crab and pokes it; the poke plays back to idle without waking a pass',
-      mascot.reachable === true && mascot.poked === 'poke-left' && mascot.afterPoke === 'idle' && mascot.passesDuring === 0,
+    check('a click reaches the sticker and lets hearts float up; the act plays back to idle',
+      mascot.reachable === true && mascot.clicked === 'hearts' && mascot.afterClick === 'idle',
       JSON.stringify(mascot), 'timing')
-    check('with the animation choice on "reduced" it holds the idle still frame; a click still pokes it',
-      mascot.reducedAttr === 'reduced' && mascot.stillFrame === 'translate(0px, 0px)' && mascot.stillAnimations === 0 &&
-        mascot.reducedClick === 'poke-left',
+    check('with the animation choice on reduced the sticker runs no animation, and a click still names its act',
+      mascot.reducedAttr === 'reduced' && mascot.stillAnimations === 0 && mascot.reducedClick === 'hearts',
       JSON.stringify(mascot), 'timing')
-    check('the crab leaves with the hero page', mascot.afterHero === false, JSON.stringify(mascot))
+    check('the sticker leaves with the hero page', mascot.afterHero === false, JSON.stringify(mascot))
     check('the studio hero mark is on the document on the hero page and off it elsewhere, and the studio rules reach the stack',
       r.homeHero !== undefined && r.homeHero.onHero === true && r.homeHero.offHero === false && r.homeHero.stackMaxWidth === '720px',
       JSON.stringify(r.homeHero))

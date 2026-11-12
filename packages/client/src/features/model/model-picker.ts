@@ -3,16 +3,17 @@ import { MODEL_EMPTY_LABEL, MODEL_FALLBACK_LABEL, MODEL_LOADING_LABEL, MODEL_MOR
 import { activeLocale } from '../../core/i18n'
 import { loadModelCopy } from './model-copy'
 import { readPrefs } from '../../core/prefs'
-import { cacheFirstMatch } from '@dsh-claude-style/engine/host'
+import { cacheFirstMatch } from '@dsh-telegram-style/engine/host'
 import { createModelCatalog } from './catalog'
 import { createModelSubMenu } from './sub-menu'
 import { byModelId, createModelRows } from './rows'
-import { buildElement, closestFrom, setAttributeIfChanged } from '@dsh-claude-style/engine/dom'
+import { buildElement, closestFrom, setAttributeIfChanged } from '@dsh-telegram-style/engine/dom'
 import { POPOVER_MARGIN, POPOVER_OPEN_DELAY, closeOtherPopovers, createHoverIntent, positionAnchoredPopover, pressKeepsPopoverOpen, registerPopover, removeStrayNodes, setMenuPopoverOpen, unregisterPopover } from '../../shared/popover'
+import { iconElement } from '../../shared/icons'
 import { pageViewport } from '../../shared/page-zoom'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import type { HostModelGroup } from '@dsh-claude-style/contracts/services'
-import type { CloseReason, FeatureHandle } from '@dsh-claude-style/engine/scheduler'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import type { HostModelGroup } from '@dsh-telegram-style/contracts/services'
+import type { CloseReason, FeatureHandle } from '@dsh-telegram-style/engine/scheduler'
 import type { FeatureUi } from '../../core/feature'
 import type manifest from './model-picker.manifest'
 import type { CatalogProvider, ModelCatalog } from './catalog'
@@ -95,17 +96,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       subHoverIntent: modelSubHoverIntent,
       isSubOpen() { return modelSubPop !== null && modelSubPop.getAttribute('data-open') === 'true' },
       closeSub: closeModelPopovers,
-      openSub: openModelSub,
-      /**
-       * The peak rate meter is its own feature (packages/client/src/features/peakrate/):
-       * it answers with a badge for the row, and with nothing at all for a
-       * model whose provider bills on no clock.
-       */
-      rate(provider: string, modelId: string) {
-        const peakrate = ui.peakrate
-        if (peakrate === undefined) return null
-        return peakrate.badge(provider, modelId)
-      }
+      openSub: openModelSub
   })
 
   function cancelCloseModel() {
@@ -212,9 +203,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       }
     }
     if (modelSubPop) setMenuPopoverOpen(modelSubPop, false)
-    // A card opening repaints from scratch: its countdowns were drawn at
-    // whatever minute it was last on screen, and a closed card is not part of
-    // any signature (rateSignature).
+    // A card opening repaints from scratch.
     modelBodySig = ''
     renderModelBody()
     positionModelPopovers()
@@ -275,25 +264,10 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     if (!showMore) return
     // The role is what the shared separator rule reads (shared/popover.css), so
     // this line is the same line as every separator the host draws in a card.
-    const divider = buildElement('div', 'dsh-claude-model-divider')
+    const divider = buildElement('div', 'dsh-tg-model-divider')
     divider.setAttribute('role', 'separator')
     modelFooter.appendChild(divider)
     modelFooter.appendChild(modelRows.buildModelCell(copy('moreLabel')))
-  }
-
-  /**
-   * What the rows' rates depend on, in one value the render signatures carry.
-   * The catalog is the meter feature's (its generation moves when one arrives),
-   * and the minute only matters while a card is on screen — the countdown is
-   * drawn to the minute, and a card that is down is repainted by the opening
-   * pass anyway.
-   */
-  function rateSignature() {
-    const peakrate = ui.peakrate
-    if (peakrate === undefined) return ''
-    const up = (modelPop !== null && modelPop.getAttribute('data-open') === 'true') ||
-      (modelSubPop !== null && modelSubPop.getAttribute('data-open') === 'true')
-    return up ? `${peakrate.epoch()}/${Math.floor(Date.now() / 60000)}` : `${peakrate.epoch()}`
   }
 
   /**
@@ -317,7 +291,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     const status = snap ? snap.status : 'idle'
     const groups = (snap && snap.groups) || []
     const current = modelCatalog.current(snap)
-    let sig = [status, activeLocale(), current ? `${current.group.id}/${current.model.id}` : '', readPrefs().quickProviders.join(','), readPrefs().modelDescriptions !== false, rateSignature()].join('|')
+    let sig = [status, activeLocale(), current ? `${current.group.id}/${current.model.id}` : '', readPrefs().quickProviders.join(','), readPrefs().modelDescriptions !== false].join('|')
     sig += rowsSignature(groups)
     if (sig === modelBodySig) {
       return
@@ -332,12 +306,12 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     // nothing to show yet falls back to the loading line.
     const seated = groups.length > 0 && current !== null
     if (!seated && (status === 'idle' || status === 'loading' || status === 'selecting')) {
-      modelBody.appendChild(buildElement('div', 'dsh-claude-popover-status', copy('loading')))
+      modelBody.appendChild(buildElement('div', 'dsh-tg-popover-status', copy('loading')))
       layoutModelFooter(false)
     } else {
       const sections = modelRows.levelOneSections(groups)
       if (sections.length === 0) {
-        modelBody.appendChild(buildElement('div', 'dsh-claude-popover-status', copy('empty')))
+        modelBody.appendChild(buildElement('div', 'dsh-tg-popover-status', copy('empty')))
       } else {
         for (let s = 0; s < sections.length; s++) {
           const section = sections[s]
@@ -368,7 +342,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
         const currentRuleName = current.group.id === MODEL_OFFICIAL_GROUP ? '' : (current.group.name || current.group.id)
         if (currentRuleName !== '') modelBody.appendChild(modelRows.buildProviderRule(currentRuleName))
         // Through the same row builder as every other row, so this one carries
-        // the same brand hook, description and peak rate meter.
+        // the same brand hook and description.
         modelBody.appendChild(modelRows.buildCurrentOption(current.group, current.model))
       }
       // The divider closes the model list and the More-models row follows it;
@@ -391,8 +365,8 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
 
   /**
    * What level 2's rows read as, in one string the card's own paint compares:
-   * the providers level 1 lists (this card carries the rest), the rows' rates
-   * and the model in force.
+   * the providers level 1 lists (this card carries the rest) and the model in
+   * force.
    */
   function subSignature() {
     const snap = modelCatalog.snapshot()
@@ -401,7 +375,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     const sections = modelRows.levelOneSections(groups)
     const listed: string[] = []
     for (let s = 0; s < sections.length; s++) listed.push(sections[s].id)
-    let sig = `more|${listed.join(',')}|${rateSignature()}`
+    let sig = `more|${listed.join(',')}`
     sig += rowsSignature(groups)
     if (current) sig += `#${current.group.id}/${current.model.id}`
     return sig
@@ -442,13 +416,13 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     // render signatures so the next pass repaints into the fresh nodes.
     if (modelPop === null || modelPop.parentElement === null) {
       modelPop = document.createElement('div')
-      modelPop.className = 'dsh-claude-popover-card dsh-claude-model-popover'
+      modelPop.className = 'dsh-tg-popover-card dsh-tg-model-popover'
       setMenuPopoverOpen(modelPop, false)
       modelBody = document.createElement('div')
-      modelBody.className = 'dsh-claude-popover-body'
+      modelBody.className = 'dsh-tg-popover-body'
       modelPop.appendChild(modelBody)
       modelFooter = document.createElement('div')
-      modelFooter.className = 'dsh-claude-model-footer'
+      modelFooter.className = 'dsh-tg-model-footer'
       modelPop.appendChild(modelFooter)
       modelPop.addEventListener('mouseenter', cancelCloseModel)
       // The second level belongs to its More-models cell: while it is open,
@@ -459,7 +433,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       // boundary event would never fire.
       modelPop.addEventListener('mouseover', e => {
         if (modelSubPop === null || modelSubPop.getAttribute('data-open') !== 'true') return
-        if (closestFrom(e.target, '.dsh-claude-model-cell')) return
+        if (closestFrom(e.target, '.dsh-tg-model-cell')) return
         // Delayed, not immediate: the sub card sits BESIDE level 1, so a
         // pointer on its way from the cell to the sub crosses level 1's own
         // rows — folding on the spot made that journey impossible at any
@@ -480,7 +454,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     }
     if (modelSubPop === null || modelSubPop.parentElement === null) {
       modelSubPop = document.createElement('div')
-      modelSubPop.className = 'dsh-claude-popover-card dsh-claude-model-popover dsh-claude-model-popover-sub'
+      modelSubPop.className = 'dsh-tg-popover-card dsh-tg-model-popover dsh-tg-model-popover-sub'
       setMenuPopoverOpen(modelSubPop, false)
       // The field is pinned above the list: the reader sees what they typed
       // while they scroll the matches under it, the way level 1 keeps its
@@ -506,13 +480,13 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
    * skin's trigger and popovers, drop the catalog subscription.
    */
   function dropModelControl() {
-    const allHosts = document.querySelectorAll('[data-dsh-claude-model-host]')
+    const allHosts = document.querySelectorAll('[data-dsh-tg-model-host]')
     for (let h = 0; h < allHosts.length; h++) {
-      allHosts[h].removeAttribute('data-dsh-claude-model-host')
+      allHosts[h].removeAttribute('data-dsh-tg-model-host')
     }
-    removeStrayNodes(document, '.dsh-claude-model-btn', [])
+    removeStrayNodes(document, '.dsh-tg-model-btn', [])
     modelBtn = null
-    removeStrayNodes(document, '.dsh-claude-model-popover', [])
+    removeStrayNodes(document, '.dsh-tg-model-popover', [])
     modelPop = null
     modelSubPop = null
     modelBody = null
@@ -547,17 +521,19 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     // client HMR drops the old fiber's disposals, so a previous generation's
     // trigger and popovers are still in the DOM while this fresh scope starts
     // from null. Sweep the strays, or the seat renders twice.
-    removeStrayNodes(slot, '.dsh-claude-model-btn', [modelBtn])
-    removeStrayNodes(document, 'body > .dsh-claude-model-popover', [modelPop, modelSubPop])
+    removeStrayNodes(slot, '.dsh-tg-model-btn', [modelBtn])
+    removeStrayNodes(document, 'body > .dsh-tg-model-popover', [modelPop, modelSubPop])
     const hostRoot = slot.firstElementChild
-    if (hostRoot !== null) hostRoot.toggleAttribute('data-dsh-claude-model-host', true)
+    if (hostRoot !== null) hostRoot.toggleAttribute('data-dsh-tg-model-host', true)
     if (modelBtn === null || modelBtn.parentElement !== slot) {
       if (modelBtn !== null && modelBtn.parentElement !== null) modelBtn.parentElement.removeChild(modelBtn)
       modelBtn = document.createElement('button')
       modelBtn.type = 'button'
-      modelBtn.className = 'dsh-claude-model-btn'
+      modelBtn.className = 'dsh-tg-model-btn'
       modelBtn.setAttribute('aria-haspopup', 'menu')
-      modelBtn.innerHTML = '<span class="dsh-claude-model-btn-label"></span>'
+      modelBtn.innerHTML = '<span class="dsh-tg-model-btn-label"></span>'
+      // The capsule ends in a chevron: the chip opens a menu.
+      modelBtn.appendChild(iconElement('chevron-down'))
       // Same contract as the account trigger: hover under the "All" scope,
       // click-only otherwise.
       modelBtn.addEventListener('mouseenter', () => {
@@ -584,7 +560,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     const current = modelCatalog.current(snap)
     const groupsNow = (snap && snap.groups) || []
     const label = current ? current.model.name : copy('fallbackLabel')
-    const labelEl = modelBtn.querySelector('.dsh-claude-model-btn-label')
+    const labelEl = modelBtn.querySelector('.dsh-tg-model-btn-label')
     if (labelEl) {
       // Same-value guards: syncModelControl runs on every scheduler pass,
       // and an identical write still mutates the DOM (textContent replaces
@@ -599,12 +575,12 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       // through that same RPC), and a greyed-out trigger for that long
       // reads as broken rather than busy.
       const unsettled = !!(snap && (snap.status === 'loading' || snap.status === 'idle' || snap.status === 'selecting')) && !(groupsNow.length > 0 && current !== null)
-      labelEl.classList.toggle('dsh-claude-model-btn-loading', unsettled)
+      labelEl.classList.toggle('dsh-tg-model-btn-loading', unsettled)
     }
     // The level is NOT part of this trigger any more: it has its own button
     // beside it (packages/client/src/features/effort/effort-picker.ts). A stale "· High" span from
     // an older generation is swept rather than reused.
-    const staleEffortEl = modelBtn.querySelector('.dsh-claude-model-btn-effort')
+    const staleEffortEl = modelBtn.querySelector('.dsh-tg-model-btn-effort')
     if (staleEffortEl !== null) staleEffortEl.remove()
     const triggerAria = copy('triggerLabel', { model: label })
     setAttributeIfChanged(modelBtn, 'aria-label', triggerAria)

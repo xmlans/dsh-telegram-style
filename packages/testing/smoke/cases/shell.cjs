@@ -1,58 +1,32 @@
 'use strict'
 const { same, check, basicChecks, commonChecks } = require('./_shared.cjs')
 
-/** The shell surfaces a wallpaper plugin shows through, and what the Claude palette paints them */
-const CLAUDE_SHELL = ['body', 'sidebar', 'conversation']
-const CLAUDE_FILLS = [['body', 'rgb(252, 252, 251)'], ['sidebar', 'rgb(251, 251, 249)'], ['conversation', 'rgb(252, 252, 251)']]
+/** The classic palette's wallpaper colour (tokens.json wallpaper entry), which the skin paints on <body> */
+const CLASSIC_WALLPAPER = 'rgb(200, 218, 174)'
+const CLEAR = 'rgba(0, 0, 0, 0)'
 
 module.exports = {
-  // The skin's own Claude palette: the ivory and warm-black canvases, the clay
-  // accent and the raised card fill, read from the live custom properties.
+  // The skin's classic palette: the white and near-black canvases, read from
+  // the live custom properties.
   brand(r) {
     basicChecks(r)
     const palette = r.claudePalette || {}
-    check('the Claude brand keeps its ivory and warm-black canvases and the clay accent',
-      palette.canvas === 'rgb(252, 252, 251)' && palette.accent === '#d97757' && !!palette.dark &&
-        palette.dark.canvas === 'rgb(20, 20, 19)' && palette.dark.accent === '#d97757' && palette.dark.raised === '#1e1e1d',
+    check('the classic palette paints a white canvas in light and a near-black one in dark',
+      palette.canvas === 'rgb(255, 255, 255)' && !!palette.dark &&
+        palette.dark.raised === '#212121',
       JSON.stringify(palette))
     commonChecks(r)
   },
-  // The custom brand over the Claude brand (D30): both images painted where the
-  // brand's art stood, the text-colour ink and the accent once the preferences
-  // ask for them, and the brand's own accent back once it is cleared.
-  'custom-brand'(r) {
+  // The wallpaper: the palette's plain colour on <body> with the pattern layer over it.
+  wallpaper(r) {
     basicChecks(r)
-    const brand = r.customBrand || {}
-    const images = brand.images || {}
-    const markUrl = '/dsh-claude-style/brand/mark?v=1-1'
-    const wordUrl = '/dsh-claude-style/brand/wordmark?v=1-1'
-    check('the mark the host half holds replaces the brand\'s art in the sidebar, on the hero and as the account row\'s fallback picture',
-      images.markAttr === '' && images.hostArt === 'none' &&
-        images.mark.image.includes(markUrl) && images.mark.mask === 'none' && images.mark.width === '18px' &&
-        images.hero.image.includes(markUrl) && images.hero.width === '42.5px' &&
-        typeof images.avatar === 'string' && images.avatar.includes(markUrl),
-      JSON.stringify(images))
-    check('the wordmark replaces the brand name at the 18px cap height, its width read from the image\'s 4:1 proportions',
-      images.wordAttr === 'image' && images.hostWord === 'none' &&
-        images.word.image.includes(wordUrl) && images.word.width === '72px' && images.word.height === '18px',
-      JSON.stringify(images.word))
-    const tinted = brand.tinted || {}
-    check('the text-colour choice paints the mark as a shape in the label colour, and the wordmark still outranks a brand name',
-      tinted.tintAttr === '' && tinted.mark.image === 'none' && tinted.mark.mask.includes(markUrl) &&
-        tinted.mark.fill !== 'rgba(0, 0, 0, 0)' && tinted.wordAttr === 'image',
-      JSON.stringify(tinted))
-    check('a custom accent takes the accent tokens, with the light ink on a dark fill',
-      tinted.accent === '#1a7f5a' && tinted.accentInk === '#faf9f5', JSON.stringify({ accent: tinted.accent, ink: tinted.accentInk }))
-    const cleared = brand.cleared || {}
-    check('clearing the accent hands the brand\'s own accent back, and the images return to their own colours',
-      cleared.accent === '#d97757' && cleared.tintAttr === null && cleared.mark.image.includes(markUrl),
-      JSON.stringify(cleared))
-    check('teardown takes the custom brand\'s values off <body>',
-      Array.isArray(r.leftBrandProperties) && r.leftBrandProperties.length === 0, JSON.stringify(r.leftBrandProperties))
+    const wall = r.wallpaper || {}
+    check('the window carries the palette colour and the pattern layer, masked with the pattern',
+      wall.layer !== 'none' && wall.plain === true && wall.mask === true, JSON.stringify(wall))
     commonChecks(r)
   },
   // The classic hero: the welcome is drawn on arrival and held between passes,
-  // and the crab stands on that page's card too.
+  // and the sticker stands on that page's card too.
   hero(r) {
     basicChecks(r)
     const greeting = r.greeting || {}
@@ -64,13 +38,7 @@ module.exports = {
     check('the classic hero draws the permission segments in the card\'s mode strip',
       JSON.stringify(r.classicSegments) === JSON.stringify(['Read', 'Edit', 'Auto', 'Yolo']) && r.classicPermTrigger === false,
       JSON.stringify({ segments: r.classicSegments, trigger: r.classicPermTrigger }))
-    check('the classic hero page carries the crab too', r.classicCrab === true, JSON.stringify(r.classicCrab))
-    const ripple = r.ripple || {}
-    check('the glyph field is off until its switch turns it on', ripple.off === true, JSON.stringify(ripple.off))
-    check('the hero root carries the glyph field\'s canvas, under its content and taking no press',
-      ripple.stamped === true && ripple.canvas === true && ripple.pointerEvents === 'none' && ripple.order === '-1', JSON.stringify(ripple))
-    check('the glyph field\'s switch takes the canvas off the hero root, and putting it back mounts it again',
-      ripple.gone === true && ripple.back === true, JSON.stringify({ gone: ripple.gone, back: ripple.back }))
+    check('the classic hero page carries the sticker too', r.classicSticker === true, JSON.stringify(r.classicSticker))
     commonChecks(r)
   },
   // The conversation header's tab strip: the pill is drawn under the active tab
@@ -92,64 +60,6 @@ module.exports = {
     check('teardown takes the pill, its placement and the strip stamp off the view tabs', pill.left === false, JSON.stringify(pill.left))
     commonChecks(r)
   },
-  // The header band: the conversation's title and the header's control clusters
-  // in the desktop caption row, and the row they leave behind.
-  'header-band'(r) {
-    basicChecks(r)
-    const b = r.band || {}
-    const laid = b.laid || {}
-    const marks = laid.marks || {}
-    const right = b.viewportRight - (b.controls + b.air)
-    /** The caption row's own middle for a 28px box; the title sits the skin's optical drop below it. */
-    const middle = Math.round((b.band - 28) / 2)
-    const top = middle + b.titleDrop
-    // Where the row sits with the lift taken back out: the header's own inset.
-    const naturalRow = laid.row.y - parseFloat(laid.rowLift || '0')
-    check('the caption row takes both sides: the title at the row\'s left, the two control clusters against the caption buttons',
-      marks.band === 'title actions' && marks.title === true && marks.utilities === true && marks.corner === true &&
-        laid.title.x === laid.row.x && laid.title.y === top &&
-        laid.utilities.y === middle && laid.corner.right === right && laid.corner.y === middle &&
-        laid.utilities.right === laid.corner.x - b.air,
-      JSON.stringify(laid))
-    check('the pieces placed there are fixed, stacked over the page and clickable inside the shell\'s drag region',
-      laid.titlePosition === 'fixed' && laid.titleZ === '30' &&
-        laid.titleRegion === 'no-drag' && laid.utilitiesRegion === 'no-drag' && laid.cornerRegion === 'no-drag',
-      JSON.stringify({ position: laid.titlePosition, z: laid.titleZ, regions: [laid.titleRegion, laid.utilitiesRegion, laid.cornerRegion] }))
-    check('the title is handed the room left between its own edge and the controls once the strip\'s width is reserved, and the row it left tucks under it',
-      laid.titleLeft === laid.row.x + 'px' &&
-        laid.titleMax === laid.utilities.x - b.air - ((laid.strip.right - laid.strip.x) + b.air) - laid.title.x + 'px' &&
-        laid.row.y === laid.title.y + 28 - b.tuck && laid.rowPosition === 'relative' && laid.rowOffset === laid.rowLift &&
-        laid.row.y === laid.rowLift.replace('px', '') * 1 + laid.header.y + parseFloat(laid.headerPaddingTop) &&
-        laid.preset.x === laid.row.x,
-      JSON.stringify({ left: laid.titleLeft, max: laid.titleMax, lift: laid.rowLift, offset: laid.rowOffset, row: laid.row, header: laid.header, preset: laid.preset, utilities: laid.utilities, strip: laid.strip }))
-    const panelClosed = b.panelClosed || {}
-    check('the right panel\'s collapse control is the skin\'s own, drawn in the header\'s row: it shows while the panel is open and hides with the panel, and the panel\'s own copy stays where the host drew it',
-      laid.closeInline === 'inline-flex' && laid.closeShown !== 'none' &&
-        laid.hostToggleDisplay !== 'none' && panelClosed.close === 'none',
-      JSON.stringify({ laid: { close: laid.closeInline, shown: laid.closeShown, host: laid.hostToggleDisplay }, closed: panelClosed }))
-    const solo = b.solo || {}
-    check('with the corner seat empty — the right sidebar is open — the cluster that is there still lifts, into the corner\'s own place',
-      solo.marks.band === 'title actions' && solo.marks.corner === false && solo.utilities.right === right,
-      JSON.stringify(solo))
-    const tight = b.tight || {}
-    check('when the shell\'s own seat takes the row\'s left end, both sides stay in the header\'s row: no marker, no stamp, the row back at its own inset',
-      tight.marks.band === null && tight.marks.row === false && tight.marks.title === false &&
-        tight.marks.utilities === false && tight.marks.corner === false &&
-        tight.row.y === naturalRow && tight.title.y > b.band && tight.utilities.y > b.band,
-      JSON.stringify({ tight: tight, natural: naturalRow }))
-    const off = b.off || {}
-    const back = b.back || {}
-    check('switching the feature off hands the row back whole — the strip the other feature placed stays — and switching it on places both sides again',
-      off.marks.band === null && off.marks.title === false && off.marks.utilities === false && off.marks.corner === false &&
-        off.stripStamped === true &&
-        back.marks.band === 'title actions' && back.marks.title === true && back.marks.utilities === true,
-      JSON.stringify({ off: off, back: back }))
-    const left = b.left || {}
-    check('taking the desktop shell\'s marker away leaves no band marker and no stamps behind',
-      left.band === null && left.row === false && left.title === false && left.utilities === false && left.corner === false,
-      JSON.stringify(left))
-    commonChecks(r)
-  },
   // The composer's host controls, marked by structure, the marks their teardown
   // leaves behind, and the host's own Enter on an open menu.
   composer(r) {
@@ -160,9 +70,8 @@ module.exports = {
     check('the submit button\'s mark follows its glyph to stop and back',
       controls.stopping === 'stop' && controls.back === 'send', JSON.stringify(controls))
     const glyph = r.stopGlyph || {}
-    check('the stop mark is drawn by the skin: a whole-pixel square filled with the button\'s ink under a 16px ring, the host\'s scaled glyph unpainted',
-      glyph.hostGlyph === 'none' && glyph.ring === '16px' && glyph.squareWidth === '4px' &&
-        glyph.squareHeight === '4px' && glyph.fill === glyph.ink,
+    check('the stop mark is drawn by the skin: the stop icon, a 24px mask filled with the button\'s ink and not the send plane, the host\'s glyph unpainted',
+      glyph.hostGlyph === 'none' && glyph.icon === '24px' && glyph.swapped === true && glyph.fill === glyph.ink,
       JSON.stringify(glyph))
     check('teardown takes the draft marks off the composer cards', r.leftDraftMarks === 0, `${r.leftDraftMarks} left`)
     check('teardown takes the control marks off the host controls', r.leftControlMarks === 0, `${r.leftControlMarks} left`)
@@ -304,70 +213,38 @@ module.exports = {
       r.cardsLeftAfterLeave === 0, `${r.cardsLeftAfterLeave} open`)
     commonChecks(r)
   },
-  'sidebar-layout'(r) {
-    basicChecks(r)
-    const layout = r.sidebarLayout || {}
-    const relaxed = layout.relaxed || {}
-    const compact = layout.compact || {}
-    const back = layout.back || {}
-    check('the sidebar-layout choice resolves onto the document, relaxed by default',
-      relaxed.attr === 'relaxed' && relaxed.rowHeight === 28 && relaxed.footPadding === '8px 6px',
-      JSON.stringify(relaxed))
-    check('Compact takes the conversation rows\' height and the footer\'s padding down',
-      compact.attr === 'compact' && compact.rowHeight === 24 && compact.rowMin === '24px' &&
-        compact.footPadding === '4px 3px',
-      JSON.stringify(compact))
-    check('switching back to Relaxed restores every value without a reload',
-      back.attr === 'relaxed' && same(back, relaxed), JSON.stringify(back))
-    commonChecks(r)
-  },
   'host-palette'(r) {
     basicChecks(r)
     const hp = r.hostPalette || {}
-    const host = hp.host || {}
-    check('under the host\'s colours and type the skin writes none of the host\'s tokens',
-      host.base === 'rgb(250, 250, 252)' && host.family === '"Host Sans", sans-serif', JSON.stringify(host))
-    check('and paints none of the host\'s frame: the sidebar keeps the host\'s fill, the conversation column and the canvases stay unpainted',
-      host.sidebar === 'rgb(244, 245, 250)' && host.conversation === 'rgba(0, 0, 0, 0)' &&
-        host.body === 'rgba(0, 0, 0, 0)' && host.html === 'rgba(0, 0, 0, 0)',
-      JSON.stringify(host))
-    check('the skin\'s own cards take the host\'s overlay layer, blurred behind',
-      host.popover === 'rgb(240, 241, 250)' && host.account === 'rgb(240, 241, 250)' && host.search === 'rgb(240, 241, 250)' &&
-        /blur\(16px\)/.test(host.popoverBlur || ''),
-      JSON.stringify(host))
-    check('the inverted chip becomes the host\'s hover plate with its primary ink',
-      host.group === 'rgba(10, 20, 30, 0.08)' && host.groupInk === 'rgb(17, 18, 19)', JSON.stringify(host))
-    check('the skin\'s display and code faces fall back to the host\'s',
-      host.heading === '"Host Sans", sans-serif' && host.code === '"Host Mono", monospace', JSON.stringify(host))
-    const wall = hp.wallpaper || {}
-    check('a wallpaper plugin\'s cleared canvas and glass reach the sidebar and the cards',
-      wall.sidebar === 'rgba(0, 0, 0, 0)' && wall.popover === 'rgba(255, 255, 255, 0.6)' &&
-        wall.account === 'rgba(255, 255, 255, 0.6)' && wall.body === 'rgba(0, 0, 0, 0)',
-      JSON.stringify(wall))
-    const claude = hp.claude || {}
-    check('back on Claude the skin\'s palette and faces return',
-      claude.base === '#fcfcfb' && claude.body === 'rgb(252, 252, 251)' && claude.account === 'rgb(252, 252, 251)' &&
-        claude.popover === 'rgb(255, 255, 255)' && /Anthropic Serif Web Text/.test(claude.heading || ''),
-      JSON.stringify(claude))
-    // A wallpaper under the Claude palette. The shell canvases stand down
-    // and one fixed mask in the canvas colour lies over the wallpaper; the base
-    // canvas the host paints its dialogs and cards with stays opaque, and so do
-    // the skin's own faces. Taking the marker away brings the fills back and
-    // lifts the mask. The document element's canvas stays behind the layer.
-    const wallClaude = hp.claudeWallpaper || {}
-    check('with the Claude palette and a wallpaper up the shell stands down under one mask',
-      CLAUDE_SHELL.every((key) => wallClaude[key] === 'rgba(0, 0, 0, 0)') && wallClaude.sidebarFill === 'transparent' &&
-        wallClaude.maskPosition === 'fixed' && /^color\(srgb 0\.98\d* 0\.98\d* 0\.98\d* \/ 0\.86\)$/.test(wallClaude.mask || '') &&
-        wallClaude.html === 'rgb(252, 252, 251)',
-      JSON.stringify(wallClaude))
-    check('and the base canvas and the skin\'s own faces keep their fill',
-      wallClaude.base === '#fcfcfb' && wallClaude.popover === claude.popover && wallClaude.account === claude.account &&
-        wallClaude.search === claude.search,
-      JSON.stringify({ wallpaper: wallClaude, claude }))
-    check('with the wallpaper gone the skin\'s own fills are back and the mask is lifted',
-      CLAUDE_FILLS.every(([key, value]) => claude[key] === value) && claude.sidebarFill === '#fbfbf9' &&
-        claude.mask === 'rgba(0, 0, 0, 0)',
-      JSON.stringify(claude))
+    const classic = hp.classic || {}
+    // Without a wallpaper plugin the skin lays its own wallpaper: the palette's
+    // plain colour on <body>, the conversation left clear over it, the sidebar
+    // and the cards on the palette's card colour, no mask layer.
+    check('the classic palette paints the wallpaper colour, the cards and the sidebar',
+      classic.base === '#FFFFFF' && classic.body === CLASSIC_WALLPAPER && classic.conversation === CLEAR &&
+        classic.sidebar === 'rgb(255, 255, 255)' && classic.account === 'rgb(255, 255, 255)' &&
+        classic.popover === 'rgb(255, 255, 255)' && classic.html === 'rgb(255, 255, 255)',
+      JSON.stringify(classic))
+    // A wallpaper plugin under the classic palette. The skin's own wallpaper
+    // yields: <body> is clear and no mask layer lies over the plugin's picture.
+    // The cards turn opaque (the sidebar's fill is the card colour, and the
+    // base canvas, the popovers, the account drawer and the search box keep their
+    // fill); the document element's canvas stays behind the layer.
+    const wallClassic = hp.classicWallpaper || {}
+    check('with a wallpaper plugin up the own wallpaper of the skin stands down and no mask is laid',
+      wallClassic.body === CLEAR && wallClassic.conversation === CLEAR &&
+        wallClassic.mask === CLEAR && wallClassic.maskPosition === 'static' &&
+        wallClassic.html === 'rgb(255, 255, 255)',
+      JSON.stringify(wallClassic))
+    check('and the base canvas, the sidebar and the own faces of the skin keep an opaque fill',
+      wallClassic.base === '#FFFFFF' && wallClassic.sidebar === 'rgb(255, 255, 255)' && wallClassic.sidebarFill === '#FFFFFF' &&
+        wallClassic.popover === classic.popover && wallClassic.account === classic.account &&
+        wallClassic.search === classic.search,
+      JSON.stringify({ wallpaper: wallClassic, classic }))
+    check('with the plugin wallpaper gone the own wallpaper colour of the skin is back and there is still no mask',
+      classic.body === CLASSIC_WALLPAPER && wallClassic.body !== classic.body &&
+        classic.sidebarFill === '#FFFFFF' && classic.mask === CLEAR && classic.maskPosition === 'static',
+      JSON.stringify({ wallpaper: wallClassic, classic }))
     commonChecks(r)
   },
 }

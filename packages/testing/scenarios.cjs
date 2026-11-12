@@ -32,9 +32,7 @@ const { longSessionScenario } = require('./long-session.cjs')
 const { statsScenarios } = require('./stats-position.cjs')
 const { sidebarRailScenario } = require('./sidebar-rail.cjs')
 const { remoteSettingsScenario } = require('./remote-settings.cjs')
-const { customBrandScenario } = require('./custom-brand.cjs')
-const { dsBotScenario } = require('./ds-bot.cjs')
-const { CANVAS } = require('./shoot.cjs')
+const { PALETTES } = require('./shoot.cjs')
 const { sanitizePage } = require('../../scripts/shared/privacy.cjs')
 const { bound } = require('./bounds.cjs')
 
@@ -46,15 +44,14 @@ const MAX_FOLLOW_GAP_PX = bound('laneFollowMaxGapPx')
 
 /**
  * Capture the page in both palettes and prove the capture is fit to keep: the
- * palette is the one the brand resolves to, and the visible text carries no
+ * palette is a known one, and the visible text carries no
  * personal data (scripts/shared/privacy.cjs). The files land in the run's out
  * directory for a reviewer; nothing is compared against a stored picture.
  */
 async function captureBothSchemes(context) {
   const { page, out } = context
-  const brand = await page.evaluate(() => document.body.getAttribute('data-dsh-claude-brand'))
-  const canvas = CANVAS[brand]
-  if (canvas === undefined) throw new Error(`the page carries brand "${brand}", which has no recorded palette`)
+  const palette = await page.evaluate(() => document.body.getAttribute('data-dsh-tg-palette'))
+  if (!PALETTES.includes(palette)) throw new Error(`the page wears palette "${palette}", which is not one of ${PALETTES.join(', ')}`)
   const files = []
   const checks = []
   for (const scheme of ['light', 'dark']) {
@@ -63,9 +60,8 @@ async function captureBothSchemes(context) {
       // snapshot; no durable preference is read or written.
       await page.evaluate(() => document.body.setAttribute('data-ds-dark-theme', ''))
     }
-    const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-    const wanted = canvas[scheme]
-    if (background !== wanted) throw new Error(`${scheme} palette did not take effect (body bg ${background}, expected ${wanted})`)
+    const dark = await page.evaluate(() => document.body.hasAttribute('data-ds-dark-theme'))
+    if (dark !== (scheme === 'dark')) throw new Error(`${scheme} scheme did not take effect (the body's dark flag disagrees)`)
     const { caught, visibleText } = await sanitizePage((expression) => page.evaluate(expression))
     const file = path.join(out, `shots-${scheme}.png`)
     await page.screenshot({ path: file })
@@ -195,13 +191,13 @@ const SCENARIOS = {
         }
         const shown = (el) => el !== null && getComputedStyle(el).display !== 'none'
         const cap = (el) => (el === null ? null : getComputedStyle(el).maxWidth)
-        const perm = read('.dsh-claude-perm-btn')
-        const permLabel = read('.dsh-claude-perm-label')
-        const model = read('.dsh-claude-model-btn')
-        const modelLabel = read('.dsh-claude-model-btn-label')
-        const meter = read('[data-dsh-claude-context-meter]')
+        const perm = read('.dsh-tg-perm-btn')
+        const permLabel = read('.dsh-tg-perm-label')
+        const model = read('.dsh-tg-model-btn')
+        const modelLabel = read('.dsh-tg-model-btn-label')
+        const meter = read('[data-dsh-tg-context-meter]')
         const card = read('[data-composer-card]')
-        const row = read('[data-dsh-claude-part~="row"]')
+        const row = read('[data-dsh-tg-part~="row"]')
         return {
           width: window.innerWidth,
           card: box(card),
@@ -210,11 +206,11 @@ const SCENARIOS = {
           perm: box(perm),
           permMax: cap(perm),
           permEllipsis: permLabel === null ? null : getComputedStyle(permLabel).textOverflow,
-          chevron: shown(read('.dsh-claude-perm-chevron')),
+          chevron: shown(read('.dsh-tg-perm-chevron')),
           model: box(model),
           modelMax: cap(model),
           modelEllipsis: modelLabel === null ? null : getComputedStyle(modelLabel).textOverflow,
-          effort: box(read('.dsh-claude-effort-btn')),
+          effort: box(read('.dsh-tg-effort-btn')),
           meter: box(meter),
           ring: shown(meter === null ? null : meter.querySelector('svg')),
           number: shown(meter === null ? null : meter.querySelector('button > span')),
@@ -246,59 +242,7 @@ const SCENARIOS = {
       ]
     },
   },
-  /**
-   * The right panel's own collapse control: the skin's button stands in the
-   * header's row while that panel is open — its own copy hangs from a
-   * transformed, clipped subtree and cannot be placed there, so it stays in the
-   * panel — and pressing the skin's button closes the panel, the host's own open
-   * button taking its place again.
-   */
-  rightbar: {
-    script: 'greeting',
-    prompt: 'hello there',
-    async assert({ page, session }) {
-      const read = () => page.evaluate(() => {
-        const mine = [...document.querySelectorAll('.dsh-claude-rightbar-close')]
-        const shown = mine.filter((el) => getComputedStyle(el).display !== 'none')
-        const host = document.querySelector('[data-sidebar-right-open] [data-sidebar-right-toggle]')
-        const expand = document.querySelector('[data-sidebar-right-expand]')
-        const box = shown.length === 0 ? null : (() => {
-          const rect = shown[0].getBoundingClientRect()
-          return { left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top) }
-        })()
-        return {
-          buttons: mine.length,
-          shown: shown.length,
-          box,
-          host: host !== null,
-          hostShown: host !== null && getComputedStyle(host).display !== 'none',
-          expand: expand !== null,
-          panel: document.querySelector('[data-sidebar-right-open]') !== null,
-        }
-      })
-      const before = await read()
-      await page.locator('[data-sidebar-right-expand]').first().click()
-      await page.waitForFunction(() => document.querySelector('[data-sidebar-right-open]') !== null, undefined, { timeout: 15000 })
-      await page.waitForTimeout(500)
-      const open = await read()
-      await page.locator('.dsh-claude-rightbar-close').first().click()
-      await page.waitForFunction(() => document.querySelector('[data-sidebar-right-open]') === null, undefined, { timeout: 15000 })
-      await page.waitForTimeout(500)
-      const closed = await read()
-      return [
-        check('收起时那枚按钮不占位置，宿主自己的打开按钮在',
-          before.buttons === 1 && before.shown === 0 && before.expand === true && before.panel === false,
-          JSON.stringify(before)),
-        check('面板打开后它出现在头部那一行，面板里宿主自己那枚留在原处',
-          open.shown === 1 && open.box !== null && open.host === true && open.hostShown === true,
-          JSON.stringify(open)),
-        check('按下它面板收起，宿主的打开按钮回到原处',
-          closed.panel === false && closed.expand === true && closed.shown === 0 && closed.host === false,
-          JSON.stringify(closed)),
-        check('控制台没有异常', session.problems.length === 0, session.problems.slice(0, 3).join(' | ')),
-      ]
-    },
-  },
+
   /** A scripted tool call: its row, its call id, and the answer that follows. */
   tool: {
     script: 'inspect',
@@ -498,7 +442,7 @@ const SCENARIOS = {
       await recordProbes(context, 'conversation')
       // Any host menu does: the account menu the skin keys on is not mounted by
       // this build, and every menu shares the role, the list and the foreground.
-      const trigger = context.page.locator('[aria-haspopup="menu"]:not(:is([class^="dsh-claude"], [class*=" dsh-claude"])):visible').first()
+      const trigger = context.page.locator('[aria-haspopup="menu"]:not(:is([class^="dsh-tg"], [class*=" dsh-tg"])):visible').first()
       if (await trigger.count() > 0) {
         await trigger.click()
         await recordProbes(context, 'menu', 3000)
@@ -544,10 +488,6 @@ const SCENARIOS = {
   importance: importanceScenario({ check, observe, sendPrompt, waitForTurn, host: HOST }),
   /** A page under a non-loopback name reads and writes the host's settings beside the loopback one (packages/testing/remote-settings.cjs, D75). */
   remoteSettings: remoteSettingsScenario({ check }),
-  /** The reader's own brand images through the host half's routes and on the real shell (packages/testing/custom-brand.cjs, D30). */
-  customBrand: customBrandScenario({ check }),
-  /** The Chat / Code switch beside ds-bot's published browser half (packages/testing/ds-bot.cjs, D74). */
-  dsBot: dsBotScenario({ check }),
   /** Both palettes captured to the run's out directory and swept for personal data. */
   shots: {
     script: 'greeting',

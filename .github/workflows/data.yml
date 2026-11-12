@@ -1,9 +1,9 @@
 name: Data
 
-# The price snapshot and the peak rate catalog are scraped once here and
+# The price snapshot is scraped once here and
 # committed, so every install downloads a validated file instead of asking the
-# upstream source for one. The two scripts run in order: the price snapshot takes
-# its Chinese public holidays from the catalog. A run that finds nothing new
+# upstream source for one. The Chinese public holidays are carried over from
+# the committed snapshot; next year's dates are added to it by hand. A run that finds nothing new
 # writes nothing, and its commit is excluded from CI (paths-ignore), which is
 # what keeps a daily refresh from starting a full matrix.
 on:
@@ -34,8 +34,6 @@ jobs:
       - run: npm ci
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
-      - name: Refresh the peak rate catalog
-        run: node scripts/fetch-peakrate-catalog.mjs
       - name: Refresh the price snapshot
         run: node scripts/fetch-prices.mjs
       - name: Commit a change
@@ -47,5 +45,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add packages/host/data
-          git commit -m "chore(data): refresh the price and peak rate snapshots"
+          git commit -m "chore(data): refresh the price snapshot"
           git push

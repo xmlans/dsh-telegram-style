@@ -1,7 +1,7 @@
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { motionReduced } from '../../core/prefs'
 import { motionMs } from '../../shared/motion'
-import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-claude-style/contracts/services'
+import type { HostSessionStatsProjection, HostTokenUsageProjection } from '@dsh-telegram-style/contracts/services'
 
 /**
  * The session's figures counting to their new readings.
@@ -128,7 +128,7 @@ function takeReading(stats: HostSessionStatsProjection | null, usage: HostTokenU
 export function createStatsCount(write: (reading: StatsReading) => void) {
   // A reading that stops moving is within half a unit of its target after about
   // three time constants; the token's stretch is that distance.
-  const timeConstant = motionMs('--dsh-claude-duration-count') / 3
+  const timeConstant = motionMs('--dsh-tg-duration-count') / 3
   /** The reading the line shows right now. */
   let displayed: StatsReading = { stats: null, usage: null, cost: null }
   /** The reading the count is heading for, or null before the first one. */

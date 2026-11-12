@@ -1,5 +1,5 @@
 /**
- * Host half of dsh-claude-style.
+ * Host half of dsh-telegram-style.
  *
  * The skin's effect is browser-only. This half exists for the things a
  * browser-only plugin cannot do:
@@ -8,25 +8,19 @@
  *      beside the bundle as `model-descriptions.json` and the browser half
  *      fetches it at runtime, so the table grows without a rebuild and the
  *      bundle stays free of copy.
- *   2. Serve the bundled code font (and user-supplied text faces) as webfonts.
- *      The skin's code font stack names 'Anthropic Mono Web' first and
- *      'JetBrains Mono' behind it, and a face renders only when its family
- *      resolves — most systems have never installed either. The JetBrains
- *      files ship in this package (SIL OFL), so the fonts route hands them to
- *      the browser half's @font-face and the code face works with zero system
- *      installs. The Anthropic Sans/Serif/Mono faces are NOT in the npm
- *      package (they remain Anthropic's property), but a user who drops them
- *      into `$DSH_HOME/dsh-claude-style/fonts/` gets the same zero-install
- *      treatment; a missing file simply 404s and the stack falls back to a
- *      system-installed copy, then to the look-alike faces this package does
- *      ship (Inter, Noto Serif, JetBrains Mono — SIL OFL).
+ *   2. Serve the bundled code font as a webfont. The skin's code font stack
+ *      names 'JetBrains Mono' first, and a face renders only when its family
+ *      resolves — most systems have never installed it. The files ship in
+ *      this package (SIL OFL), so the fonts route hands them to the browser
+ *      half's @font-face and the code face works with zero system installs;
+ *      a missing file simply 404s and the stack falls back to a
+ *      system-installed copy.
  *   3. Resolve the OS user once for the browser half. The username route answers
  *      a single GET and the browser caches it; it runs the host's own request
  *      fence first — see refusalOf() in routes.ts.
- *   4. Serve Deepy's animation sheets. The DeepSeek brand's pixel whale plays
- *      more sprite sheets than are worth inlining into the bundle, so they ship
- *      as files beside it and the browser fetches each one the first time its
- *      animation plays.
+ *   4. Serve the routed assets. Images and feature chunks too big to be worth
+ *      inlining into the bundle (the sticker among them) ship as files beside
+ *      it, and the browser fetches each one the first time it is wanted.
  *
  * The registrations are defensive. A host without a web server, or with the
  * route prefix already taken, or with the settings service absent, must still
@@ -37,9 +31,9 @@
  * The routes live in routes.ts, the HDSL account contract in hdsl.ts, and the
  * settings surface in settings.ts; this file only mounts them.
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
 import { registerRoutes } from './routes.js'
-import type { DshContext, DshScope } from '@dsh-claude-style/engine/node/dsh'
+import type { DshContext, DshScope } from '@dsh-telegram-style/engine/node/dsh'
 import { registerSettings } from './settings.js'
 
 export const name = PACKAGE_NAME

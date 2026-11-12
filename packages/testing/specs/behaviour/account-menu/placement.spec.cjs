@@ -1,12 +1,10 @@
 /**
- * The account row's menu opens over the row at the page's own scale and under
- * the reader's page zoom alike. The host places its own card from the row's
- * bounding box and the card's laid-out height, and the two are measured in
- * different pixels once the page is drawn at a zoom factor.
+ * The account row's menu opens over the row. The host places its own card from the row's
+ * bounding box and the card's laid-out height.
  *
  * @capability account-menu
  * @features account
- * @risk With the page drawn at a zoom factor the account menu opens below its row and runs past the window's edge, so the settings and sign-out rows cannot be reached.
+ * @risk The account menu opens below its row and runs past the window's edge, so the settings and sign-out rows cannot be reached.
  */
 'use strict'
 const { spec } = require('../../fixtures/behaviour.cjs')
@@ -51,17 +49,5 @@ module.exports = spec({ page: 'desktop' }, ({ test }) => {
     await t.page.waitForTimeout(500)
     await aboveTheRow(t)
     t.expectThat.boxWithin(await cardBox(t), await windowBox(t), 'the menu stays inside the window at the page\'s own scale', 1)
-  })
-
-  test('under page zoom the menu still opens above its row, inside the window', async (t) => {
-    await t.prefs({ pageZoom: '1.25' })
-    // The zoom is what this reading is about, so it is judged too: a preference
-    // that never reached the page would leave the placement at 100% and the
-    // comparison would pass over a state nothing exercised.
-    t.expectThat.equal(await t.read.attribute('body', t.surface.attribute('skin.page-zoom')), '1.25', 'the page is drawn at 125%')
-    await accountRow(t.page).click()
-    await t.page.waitForTimeout(500)
-    await aboveTheRow(t)
-    t.expectThat.boxWithin(await cardBox(t), await windowBox(t), 'the menu stays inside the window at 125%', 1)
   })
 })

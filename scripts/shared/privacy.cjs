@@ -27,14 +27,17 @@ const USERNAME = 'Ada'
  * LEAK covers the local username, drive paths and quota amounts; PATH and
  * BALANCE cover the two rewrites.
  */
-const USERNAME_RE_SOURCE = 'Nwflower'
+const USERNAME_RE_SOURCE = ['Nwflower', require('os').userInfo().username]
+  .filter((name) => /^[A-Za-z0-9_.-]{2,}$/.test(name))
+  .map((name) => name.replace(/\./g, '[.]'))
+  .join('|')
 const PATH_RE_SOURCE = '[A-Z]:[\\\\/][^\\s"\']*'
 const BALANCE_RE_SOURCE = '\u00a5\\s?[0-9][0-9.,]*'
 
 /**
  * Replace sidebar titles with stand-ins; swap the username nodes for static
  * ones under a different class — the theme's footer sync re-writes any node
- * still carrying `.dsh-claude-account-user` with the inferred real name, so
+ * still carrying `.dsh-tg-account-user` with the inferred real name, so
  * the stand-in must be invisible to that query. The name the account row
  * shows is replaced everywhere else too (the studio greeting says it).
  *
@@ -61,28 +64,28 @@ const SANITIZE_JS = `(() => {
   let swapped = 0
   swapped += swap([...document.querySelectorAll('[class*="projectRow"] [class*="projectText"]')], ${JSON.stringify(PROJECT_NAMES)})
   swapped += swap([...document.querySelectorAll('[class*="sessionRow"] [class*="title"]')], ${JSON.stringify(SESSION_NAMES)})
-  const shown = ((document.querySelector('.dsh-claude-account-user') || {}).textContent || '').trim()
+  const shown = ((document.querySelector('.dsh-tg-account-user') || {}).textContent || '').trim()
   if (shown.length >= 2 && shown !== ${JSON.stringify(USERNAME)}) {
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
     while (walker.nextNode()) {
       const node = walker.currentNode
-      if ((node.nodeValue || '').includes(shown) && !node.parentElement.closest('.dsh-claude-account-user')) {
+      if ((node.nodeValue || '').includes(shown) && !node.parentElement.closest('.dsh-tg-account-user')) {
         node.nodeValue = node.nodeValue.split(shown).join(${JSON.stringify(USERNAME)})
         swapped++
       }
     }
   }
-  document.querySelectorAll('.dsh-claude-account-user').forEach((el) => {
+  document.querySelectorAll('.dsh-tg-account-user').forEach((el) => {
     const rep = document.createElement('span')
-    rep.className = 'dsh-claude-account-you'
+    rep.className = 'dsh-tg-account-you'
     rep.style.cssText = 'font-weight:500;color:var(--dsw-alias-label-primary);'
     rep.textContent = ${JSON.stringify(USERNAME)}
     el.replaceWith(rep)
     swapped++
   })
-  document.querySelectorAll('.dsh-claude-account-popover-name').forEach((el) => {
+  document.querySelectorAll('.dsh-tg-account-popover-name').forEach((el) => {
     const rep = document.createElement('div')
-    rep.className = 'dsh-claude-account-popover-name-static'
+    rep.className = 'dsh-tg-account-popover-name-static'
     rep.style.cssText = 'font-size:14px;font-weight:600;line-height:18px;color:var(--dsw-alias-label-primary);'
     rep.textContent = ${JSON.stringify(USERNAME)}
     el.replaceWith(rep)

@@ -9,13 +9,12 @@
  */
 import { expect, test } from 'vitest'
 import fc from 'fast-check'
-import { resolveMascot } from '@dsh-claude-style/client/pure'
 import {
-  BRAND_CLAUDE, BRAND_DEEPSEEK, BRAND_DEEPSEEK_LEGACY, BRAND_INK_ORIGINAL, BRAND_INK_TEXT, BRAND_NAME_MAX,
-  CHAT_ANIMATIONS_OFF, MASCOT_CRAB, MASCOT_DEEPY, MASCOT_OFF, ONGOING_INDICATOR_RING, PREFS, PREF_DEFAULTS,
+  PALETTE_TELEGRAM, PALETTE_TRANS,
+  CHAT_ANIMATIONS_OFF, PREFS, PREF_DEFAULTS,
   PROVIDER_ID_MAX, QUICK_PROVIDERS_MAX, STATUS_MOTION_WASH, USERNAME_MAX, clampPrefs,
-} from '@dsh-claude-style/contracts/prefs'
-import { OFFICIAL_MODEL_GROUP } from '@dsh-claude-style/contracts/services'
+} from '@dsh-telegram-style/contracts/prefs'
+import { OFFICIAL_MODEL_GROUP } from '@dsh-telegram-style/contracts/services'
 
 test('an empty or unreadable value reads as the defaults', () => {
   expect(clampPrefs({})).toEqual(PREF_DEFAULTS)
@@ -28,7 +27,7 @@ test('an empty or unreadable value reads as the defaults', () => {
  * field with a built-in's name, and that name itself, which an earlier-shape
  * lookup took for one of its own entries.
  */
-const ODD_VALUES = [{ brand: { toString: [] } }, { brand: 'toString' }, { statusDetail: 'constructor' }, { autoPopover: { valueOf: 1 } }]
+const ODD_VALUES = [{ palette: { toString: [] } }, { palette: 'toString' }, { statusDetail: 'constructor' }, { autoPopover: { valueOf: 1 } }]
 
 test('a value no build ever wrote reads as the default instead of breaking the read', () => {
   for (const stored of ODD_VALUES) {
@@ -70,8 +69,6 @@ test('a choice outside its set reads as its default', () => {
   expect(clampPrefs({ statusDetail: 'simple' }).statusDetail).toBe(false)
   expect(clampPrefs({ statusDetail: 'precise' }).statusDetail).toBe(true)
   expect(clampPrefs({ statusDetail: 'verbose' }).statusDetail).toBe(PREF_DEFAULTS.statusDetail)
-  expect(clampPrefs({ ongoingIndicator: ONGOING_INDICATOR_RING }).ongoingIndicator).toBe(ONGOING_INDICATOR_RING)
-  expect(clampPrefs({ ongoingIndicator: 'pulse' }).ongoingIndicator).toBe(PREF_DEFAULTS.ongoingIndicator)
 })
 
 test('the caret switch reads the retired explicit-moves tier as on', () => {
@@ -80,10 +77,11 @@ test('the caret switch reads the retired explicit-moves tier as on', () => {
   expect(clampPrefs({ caretMotion: 'move' }).caretMotion).toBe(PREF_DEFAULTS.caretMotion)
 })
 
-test('the brand stored under its earlier name lands on its choice, anything else on Claude', () => {
-  expect(clampPrefs({ brand: BRAND_DEEPSEEK }).brand).toBe(BRAND_DEEPSEEK)
-  expect(clampPrefs({ brand: BRAND_DEEPSEEK_LEGACY }).brand).toBe(BRAND_DEEPSEEK)
-  expect(clampPrefs({ brand: 'anthropic' }).brand).toBe(BRAND_CLAUDE)
+test('the palette an earlier build stored lands on the classic one, a new one stands, anything else reads as the default', () => {
+  expect(clampPrefs({ palette: 'claude' }).palette).toBe(PALETTE_TELEGRAM)
+  expect(clampPrefs({ palette: 'host' }).palette).toBe(PALETTE_TELEGRAM)
+  expect(clampPrefs({ palette: PALETTE_TRANS }).palette).toBe(PALETTE_TRANS)
+  expect(clampPrefs({ palette: 'anthropic' }).palette).toBe(PREF_DEFAULTS.palette)
 })
 
 test('the hover-open preference takes its earlier boolean shape', () => {
@@ -116,28 +114,9 @@ test('the username is trimmed and cut to its limit', () => {
   expect(clampPrefs({ username: 42 }).username).toBe('')
 })
 
-test('the brand name is trimmed and cut to its limit', () => {
-  expect(clampPrefs({ brandName: '  Acme  ' }).brandName).toBe('Acme')
-  expect(clampPrefs({ brandName: 'n'.repeat(BRAND_NAME_MAX + 10) }).brandName).toHaveLength(BRAND_NAME_MAX)
-  expect(clampPrefs({ brandName: false }).brandName).toBe('')
-})
-
-test('the custom accent keeps a #rrggbb colour, lower-cased, and reads anything else as unset', () => {
-  expect(clampPrefs({ brandAccent: '#1A7F5A' }).brandAccent).toBe('#1a7f5a')
-  expect(clampPrefs({ brandAccent: '#abc' }).brandAccent).toBe('')
-  expect(clampPrefs({ brandAccent: 'red' }).brandAccent).toBe('')
-  expect(clampPrefs({}).brandAccent).toBe('')
-})
-
-test('the custom images keep their own colours unless the text colour is chosen', () => {
-  expect(clampPrefs({}).brandInk).toBe(BRAND_INK_ORIGINAL)
-  expect(clampPrefs({ brandInk: BRAND_INK_TEXT }).brandInk).toBe(BRAND_INK_TEXT)
-  expect(clampPrefs({ brandInk: 'mono' }).brandInk).toBe(BRAND_INK_ORIGINAL)
-})
-
-test('"follow the brand" puts the crab under Claude and Deepy under DeepSeek; a fixed choice stands', () => {
-  expect(resolveMascot(clampPrefs({ brand: BRAND_CLAUDE }))).toBe(MASCOT_CRAB)
-  expect(resolveMascot(clampPrefs({ brand: BRAND_DEEPSEEK }))).toBe(MASCOT_DEEPY)
-  expect(resolveMascot(clampPrefs({ brand: BRAND_DEEPSEEK, mascot: MASCOT_CRAB }))).toBe(MASCOT_CRAB)
-  expect(resolveMascot(clampPrefs({ mascot: MASCOT_OFF }))).toBe(MASCOT_OFF)
+test('the sticker mascot is on by default; the values an earlier build stored read as on, and `off` as off', () => {
+  expect(clampPrefs({}).mascot).toBe(true)
+  for (const earlier of ['brand', 'crab', 'deepy']) expect(clampPrefs({ mascot: earlier }).mascot).toBe(true)
+  expect(clampPrefs({ mascot: 'off' }).mascot).toBe(false)
+  expect(clampPrefs({ mascot: false }).mascot).toBe(false)
 })

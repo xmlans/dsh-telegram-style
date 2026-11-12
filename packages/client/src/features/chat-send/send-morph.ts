@@ -146,7 +146,12 @@ export function startMorph(snapshot: ComposerSnapshot, bubble: HTMLElement, end:
   // animated here: the plate is one declaration, so no clock can leave it behind.
   // Written flat — see chatSendOpaque: a translucent token would composite again
   // over the row this stand-in fades across.
-  shell.style.backgroundColor = chatSendOpaque(style.backgroundColor, window.getComputedStyle(chatSendGhostHost()).backgroundColor)
+  // A glass palette paints the bubble with a gradient, so its background-color
+  // computes to transparent: the stand-in then takes the solid the gradient is built
+  // on (--dsh-tg-bubble-out-solid), the outgoing bubble as one colour.
+  const outgoing = window.getComputedStyle(document.body).getPropertyValue('--dsh-tg-bubble-out-solid').trim()
+  const bubbleFill = outgoing !== '' && (style.backgroundColor === 'rgba(0, 0, 0, 0)' || style.backgroundColor === 'transparent') ? outgoing : style.backgroundColor
+  shell.style.backgroundColor = chatSendOpaque(bubbleFill, window.getComputedStyle(chatSendGhostHost()).backgroundColor)
   // The shape carries the destination's own edge as well: a bubble the fold holds
   // softens its bottom with a mask, and the stand-in is that bubble until it lands. A
   // bubble nothing holds computes to `none`, which writes nothing.

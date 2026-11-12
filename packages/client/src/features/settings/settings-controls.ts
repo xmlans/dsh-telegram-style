@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Tag } from '@deepseek-ai/dsh-client-ui-primitives'
-import { PREFS } from '@dsh-claude-style/contracts/prefs'
-import { ROW_CONTROLS } from 'virtual:dsh-claude-style/settings-controls'
+import { PREFS } from '@dsh-telegram-style/contracts/prefs'
+import { ROW_CONTROLS } from 'virtual:dsh-telegram-style/settings-controls'
 import { SEGMENTS_CLASS, SEGMENT_CLASS } from '../../shared/segment-control'
-import { windowsDesktop } from '@dsh-claude-style/engine/desktop-band'
+import { windowsDesktop } from '@dsh-telegram-style/engine/desktop-band'
 import { prefYielded, settingsRowsOf } from '../../core/feature'
 import { featureCopy } from '../../core/i18n'
 import { motionReduced } from '../../core/prefs'
@@ -19,8 +19,8 @@ import type { QuickProvidersHandle } from './quick-providers'
  * shell and the indented sub-row. Every tab builds its rows from these, so
  * the page reads as one control set whichever tab is open.
  *
- * The segmented controls reuse the shared `.dsh-claude-segments` /
- * `.dsh-claude-segment` classes and sliding highlight — the same control the
+ * The segmented controls reuse the shared `.dsh-tg-segments` /
+ * `.dsh-tg-segment` classes and sliding highlight — the same control the
  * composer's permission picker uses — so the two read as one design instead
  * of two lookalikes.
  */
@@ -79,7 +79,7 @@ export function tabRows(tab: SettingsTab, view: SettingsView) {
   const nodes = rows.sort((a, b) => a.rank - b.rank).map(row => row.node)
   const notice = tab.notice === undefined ? null : tab.notice()
   if (notice === null) return nodes
-  return [React.createElement('div', { key: 'notice', className: 'dsh-claude-settings-notice dsh-claude-settings-tab-notice', role: 'note' }, notice), ...nodes]
+  return [React.createElement('div', { key: 'notice', className: 'dsh-tg-settings-notice dsh-tg-settings-tab-notice', role: 'note' }, notice), ...nodes]
 }
 
 /**
@@ -201,7 +201,7 @@ export function managedDesc(text: string, managed: boolean): React.ReactNode {
  */
 export function noteDesc(text: string, note: string | null): React.ReactNode {
   if (note === null) return text
-  return [text, React.createElement('span', { key: 'note', className: 'dsh-claude-settings-row-note' }, note)]
+  return [text, React.createElement('span', { key: 'note', className: 'dsh-tg-settings-row-note' }, note)]
 }
 /**
  * One segmented control on the page, carrying the shared sliding highlight
@@ -210,7 +210,7 @@ export function noteDesc(text: string, note: string | null): React.ReactNode {
  * painted — and taken off when the group unmounts. `role` defaults to a
  * plain group; the tab strip passes `tablist`.
  */
-export function ClaudeStyleSegmentGroup(props: { role?: string, className?: string, children?: React.ReactNode }) {
+export function TelegramStyleSegmentGroup(props: { role?: string, className?: string, children?: React.ReactNode }) {
   const group = React.useRef<HTMLDivElement>(null)
   const pill = React.useRef<ReturnType<typeof createSlidingPill> | null>(null)
   React.useLayoutEffect(() => {
@@ -238,13 +238,13 @@ export function ClaudeStyleSegmentGroup(props: { role?: string, className?: stri
  * switching back or a value arriving from elsewhere draws every knob at rest
  * (settings.css).
  */
-export function ClaudeStyleSwitch(props: { on: boolean, onPick(value: boolean): void, disabled?: boolean, label?: string }) {
+export function TelegramStyleSwitch(props: { on: boolean, onPick(value: boolean): void, disabled?: boolean, label?: string }) {
   const [moved, setMoved] = React.useState(false)
   return React.createElement(
     'button',
     {
       type: 'button',
-      className: 'dsh-claude-settings-switch',
+      className: 'dsh-tg-settings-switch',
       role: 'switch',
       disabled: props.disabled === true,
       'aria-checked': props.on ? 'true' : 'false',
@@ -256,7 +256,7 @@ export function ClaudeStyleSwitch(props: { on: boolean, onPick(value: boolean): 
         props.onPick(!props.on)
       },
     },
-    React.createElement('span', { className: 'dsh-claude-settings-switch-knob' }),
+    React.createElement('span', { className: 'dsh-tg-settings-switch-knob' }),
   )
 }
 
@@ -289,27 +289,27 @@ export function createSettingsControls() {
         options[i].label,
       ))
     }
-    return React.createElement(ClaudeStyleSegmentGroup, null, buttons)
+    return React.createElement(TelegramStyleSegmentGroup, null, buttons)
   }
 
   /** An on/off switch; `row()` names it after the row it lands in. */
   function toggle(on: boolean, onPick: (value: boolean) => void, disabled?: boolean) {
-    return React.createElement(ClaudeStyleSwitch, { on, onPick, disabled })
+    return React.createElement(TelegramStyleSwitch, { on, onPick, disabled })
   }
 
   /** A row's text half: the title over the description; a row whose control is the explanation (a preview card) carries no description. */
   function rowText(title: string, description: React.ReactNode, experimental?: boolean) {
     return React.createElement(
       'div',
-      { className: 'dsh-claude-settings-row-text' },
+      { className: 'dsh-tg-settings-row-text' },
       title === '' ? null : React.createElement(
         'div',
-        { className: 'dsh-claude-settings-row-title', 'data-experimental': experimental === true ? '' : undefined },
+        { className: 'dsh-tg-settings-row-title', 'data-experimental': experimental === true ? '' : undefined },
         title,
         // The tag is the host's own control, the one its plugin page marks an experimental package with.
-        experimental === true ? React.createElement(Tag, { tone: 'info', className: 'dsh-claude-settings-row-tag' }, sharedLine('experimental')) : null,
+        experimental === true ? React.createElement(Tag, { tone: 'info', className: 'dsh-tg-settings-row-tag' }, sharedLine('experimental')) : null,
       ),
-      description === null ? null : React.createElement('div', { className: 'dsh-claude-settings-row-desc' }, description),
+      description === null ? null : React.createElement('div', { className: 'dsh-tg-settings-row-desc' }, description),
     )
   }
 
@@ -330,16 +330,16 @@ export function createSettingsControls() {
    * group keeps no hairline between its members.
    */
   function row(key: string, title: string | null, description: React.ReactNode, control: React.ReactNode, options?: { block?: boolean, disabled?: boolean, sub?: boolean, experimental?: boolean }) {
-    const classes = ['dsh-claude-settings-row']
-    if (options?.block) classes.push('dsh-claude-settings-row-block')
-    else if (React.isValidElement(control) && control.type === ClaudeStyleSegmentGroup) classes.push('dsh-claude-settings-row-segment')
+    const classes = ['dsh-tg-settings-row']
+    if (options?.block) classes.push('dsh-tg-settings-row-block')
+    else if (React.isValidElement(control) && control.type === TelegramStyleSegmentGroup) classes.push('dsh-tg-settings-row-segment')
     // A row with no title is the option that belongs to
     // the switch above it, and `sub` is the same belonging for a titled row
     // (the precise status line under that switch): the stylesheet keeps the
     // group's members together, with no hairline between them (settings.css).
-    if (options?.sub === true || title === null) classes.push('dsh-claude-settings-row-sub')
+    if (options?.sub === true || title === null) classes.push('dsh-tg-settings-row-sub')
     // The switch has no text of its own; its name is this row's title.
-    const named = React.isValidElement(control) && control.type === ClaudeStyleSwitch
+    const named = React.isValidElement(control) && control.type === TelegramStyleSwitch
       ? React.cloneElement(control as React.ReactElement<{ label?: string }>, { label: title ?? '' })
       : control
     const disabled = options?.disabled === true
@@ -357,13 +357,13 @@ export function createSettingsControls() {
    * with the same `disabled` flag, so it also refuses the keyboard.
    */
   function subRow(key: string, title: string, description: React.ReactNode, control: React.ReactNode, enabled: boolean, experimental?: boolean) {
-    const named = React.isValidElement(control) && control.type === ClaudeStyleSwitch
+    const named = React.isValidElement(control) && control.type === TelegramStyleSwitch
       ? React.cloneElement(control as React.ReactElement<{ label?: string }>, { label: title })
       : control
     return React.createElement(
       'div',
       {
-        className: 'dsh-claude-settings-row dsh-claude-settings-row-sub',
+        className: 'dsh-tg-settings-row dsh-tg-settings-row-sub',
         key,
         'aria-disabled': enabled ? undefined : 'true',
         'data-disabled': enabled ? undefined : '',

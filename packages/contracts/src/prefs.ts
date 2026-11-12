@@ -13,26 +13,6 @@ import { CURRENCIES, CURRENCY_CNY } from './prices'
 
 /* ---------- the value vocabulary ---------- */
 
-/** Brand marks selectable from the settings page. `claude` is the default. */
-export const BRAND_CLAUDE = 'claude'
-/**
- * The DeepSeek brand: the host's own brand area stays (no Claude variant
- * matches) and takes DeepSeek's brand blue, both palettes turn blue
- * (theme/tokens.css), the skin's Claude marks give way to DeepSeek's whale,
- * and Deepy the pixel whale takes the crab's place on the composer.
- */
-export const BRAND_DEEPSEEK = 'deepseek'
-/** What earlier builds stored for the DeepSeek choice, when it was labelled "Off". */
-export const BRAND_DEEPSEEK_LEGACY = 'off'
-export const BRANDS = [BRAND_CLAUDE, BRAND_DEEPSEEK] as const
-
-/** How the custom brand images are painted: in their own colours, or as a shape in the text colour. */
-export const BRAND_INK_ORIGINAL = 'original'
-export const BRAND_INK_TEXT = 'text'
-export const BRAND_INKS = [BRAND_INK_ORIGINAL, BRAND_INK_TEXT] as const
-/** Longest accepted brand name. */
-export const BRAND_NAME_MAX = 40
-
 /**
  * The animation choice: `system` follows the operating system's own
  * reduced-motion setting, `reduced` holds every animation still whatever the
@@ -69,21 +49,16 @@ export const MESSAGE_ENTER_FLIGHT = 'flight'
 export const MESSAGE_ENTER_GROW = 'grow'
 export const MESSAGE_ENTER_MODES = [MESSAGE_ENTER_FLIGHT, MESSAGE_ENTER_GROW] as const
 
-/** Who paints the colours: the skin's own palette, or the host's colour tokens left to the host and other theme plugins. */
-export const PALETTE_CLAUDE = 'claude'
-export const PALETTE_HOST = 'host'
-export const PALETTES = [PALETTE_CLAUDE, PALETTE_HOST] as const
-/** Who sets the type, under the same two answers. */
-export const TYPEFACE_CLAUDE = 'claude'
-export const TYPEFACE_HOST = 'host'
-export const TYPEFACES = [TYPEFACE_CLAUDE, TYPEFACE_HOST] as const
+/**
+ * The three palettes (spec 4.12), each with a light and a dark theme that
+ * follow the host's own light/dark switch. What an earlier build stored
+ * (`claude`, `host`) reads as the classic one.
+ */
+export const PALETTE_TELEGRAM = 'telegram'
+export const PALETTE_GLASS = 'glass'
+export const PALETTE_TRANS = 'trans'
+export const PALETTES = [PALETTE_TELEGRAM, PALETTE_GLASS, PALETTE_TRANS] as const
 
-/** The mascot on the composer, chosen apart from the brand: follow the brand, pick one, or show none. */
-export const MASCOT_BRAND = 'brand'
-export const MASCOT_CRAB = 'crab'
-export const MASCOT_DEEPY = 'deepy'
-export const MASCOT_OFF = 'off'
-export const MASCOTS = [MASCOT_BRAND, MASCOT_CRAB, MASCOT_DEEPY, MASCOT_OFF] as const
 /** Where the mascot stands: the home page alone, or the home page and the conversation. */
 export const MASCOT_SCOPE_HOME = 'home'
 export const MASCOT_SCOPE_ALL = 'all'
@@ -96,18 +71,7 @@ export const SEARCH_STYLE_STANDALONE = 'standalone'
 export const SEARCH_STYLES = [SEARCH_STYLE_ICON, SEARCH_STYLE_OVERLAY, SEARCH_STYLE_STANDALONE] as const
 
 /** How much air the sidebar keeps around its own rows. */
-export const SIDEBAR_LAYOUT_RELAXED = 'relaxed'
-export const SIDEBAR_LAYOUT_COMPACT = 'compact'
-export const SIDEBAR_LAYOUTS = [SIDEBAR_LAYOUT_RELAXED, SIDEBAR_LAYOUT_COMPACT] as const
 
-/**
- * The mark a conversation still running carries in the sidebar: a light
- * breathing in place over the idle seat's hollow circle, or the ring turning
- * that the skin drew before the light.
- */
-export const ONGOING_INDICATOR_BREATHE = 'breathe'
-export const ONGOING_INDICATOR_RING = 'ring'
-export const ONGOING_INDICATORS = [ONGOING_INDICATOR_BREATHE, ONGOING_INDICATOR_RING] as const
 
 /** The chat area's animation switch: on plays the ported set (features/chat-*), off leaves the area to the host. */
 export const CHAT_ANIMATIONS_OFF = 'off'
@@ -116,17 +80,6 @@ export const CHAT_ANIMATIONS_OFF = 'off'
 export const STATS_POSITION_INLINE = 'inline'
 export const STATS_POSITION_CONTEXT = 'context'
 export const STATS_POSITIONS = [STATS_POSITION_INLINE, STATS_POSITION_CONTEXT] as const
-
-/**
- * The language the account-hold easter egg (features/ban-screen/) is written
- * in, or `off` for none. It is its own preference rather than "follow the
- * shell", because the page reproduces a real Claude screen: the point is to
- * read it in the language Claude actually used.
- */
-export const BAN_LOCALE_EN = 'en'
-export const BAN_LOCALE_ZH = 'zh'
-export const BAN_LOCALE_OFF = 'off'
-export const BAN_LOCALES = [BAN_LOCALE_EN, BAN_LOCALE_ZH, BAN_LOCALE_OFF] as const
 
 /** Home-page layouts. `classic` is the centered hero; `studio` is the dashboard form, Claude Code's own home. */
 export const HOME_LAYOUT_CLASSIC = 'classic'
@@ -145,29 +98,6 @@ export const AUTO_POPOVER_OFF = 'off'
 export const AUTO_POPOVER_ACCOUNT = 'account'
 export const AUTO_POPOVER_ALL = 'all'
 export const AUTO_POPOVER_SCOPES = [AUTO_POPOVER_OFF, AUTO_POPOVER_ACCOUNT, AUTO_POPOVER_ALL] as const
-
-/**
- * How large the page is drawn: `system` leaves it at the size the system gives
- * it, and every other value scales the whole page by that factor (the stylesheet
- * writes it as a `zoom`, so the page lays out in a smaller space and every
- * control, line and picture grows with it).
- */
-export const PAGE_ZOOM_SYSTEM = 'system'
-export const PAGE_ZOOM_08 = '0.8'
-export const PAGE_ZOOM_1 = '1'
-export const PAGE_ZOOM_125 = '1.25'
-export const PAGE_ZOOM_15 = '1.5'
-export const PAGE_ZOOMS = [PAGE_ZOOM_SYSTEM, PAGE_ZOOM_08, PAGE_ZOOM_1, PAGE_ZOOM_125, PAGE_ZOOM_15] as const
-
-/**
- * The sodium rewrite (D78): `undecided` until the reader or the first probe that
- * finds a listed rule decides it, and drawn as off until then. The settings
- * switch writes `on` or `off`, and the probe acts on `undecided` alone.
- */
-export const SODIUM_ON = 'on'
-export const SODIUM_OFF = 'off'
-export const SODIUM_UNDECIDED = 'undecided'
-export const SODIUM_MODES = [SODIUM_UNDECIDED, SODIUM_ON, SODIUM_OFF] as const
 
 /** Longest accepted custom username. */
 export const USERNAME_MAX = 64
@@ -189,11 +119,10 @@ interface PrefSpecBase {
 interface BooleanSpec extends PrefSpecBase { readonly type: 'boolean', readonly default: boolean }
 interface ChoiceSpec extends PrefSpecBase { readonly type: 'choice', readonly values: readonly string[], readonly default: string }
 interface TextSpec extends PrefSpecBase { readonly type: 'text', readonly default: string, readonly max: number }
-interface ColorSpec extends PrefSpecBase { readonly type: 'color', readonly default: string }
 interface ListSpec extends PrefSpecBase { readonly type: 'list', readonly default: readonly string[], readonly max: number, readonly entryMax: number, readonly drop: readonly string[] }
 
 /** One preference's declaration: its type, its default, and what its type adds to that. */
-export type PrefSpec = BooleanSpec | ChoiceSpec | TextSpec | ColorSpec | ListSpec
+export type PrefSpec = BooleanSpec | ChoiceSpec | TextSpec | ListSpec
 
 /**
  * One declaration per preference (D73). A `choice`'s values are the set a stored
@@ -202,10 +131,6 @@ export type PrefSpec = BooleanSpec | ChoiceSpec | TextSpec | ColorSpec | ListSpe
  * shapes, so an old value never keeps the package from starting.
  */
 export const PREFS = {
-  brand: { type: 'choice', values: BRANDS, default: BRAND_CLAUDE, legacy: { [BRAND_DEEPSEEK_LEGACY]: BRAND_DEEPSEEK } },
-  brandName: { type: 'text', default: '', max: BRAND_NAME_MAX },
-  brandInk: { type: 'choice', values: BRAND_INKS, default: BRAND_INK_ORIGINAL },
-  brandAccent: { type: 'color', default: '' },
   motion: { type: 'choice', values: MOTION_MODES, default: MOTION_SYSTEM },
   statusMotion: { type: 'choice', values: STATUS_MOTIONS, default: STATUS_MOTION_SWEEP },
   /** An earlier build stored the two words; `precise` is what the switch being on means. */
@@ -216,7 +141,6 @@ export const PREFS = {
   composerScope: { type: 'choice', values: COMPOSER_SCOPES, default: COMPOSER_SCOPE_ALL },
   modelPicker: { type: 'boolean', default: true },
   modelDescriptions: { type: 'boolean', default: true },
-  peakrate: { type: 'boolean', default: true },
   /**
    * The provider ids the picker's first level carries: ids rather than names,
    * so a catalog rename does not lose the stored selection. The official
@@ -225,15 +149,12 @@ export const PREFS = {
    */
   quickProviders: { type: 'list', default: [], max: QUICK_PROVIDERS_MAX, entryMax: PROVIDER_ID_MAX, drop: [OFFICIAL_MODEL_GROUP] },
   username: { type: 'text', default: '', max: USERNAME_MAX },
-  pageZoom: { type: 'choice', values: PAGE_ZOOMS, default: PAGE_ZOOM_SYSTEM },
-  sodium: { type: 'choice', values: SODIUM_MODES, default: SODIUM_UNDECIDED },
-  banLocale: { type: 'choice', values: BAN_LOCALES, default: BAN_LOCALE_EN },
   homeLayout: { type: 'choice', values: HOME_LAYOUTS, default: HOME_LAYOUT_STUDIO },
-  homeRipple: { type: 'boolean', default: false },
-  palette: { type: 'choice', values: PALETTES, default: PALETTE_CLAUDE },
-  typeface: { type: 'choice', values: TYPEFACES, default: TYPEFACE_CLAUDE },
-  /** The mascot on the composer; the resolved one rides the document. */
-  mascot: { type: 'choice', values: MASCOTS, default: MASCOT_BRAND },
+  palette: { type: 'choice', values: PALETTES, default: PALETTE_TELEGRAM, legacy: { claude: PALETTE_TELEGRAM, host: PALETTE_TELEGRAM } },
+  /** The doodle layer over the wallpaper's plain colour (spec 4.1, 6.3); off leaves only the colour. */
+  doodle: { type: 'boolean', default: true },
+  /** The sticker on the input bar (spec 4.6, 6.3); every mascot an earlier build stored reads as on, `off` as off. */
+  mascot: { type: 'boolean', default: true, legacy: { brand: true, crab: true, deepy: true, off: false } },
   mascotScope: { type: 'choice', values: MASCOT_SCOPES, default: MASCOT_SCOPE_ALL },
   permissionsControl: { type: 'boolean', default: true },
   statsPosition: { type: 'choice', values: STATS_POSITIONS, default: STATS_POSITION_CONTEXT },
@@ -243,11 +164,8 @@ export const PREFS = {
   dockCards: { type: 'boolean', default: true },
   sidebarSearch: { type: 'boolean', default: true },
   searchStyle: { type: 'choice', values: SEARCH_STYLES, default: SEARCH_STYLE_OVERLAY },
-  sidebarLayout: { type: 'choice', values: SIDEBAR_LAYOUTS, default: SIDEBAR_LAYOUT_RELAXED },
-  ongoingIndicator: { type: 'choice', values: ONGOING_INDICATORS, default: ONGOING_INDICATOR_BREATHE },
   turnNav: { type: 'boolean', default: true },
   viewTabs: { type: 'boolean', default: true },
-  headerBand: { type: 'boolean', default: true },
   /** It held a choice before it became a switch again; every retired choice meant on bar `off`. */
   chatAnimations: { type: 'boolean', default: true, legacy: { [CHAT_ANIMATIONS_OFF]: false, enhanced: true, redraw: true } },
   chatWait: { type: 'boolean', default: true },
@@ -266,20 +184,16 @@ export type PrefKey = keyof typeof PREFS
  * this list is read by its feature at the moment it acts.
  */
 export const LIVE_PREFS = [
-  'homeRipple',
   'permissionsControl',
   'statsPosition',
-  'banLocale',
   'workspaceView',
   'sidebarSearch',
   'turnNav',
   'viewTabs',
-  'headerBand',
   'chatAnimations',
   'chatWait',
   'chatSend',
   'chatReveal',
-  'peakrate',
   'caretMotion',
   'mascot',
   'modelPicker',
@@ -311,9 +225,6 @@ export const PREF_DEFAULTS = Object.freeze(Object.fromEntries(
   Object.entries(PREFS).map(([key, spec]) => [key, spec.default]),
 )) as unknown as Prefs
 
-/** A `#rrggbb` colour, which is all the custom accent accepts. */
-const COLOR_RE = /^#[0-9a-f]{6}$/i
-
 /**
  * The shape an earlier build wrote for this value, or undefined. Only a string or
  * a boolean was ever written, and only the table's own keys name one: an object
@@ -333,7 +244,6 @@ function clampPref(spec: PrefSpec, raw: unknown): unknown {
     case 'boolean': return typeof raw === 'boolean' ? raw : spec.default
     case 'choice': return typeof raw === 'string' && spec.values.includes(raw) ? raw : spec.default
     case 'text': return typeof raw === 'string' ? raw.trim().slice(0, spec.max) : spec.default
-    case 'color': return typeof raw === 'string' && COLOR_RE.test(raw) ? raw.toLowerCase() : spec.default
     case 'list': {
       if (!Array.isArray(raw)) return spec.default
       const out: string[] = []

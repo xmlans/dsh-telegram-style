@@ -2,7 +2,7 @@ diff --git a/packages/client/src/features/chat-send/send-shape.ts b/packages/cli
 index 605f699..ec4efc8 100644
 --- a/packages/client/src/features/chat-send/send-shape.ts
 +++ b/packages/client/src/features/chat-send/send-shape.ts
-@@ -78,15 +78,14 @@ export const CHAT_LANDING_MS = motionMs('--dsh-claude-duration-surface')
+@@ -78,15 +78,14 @@ export const CHAT_LANDING_MS = motionMs('--dsh-tg-duration-surface')
   *
   * Critically damped, no overshoot: the shape must not bounce.
   *

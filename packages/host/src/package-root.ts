@@ -1,5 +1,5 @@
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
-import { findPackageRoot } from '@dsh-claude-style/engine/node/package-root'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
+import { findPackageRoot } from '@dsh-telegram-style/engine/node/package-root'
 
 let cached: string | null = null
 

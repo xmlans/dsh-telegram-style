@@ -1,6 +1,6 @@
-import { DARK_THEME_ATTRIBUTE } from '@dsh-claude-style/contracts/dom'
-import { subscribeMutations } from '@dsh-claude-style/engine/bus'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
+import { DARK_THEME_ATTRIBUTE } from '@dsh-telegram-style/contracts/dom'
+import { subscribeMutations } from '@dsh-telegram-style/engine/bus'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
 import { motionMs } from '../../shared/motion'
 
 /**
@@ -36,7 +36,7 @@ import { motionMs } from '../../shared/motion'
  * reaches the sweep, which is why it asks for the stamp first.
  */
 export const THEME_FLIP_ATTR = 'data-dsh-theme-transitioning'
-export const THEME_FLIP_MS = motionMs('--dsh-claude-duration-fade')
+export const THEME_FLIP_MS = motionMs('--dsh-tg-duration-fade')
 // Paint properties a theme flip changes; cancelling their transitions
 // snaps them to the new theme's values in one frame.
 export const THEME_FLIP_PROPS: Record<string, boolean> = {
@@ -86,7 +86,7 @@ export function installThemeFlip() {
   function onThemeFlip() {
     // A skin arriving in the same task as this flip has already taken the
     // page: its transitions are not this one's to cancel (D74).
-    if (!body.hasAttribute('data-dsh-claude-style')) return
+    if (!body.hasAttribute('data-dsh-telegram-style')) return
     setFlag(true)
     // Force the flip's style recalc right now — inside this microtask,
     // before any paint — so every transition it would start has started.

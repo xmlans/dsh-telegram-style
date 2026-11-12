@@ -23,9 +23,7 @@
   var launcherCase = LAUNCHER[CASE] !== undefined
   var username = CASE === 'markup' ? MARKUP : CASE === 'desktop' || launcherCase ? '' : 'Tester'
   var formListeners = []
-  var formValue = { username: username, collapseFooter: true, homeLayout: CASE === 'studio' ? 'studio' : 'classic', brand: CASE === 'deepy' ? 'off' : undefined }
-  // The crab-states case picks the crab, whose states it walks through.
-  if (CASE === 'crab-states') formValue.mascot = 'crab'
+  var formValue = { username: username, collapseFooter: true, homeLayout: CASE === 'studio' ? 'studio' : 'classic' }
   // The stats-inline case drives the line of their own, which is the shipped
   // default; the two popover cases ask the numbers back into the panel.
   if (CASE === 'stats-inline') formValue.statsPosition = 'inline'
@@ -35,8 +33,6 @@
     Object.assign(formValue, { permissionsControl: false, workspaceView: false, sidebarSearch: false, viewTabs: false, chatAnimations: false, composerScope: 'off' })
   }
   var form = {
-    // The deepy case stores the DeepSeek brand under the value earlier builds
-    // wrote for it ("off"), which has to read as the DeepSeek brand.
     getSnapshot: function () { return { status: 'ready', value: formValue } },
     subscribe: function (listener) {
       formListeners.push(listener)

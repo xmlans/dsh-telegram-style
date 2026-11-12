@@ -26,13 +26,13 @@
  * A host that publishes cross-session usage totals, or keeps the usage of deleted
  * sessions, retires the matching path here.
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
 import { join, resolve } from 'node:path'
-import type { DshContext } from '@dsh-claude-style/engine/node/dsh'
-import { harnessPath } from '@dsh-claude-style/engine/node/harness-home'
+import type { DshContext } from '@dsh-telegram-style/engine/node/dsh'
+import { harnessPath } from '@dsh-telegram-style/engine/node/harness-home'
 import { readRecord, writeRecord } from './usage-record.js'
 import type { RecordSession } from './usage-record.js'
-import { readEvents } from '@dsh-claude-style/engine/node/session-events'
+import { readEvents } from '@dsh-telegram-style/engine/node/session-events'
 import { foldSession, listSessionLogs } from './usage-fold.js'
 import type { SessionLog, UsageEvent } from './usage-fold.js'
 import { readLedger } from './usage-ledger.js'

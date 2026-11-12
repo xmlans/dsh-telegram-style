@@ -1,4 +1,4 @@
-import { buildElement } from '@dsh-claude-style/engine/dom'
+import { buildElement } from '@dsh-telegram-style/engine/dom'
 
 /**
  * The highlight band the host's own TextShimmer draws over a running row's
@@ -12,9 +12,9 @@ import { buildElement } from '@dsh-claude-style/engine/dom'
  */
 
 /** The window: the band's mask, laid over its owner's box (shared/motion.css). */
-export const SWEEP_BAND_CLASS = 'dsh-claude-sweep-band'
+export const SWEEP_BAND_CLASS = 'dsh-tg-sweep-band'
 /** The tinted copy inside the window, crossing back. */
-export const SWEEP_GLYPHS_CLASS = 'dsh-claude-sweep-glyphs'
+export const SWEEP_GLYPHS_CLASS = 'dsh-tg-sweep-glyphs'
 
 /**
  * Build one band.

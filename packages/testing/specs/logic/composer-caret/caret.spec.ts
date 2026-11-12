@@ -10,8 +10,8 @@
  * @risk Pressing the input card or a process group's header sends the caret back to the start of the draft, and the next words the reader types land in the wrong place.
  */
 import { afterEach, expect, test } from 'vitest'
-import { captureComposerCaret, focusKeepingComposerCaret } from '@dsh-claude-style/client/pure'
-import { COMPOSER_INPUT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { captureComposerCaret, focusKeepingComposerCaret } from '@dsh-telegram-style/client/pure'
+import { COMPOSER_INPUT_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 import { hostElement } from '../../fixtures/host-markup'
 
 /** Everything this spec put on the page, taken away after each test. */

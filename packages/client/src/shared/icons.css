@@ -1,0 +1,34 @@
+/* The skin's line icons: a mask in the current text colour, so an
+   icon takes whatever colour its row, button or bubble gives it. */
+body[data-dsh-telegram-style] .dsh-tg-icon {
+  display: inline-block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  -webkit-mask: var(--dsh-tg-icon) center / contain no-repeat;
+  mask: var(--dsh-tg-icon) center / contain no-repeat;
+}
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="plane"] { --dsh-tg-icon: var(--dsh-tg-image-icon-plane); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="pencil"] { --dsh-tg-icon: var(--dsh-tg-image-icon-pencil); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="archive"] { --dsh-tg-icon: var(--dsh-tg-image-icon-archive); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="menu"] { --dsh-tg-icon: var(--dsh-tg-image-icon-menu); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="search"] { --dsh-tg-icon: var(--dsh-tg-image-icon-search); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="check"] { --dsh-tg-icon: var(--dsh-tg-image-icon-check); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="check-double"] { --dsh-tg-icon: var(--dsh-tg-image-icon-check-double); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="clock"] { --dsh-tg-icon: var(--dsh-tg-image-icon-clock); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="loop"] { --dsh-tg-icon: var(--dsh-tg-image-icon-loop); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="spark"] { --dsh-tg-icon: var(--dsh-tg-image-icon-spark); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="heart"] { --dsh-tg-icon: var(--dsh-tg-image-icon-heart); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="thought"] { --dsh-tg-icon: var(--dsh-tg-image-icon-thought); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="arrow-down"] { --dsh-tg-icon: var(--dsh-tg-image-icon-arrow-down); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="arrow-left"] { --dsh-tg-icon: var(--dsh-tg-image-icon-arrow-left); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="chevron-down"] { --dsh-tg-icon: var(--dsh-tg-image-icon-chevron-down); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="stop"] { --dsh-tg-icon: var(--dsh-tg-image-icon-stop); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="file"] { --dsh-tg-icon: var(--dsh-tg-image-icon-file); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="file-code"] { --dsh-tg-icon: var(--dsh-tg-image-icon-file-code); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="file-image"] { --dsh-tg-icon: var(--dsh-tg-image-icon-file-image); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="moon"] { --dsh-tg-icon: var(--dsh-tg-image-icon-moon); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="plug"] { --dsh-tg-icon: var(--dsh-tg-image-icon-plug); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="gear"] { --dsh-tg-icon: var(--dsh-tg-image-icon-gear); }
+body[data-dsh-telegram-style] .dsh-tg-icon[data-icon="info"] { --dsh-tg-icon: var(--dsh-tg-image-icon-info); }

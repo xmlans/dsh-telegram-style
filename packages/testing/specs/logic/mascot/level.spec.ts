@@ -8,9 +8,9 @@
  * @risk The mascot dozes while a session waits on the reader's answer, or keeps typing after every session has stopped.
  */
 import { expect, test } from 'vitest'
-import { mascotLevel } from '@dsh-claude-style/client/pure'
-import type { MascotReading } from '@dsh-claude-style/client/pure'
-import type { HostSessionListSnapshot } from '@dsh-claude-style/contracts/services'
+import { mascotLevel } from '@dsh-telegram-style/client/pure'
+import type { MascotReading } from '@dsh-telegram-style/client/pure'
+import type { HostSessionListSnapshot } from '@dsh-telegram-style/contracts/services'
 
 type Status = { running?: boolean, pendingInteraction?: unknown }
 
@@ -35,9 +35,9 @@ function reading(fields: Partial<MascotReading> & { statuses?: Record<string, St
 
 test('the home page reads the whole workspace: a question anywhere, else the crowd at work', () => {
   const sessions = list([{ id: 'a', running: true }, { id: 'b', running: true }, { id: 'c', running: true }, { id: 's', running: true, origin: 'subagent' }])
-  expect(mascotLevel(reading({ list: sessions })).animation).toBe('building')
-  expect(mascotLevel(reading({ list: list([{ id: 'a', running: true }, { id: 'b', running: true }]) })).animation).toBe('music')
-  expect(mascotLevel(reading({ list: list([{ id: 'a', running: true }]) })).animation).toBe('typing')
+  expect(mascotLevel(reading({ list: sessions })).animation).toBe('working-fast')
+  expect(mascotLevel(reading({ list: list([{ id: 'a', running: true }, { id: 'b', running: true }]) })).animation).toBe('working-fast')
+  expect(mascotLevel(reading({ list: list([{ id: 'a', running: true }]) })).animation).toBe('working')
   expect(mascotLevel(reading({ list: list([{ id: 'a' }]) })).state).toBe('idle')
   expect(mascotLevel(reading({ list: sessions, statuses: { c: { pendingInteraction: {} } } })).state).toBe('notification')
 })
@@ -50,19 +50,19 @@ test('a session waits on the reader when it or one of its subagents asks', () =>
 
 test('a compaction shows over the subagents and the turn', () => {
   const sessions = list([{ id: 'a', running: true, subagents: ['k'] }, { id: 'k', running: true, origin: 'subagent' }])
-  expect(mascotLevel(reading({ sessionId: 'a', list: sessions, compacting: true, phase: 'working' })).animation).toBe('compacting')
+  expect(mascotLevel(reading({ sessionId: 'a', list: sessions, compacting: true, phase: 'working' })).animation).toBe('sweeping')
 })
 
-test('running subagents juggle: one plays music, two conduct', () => {
+test('running subagents juggle at the fast tempo', () => {
   const one = list([{ id: 'a', running: true, subagents: ['k', 'l'] }, { id: 'k', running: true, origin: 'subagent' }, { id: 'l', origin: 'subagent' }])
-  expect(mascotLevel(reading({ sessionId: 'a', list: one, phase: 'working' }))).toEqual({ state: 'juggling', animation: 'music', priority: 4 })
+  expect(mascotLevel(reading({ sessionId: 'a', list: one, phase: 'working' }))).toEqual({ state: 'juggling', animation: 'working-fast', priority: 4 })
   const two = list([{ id: 'a', running: true, subagents: ['k', 'l'] }, { id: 'k', running: true, origin: 'subagent' }, { id: 'l', running: true, origin: 'subagent' }])
-  expect(mascotLevel(reading({ sessionId: 'a', list: two })).animation).toBe('conducting')
+  expect(mascotLevel(reading({ sessionId: 'a', list: two })).animation).toBe('working-fast')
 })
 
 test('the turn\'s phase decides between work and thought; a running session with no turn yet is thinking', () => {
   const sessions = list([{ id: 'a', running: true }])
-  expect(mascotLevel(reading({ sessionId: 'a', list: sessions, phase: 'working' })).animation).toBe('typing')
+  expect(mascotLevel(reading({ sessionId: 'a', list: sessions, phase: 'working' })).animation).toBe('working')
   expect(mascotLevel(reading({ sessionId: 'a', list: sessions, phase: 'thinking' })).state).toBe('thinking')
   expect(mascotLevel(reading({ sessionId: 'a', list: sessions })).state).toBe('thinking')
   expect(mascotLevel(reading({ sessionId: 'a', list: list([{ id: 'a' }]) })).state).toBe('idle')

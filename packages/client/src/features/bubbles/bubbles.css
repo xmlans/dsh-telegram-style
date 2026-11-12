@@ -1,0 +1,84 @@
+/* The reader's bubbles: right-aligned, 75% wide at most, the
+   outgoing colour, a 4px corner where the tail meets the bubble. The host
+   hashes the bubble's class, so the part mark for its local name stands for
+   it (engine/parts-table.ts); a steering message not yet taken in carries its
+   own attribute. */
+body[data-dsh-telegram-style] :is([data-chat-flow-kind="user"], [data-submission-echo]) [data-dsh-tg-part~="message-bubble"],
+body[data-dsh-telegram-style] [data-pending-steering] {
+  position: relative;
+  align-self: flex-end;
+  margin-inline-start: auto;
+  max-width: 75%;
+  width: fit-content;
+  box-sizing: border-box;
+  padding: 6px 10px 6px 12px;
+  border: 0;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--dsh-tg-bubble-out);
+  color: var(--dsh-tg-bubble-out-ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+body[data-dsh-telegram-style] :is([data-chat-flow-kind="user"], [data-submission-echo]) [data-dsh-tg-part~="message-bubble"]::after,
+body[data-dsh-telegram-style] [data-pending-steering]::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  bottom: 0;
+  width: 12px;
+  height: 16px;
+  background: var(--dsh-tg-bubble-out-tail);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'><path d='M0 0 C1 9 5 14 12 16 L0 16 Z'/></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'><path d='M0 0 C1 9 5 14 12 16 L0 16 Z'/></svg>") center / contain no-repeat;
+}
+body[data-dsh-telegram-style] .dsh-tg-bubble-meta {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 8px -4px -4px 10px;
+  font-size: 12px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--dsh-tg-bubble-out-meta);
+}
+body[data-dsh-telegram-style] .dsh-tg-bubble-meta .dsh-tg-icon {
+  width: 16px;
+  height: 16px;
+}
+/* The answer's bubble: left-aligned, up to the column's width, the
+   incoming colour. Its row is the assistant step's output part outside the
+   process groups. */
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *) {
+  position: relative;
+  margin-inline-end: auto;
+  max-width: 100%;
+  width: fit-content;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border-radius: 16px 16px 16px 4px;
+  background: var(--dsh-tg-bubble-in);
+  color: var(--dsh-tg-ink);
+  -webkit-backdrop-filter: var(--dsh-tg-card-blur);
+  backdrop-filter: var(--dsh-tg-card-blur);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  font-size: 15px;
+  line-height: 1.45;
+}
+body[data-dsh-telegram-style] [data-chat-flow-kind="assistant-step"]:not([data-chat-group-part="reasoning"]):not([data-step-process] *)::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  bottom: 0;
+  width: 12px;
+  height: 16px;
+  background: var(--dsh-tg-bubble-in);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'><path d='M12 0 C11 9 7 14 0 16 L12 16 Z'/></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'><path d='M12 0 C11 9 7 14 0 16 L12 16 Z'/></svg>") center / contain no-repeat;
+}
+
+/* The host's own time under the reader's message repeats the one in the bubble;
+   the copy button beside it stays. */
+body[data-dsh-telegram-style] :is([data-chat-flow-kind="user"], [data-submission-echo]) [data-clock] > :not(button) {
+  display: none;
+}

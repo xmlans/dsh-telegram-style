@@ -36,13 +36,13 @@
       // runs on a frame.) One entry writes its own box inline, so this read is
       // where the takeover's weight over an inline style is judged.
       await sleep(500)
-      var footerEntries = document.querySelectorAll('[data-dsh-claude-part~="foot-area"] [data-dsh-claude-footer-entry]')
+      var footerEntries = document.querySelectorAll('[data-dsh-tg-part~="foot-area"] [data-dsh-tg-footer-entry]')
       r.footerEntriesBeforeOpen = Array.prototype.map.call(
         footerEntries,
         function (entry) {
           return {
             kind: entry.getAttribute('data-dsh-usage-foot-card') === null ? 'slot' : 'card',
-            hidden: entry.hasAttribute('data-dsh-claude-footer-hidden'),
+            hidden: entry.hasAttribute('data-dsh-tg-footer-hidden'),
             display: getComputedStyle(entry).display,
           }
         })
@@ -80,12 +80,12 @@
       var hostRow = document.getElementById('host-account')
       r.hostRowDisplay = hostRow ? getComputedStyle(hostRow).display : null
       r.hostRowVisible = !!(hostRow && hostRow.getBoundingClientRect().width > 0)
-      r.syntheticBtn = !!document.querySelector('.dsh-claude-account-btn')
-      var triggerRow = document.querySelector('[data-dsh-claude-part~="foot-area"] [data-dsh-claude-part~="settings-trigger"]')
+      r.syntheticBtn = !!document.querySelector('.dsh-tg-account-btn')
+      var triggerRow = document.querySelector('[data-dsh-tg-part~="foot-area"] [data-dsh-tg-part~="settings-trigger"]')
       r.triggerRowDisplay = triggerRow ? getComputedStyle(triggerRow).display : null
       r.hostRowText = hostRow ? (hostRow.textContent || '').trim() : null
       r.hostRowWidth = hostRow ? hostRow.getBoundingClientRect().width : null
-      r.accountWidthVar = document.body.style.getPropertyValue('--dsh-claude-account-width').trim()
+      r.accountWidthVar = document.body.style.getPropertyValue('--dsh-tg-account-width').trim()
       // The hover preference is on in this stand-in: a pointer dwelling on the
       // host's account row opens the host menu, and leaving it dismisses the
       // menu the host had mounted.
@@ -109,16 +109,16 @@
       r.pressLeaveClosesMenu = !accountMenuOpen()
       // Read through the CSSOM: the sheet's text is minified, and the parsed
       // rules are what the page applies.
-      var styleEl = document.getElementById('dsh-claude-style-style')
+      var styleEl = document.getElementById('dsh-telegram-style-style')
       var sheetRules = styleEl && styleEl.sheet ? Array.prototype.slice.call(styleEl.sheet.cssRules) : []
       // The entrance is the shared menu preset (shared/motion.css, D9): the host
-      // menu's own rule plays dsh-claude-dropdown-in, which the stylesheet carries.
+      // menu's own rule plays dsh-tg-dropdown-in, which the stylesheet carries.
       // The rule is read as written, since the shorthand names the timing tokens
       // and a shorthand holding var() leaves the longhands of `style` empty.
-      r.menuEntryKeyframes = sheetRules.some(function (rule) { return rule instanceof CSSKeyframesRule && rule.name === 'dsh-claude-dropdown-in' })
+      r.menuEntryKeyframes = sheetRules.some(function (rule) { return rule instanceof CSSKeyframesRule && rule.name === 'dsh-tg-dropdown-in' })
       r.menuEntryAnimation = sheetRules.some(function (rule) {
-        return rule instanceof CSSStyleRule && rule.selectorText.indexOf('data-dsh-claude-account-ready') !== -1 &&
-          rule.cssText.indexOf('dsh-claude-dropdown-in') !== -1
+        return rule instanceof CSSStyleRule && rule.selectorText.indexOf('data-dsh-tg-account-ready') !== -1 &&
+          rule.cssText.indexOf('dsh-tg-dropdown-in') !== -1
       })
       // Open the host's own menu: the card mounts with the host's rows, the skin
       // injects ours a frame later, and the host re-places the card a frame after
@@ -130,9 +130,9 @@
         await frame()
         var card = document.querySelector('body > [role="menu"]')
         if (card === null) continue
-        var cardRows = card.querySelector('.dsh-claude-account-inject')
+        var cardRows = card.querySelector('.dsh-tg-account-inject')
         cardFrames.push({
-          ready: card.hasAttribute('data-dsh-claude-account-ready'),
+          ready: card.hasAttribute('data-dsh-tg-account-ready'),
           rows: cardRows !== null && cardRows.childElementCount > 0,
           top: card.style.top,
           painted: getComputedStyle(card).visibility !== 'hidden',
@@ -153,22 +153,22 @@
       }
       await sleep(400)
       var viewport = document.querySelector('body > [role="menu"] [role="presentation"]')
-      var inject = document.querySelector('.dsh-claude-account-inject')
+      var inject = document.querySelector('.dsh-tg-account-inject')
       // The marker the stylesheet hangs the skin's card on. It sits on the
       // host's own role=menu card, derived from the list it injected into so a
       // hidden menu portal elsewhere in the page cannot answer for it.
       var accountMenu = viewport ? viewport.closest('[role="menu"]') : null
-      r.accountMenuMarked = !!(accountMenu && accountMenu.hasAttribute('data-dsh-claude-account-menu'))
+      r.accountMenuMarked = !!(accountMenu && accountMenu.hasAttribute('data-dsh-tg-account-menu'))
       r.menuCardWidth = accountMenu ? accountMenu.getBoundingClientRect().width : null
       r.injectInViewport = !!(viewport && inject && inject.parentElement === viewport)
       r.injectFirst = !!(viewport && viewport.firstElementChild === inject)
       r.injectRows = inject ? Array.prototype.map.call(inject.children, function (c) {
-        if (c.hasAttribute('data-dsh-claude-ban-row')) return 'header'
+        if (c.classList.contains('dsh-tg-account-popover-header')) return 'header'
         if (c.hasAttribute('data-action-index')) return 'action'
         if (c.hasAttribute('data-embed-index')) return 'embed'
         return 'other'
       }) : null
-      var injectName = inject ? inject.querySelector('.dsh-claude-account-popover-name') : null
+      var injectName = inject ? inject.querySelector('.dsh-tg-account-popover-name') : null
       r.injectName = injectName ? injectName.textContent : null
       // The hover plate this row paints is its own border box (the stylesheet
       // sizes it `border-box` with a 32px minimum), and the name sits centred
@@ -177,7 +177,7 @@
       // The leading semicolon matters: the assignment above ends without one, so
       // the call would otherwise ride on the value that assignment produced.
       ;(function () {
-        var plateRow = inject ? inject.querySelector('.dsh-claude-account-popover-row') : null
+        var plateRow = inject ? inject.querySelector('.dsh-tg-account-popover-row') : null
         if (!plateRow || !injectName) {
           r.accountRowPlate = {
             missing: true,
@@ -208,7 +208,7 @@
       window.__rerenderHostMenu()
       await sleep(400)
       var viewport2 = document.querySelector('body > [role="menu"] [role="presentation"]')
-      var inject2 = document.querySelector('.dsh-claude-account-inject')
+      var inject2 = document.querySelector('.dsh-tg-account-inject')
       r.injectHealedFirst = !!(viewport2 && inject2 && viewport2.firstElementChild === inject2)
       r.injectHealedSame = !!(inject2 && inject2.innerHTML === htmlBefore)
       // The host's keyboard walk reaches our injected button.
@@ -216,59 +216,11 @@
       await sleep(80)
       var focused = document.activeElement
       r.focusInInjected = !!(focused && inject2 && inject2.contains(focused) && focused.tagName === 'BUTTON')
-      // The hold screen entered from the header: the overlay takes the pointer,
-      // so the row and the card it covered report a leave without the pointer
-      // moving, and with the hover preference on those leaves must neither
-      // dismiss the host menu behind the page nor — through the footer's
-      // synthetic Escape to that menu — the page itself.
-      var banEntry = document.querySelector('.dsh-claude-account-inject [data-dsh-claude-ban-row]')
-      if (banEntry) {
-        banEntry.click()
-        await sleep(80)
-        r.banOpened = document.querySelectorAll('[data-dsh-ban]').length
-        if (hostRow) hostRow.dispatchEvent(new MouseEvent('mouseleave'))
-        var coveredMenu = document.querySelector('body > [role="menu"]')
-        if (coveredMenu) coveredMenu.dispatchEvent(new MouseEvent('mouseleave'))
-        await sleep(300)
-        r.banSurvivesLeave = document.querySelectorAll('[data-dsh-ban]').length
-        r.menuBehindBan = accountMenuOpen()
-        // The page leaves on its own exit: it is marked leaving at once and gone
-        // once the exit's duration has played.
-        var banDismiss = document.querySelector('.dsh-claude-ban [data-dsh-ban-dismiss]')
-        if (banDismiss) banDismiss.click()
-        r.banLeaving = document.querySelector('[data-dsh-ban][data-dsh-ban-leaving]') !== null
-        // The token as the shipped sheet spells it: the minifier writes times in
-        // whichever unit is shorter.
-        var exitToken = getComputedStyle(document.body).getPropertyValue('--dsh-claude-duration-exit').trim()
-        r.banExitMs = parseFloat(exitToken) * (/ms$/.test(exitToken) ? 1 : 1000)
-        await sleep(r.banExitMs + 80)
-        r.banAfterDismiss = document.querySelectorAll('[data-dsh-ban]').length
-        // The easter egg switched off: the row is a plain name, out of the tab
-        // order, and a press opens nothing; switched back on it is the button again.
-        var headerRow = function () {
-          var row = document.querySelector('.dsh-claude-account-inject .dsh-claude-account-popover-row')
-          return row === null ? null : { role: row.getAttribute('role'), tabindex: row.getAttribute('tabindex') }
-        }
-        window.__pushForm({ banLocale: 'off' })
-        await sleep(150)
-        r.banOff = { row: headerRow() }
-        window.__pushForm({ banLocale: 'en' })
-        await sleep(300)
-        r.banOn = { row: headerRow() }
-        window.__pushForm({ banLocale: 'off' })
-        await sleep(150)
-        var plainEntry = document.querySelector('.dsh-claude-account-inject [data-dsh-claude-ban-row]')
-        if (plainEntry) plainEntry.click()
-        await sleep(80)
-        r.banOff.opened = document.querySelectorAll('[data-dsh-ban]').length
-        window.__pushForm({ banLocale: 'en' })
-        await sleep(300)
-      }
       // Closing the host's menu (its own Escape) leaves no container behind.
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
       await sleep(400)
-      r.injectAfterClose = document.querySelectorAll('.dsh-claude-account-inject').length
-      r.accountMenuMarkAfterClose = document.querySelectorAll('[data-dsh-claude-account-menu]').length
+      r.injectAfterClose = document.querySelectorAll('.dsh-tg-account-inject').length
+      r.accountMenuMarkAfterClose = document.querySelectorAll('[data-dsh-tg-account-menu]').length
       // The account menu is counted by content (its Sign out row): a role=menu
       // portal exists only while its menu is open, ours included.
       r.hostMenuAfterClose = Array.prototype.filter.call(document.querySelectorAll('body > [role="menu"]'), function (m) {
@@ -284,17 +236,17 @@
       window.__pushForm({ collapseFooter: false })
       await sleep(400)
       r.areaOff = {
-        takeover: document.body.hasAttribute('data-dsh-claude-footer-takeover'),
-        marked: document.querySelector('[data-dsh-claude-account-host-row]') !== null,
+        takeover: document.body.hasAttribute('data-dsh-tg-footer-takeover'),
+        marked: document.querySelector('[data-dsh-tg-account-host-row]') !== null,
       }
       document.dispatchEvent(new KeyboardEvent('keydown', { key: ',', ctrlKey: true, bubbles: true, cancelable: true }))
       await sleep(700)
-      r.dialogAfterShortcut = document.querySelectorAll('[data-dsh-claude-part~="settings-area"] [role="dialog"]').length
+      r.dialogAfterShortcut = document.querySelectorAll('[data-dsh-tg-part~="settings-area"] [role="dialog"]').length
       window.__pushForm({ collapseFooter: true })
       await sleep(400)
       r.areaBack = {
-        takeover: document.body.hasAttribute('data-dsh-claude-footer-takeover'),
-        marked: document.querySelector('[data-dsh-claude-account-host-row]') !== null,
+        takeover: document.body.hasAttribute('data-dsh-tg-footer-takeover'),
+        marked: document.querySelector('[data-dsh-tg-account-host-row]') !== null,
       }
     })
   })

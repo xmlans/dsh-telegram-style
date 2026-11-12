@@ -1,9 +1,9 @@
-/* ---------- Claude Code layout: model picker ---------- */
+/* ---------- Layout: model picker ---------- */
 /* Replaces the host's two-pane model menu: level 1 carries the current
    provider's models, a divider, the effort row and a More models row; both
    rows open their level 2 beside this popover. The card is the shared popover
    card (shared/popover.css); what is the picker's own is below. */
-body[data-dsh-claude-style] .dsh-claude-model-popover {
+body[data-dsh-telegram-style] .dsh-tg-model-popover {
   position: fixed;
   min-width: 248px;
   max-width: min(360px, calc(100vw - 16px));
@@ -22,15 +22,15 @@ body[data-dsh-claude-style] .dsh-claude-model-popover {
    scroll under the divider / effort / more-models rows, which never leave the
    viewport edge of the card. Only the first level does this — the sub popover
    keeps scrolling as one card, with its provider labels pinned (below). */
-body[data-dsh-claude-style] .dsh-claude-model-popover:not(.dsh-claude-model-popover-sub) {
+body[data-dsh-telegram-style] .dsh-tg-model-popover:not(.dsh-tg-model-popover-sub) {
   overflow: hidden;
 }
-body[data-dsh-claude-style] .dsh-claude-model-popover:not(.dsh-claude-model-popover-sub) .dsh-claude-popover-body {
+body[data-dsh-telegram-style] .dsh-tg-model-popover:not(.dsh-tg-model-popover-sub) .dsh-tg-popover-body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
 }
-body[data-dsh-claude-style] .dsh-claude-model-footer {
+body[data-dsh-telegram-style] .dsh-tg-model-footer {
   flex: none;
   display: flex;
   flex-direction: column;
@@ -42,21 +42,21 @@ body[data-dsh-claude-style] .dsh-claude-model-footer {
    typed in front of them while they walk the matches. Provider labels stay
    pinned inside that list. The card keeps its own 6px inset at the top, so the
    field stands off the card's edge the way its rows do. */
-body[data-dsh-claude-style] .dsh-claude-model-popover-sub {
+body[data-dsh-telegram-style] .dsh-tg-model-popover-sub {
   overflow: hidden;
   /* A query leaves a shorter list than the whole catalog: the card takes the
      new height over transitions.dev's "Card resize" (MIT), so the edge follows
      the reader's typing instead of jumping under it. */
   transition:
-    height var(--dsh-claude-timing-resize);
+    height var(--dsh-tg-timing-resize);
   will-change: height;
 }
 /* The reader's animation choice, resolved onto <body> (D40): reduced takes the
    tween away and the card lands on its new height at once. */
-body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-model-popover-sub {
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-model-popover-sub {
   transition: none;
 }
-body[data-dsh-claude-style] .dsh-claude-model-popover-sub .dsh-claude-model-sub-body {
+body[data-dsh-telegram-style] .dsh-tg-model-popover-sub .dsh-tg-model-sub-body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -69,7 +69,7 @@ body[data-dsh-claude-style] .dsh-claude-model-popover-sub .dsh-claude-model-sub-
    per frame by features/model/sub-menu.ts — the streak's envelope cannot be a
    keyframe — so this sheet owns the resting state and the values that script
    reads. */
-body[data-dsh-claude-style] .dsh-claude-model-search {
+body[data-dsh-telegram-style] .dsh-tg-model-search {
   flex: none;
   min-width: 0;
   /* The field is the card's opening control, not a row: its own inset above
@@ -81,7 +81,7 @@ body[data-dsh-claude-style] .dsh-claude-model-search {
 /* The field is the positioning context the flight is measured against, and it
    clips the streak to its own rounded box, so the hairline is drawn inset and
    darkens with the glow rather than sitting outside it. */
-body[data-dsh-claude-style] .dsh-claude-model-search-field {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field {
   position: relative;
   height: 28px;
   border: 1px solid var(--dsw-alias-border-l1, #e8e6dc);
@@ -96,18 +96,18 @@ body[data-dsh-claude-style] .dsh-claude-model-search-field {
   /* The streak's strength: the one value the two palettes disagree on, because
      a wash that darkens a white field does not lighten a dark one. The blend
      below is the other half of that. */
-  --dsh-claude-clear-glow-opacity: 0.85;
+  --dsh-tg-clear-glow-opacity: 0.85;
 }
-body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-model-search-field {
-  --dsh-claude-clear-glow-opacity: 0.42;
+body[data-dsh-telegram-style]:not([data-ds-dark-theme]) .dsh-tg-model-search-field {
+  --dsh-tg-clear-glow-opacity: 0.42;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-field:focus-within {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field:focus-within {
   border-color: var(--dsw-alias-brand-primary, #d97757);
 }
 /* A real input, so selecting and editing a query keep working. Its right
    padding is the clear control's room, and the mirror is padded to match so
    the words fly from where they stood. */
-body[data-dsh-claude-style] .dsh-claude-model-search-input {
+body[data-dsh-telegram-style] .dsh-tg-model-search-input {
   display: block;
   width: 100%;
   height: 100%;
@@ -121,8 +121,8 @@ body[data-dsh-claude-style] .dsh-claude-model-search-input {
 }
 /* Hidden at rest and shown by the clear alone: while the field holds words it
    draws them itself, so the mirror is only ever the words on their way out. */
-body[data-dsh-claude-style] .dsh-claude-model-search-mirror,
-body[data-dsh-claude-style] .dsh-claude-model-search-placeholder {
+body[data-dsh-telegram-style] .dsh-tg-model-search-mirror,
+body[data-dsh-telegram-style] .dsh-tg-model-search-placeholder {
   position: absolute;
   inset: 0;
   padding: 0 26px 0 8px;
@@ -134,23 +134,23 @@ body[data-dsh-claude-style] .dsh-claude-model-search-placeholder {
   z-index: 2;
   box-sizing: border-box;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-mirror {
+body[data-dsh-telegram-style] .dsh-tg-model-search-mirror {
   opacity: 0;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-field[data-dsh-claude-field-clearing] .dsh-claude-model-search-mirror {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-clearing] .dsh-tg-model-search-mirror {
   opacity: 1;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-placeholder {
+body[data-dsh-telegram-style] .dsh-tg-model-search-placeholder {
   color: var(--dsw-alias-label-tertiary, #8f8d84);
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-field[data-dsh-claude-field-filled] .dsh-claude-model-search-placeholder {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-filled] .dsh-tg-model-search-placeholder {
   opacity: 0;
 }
 /* The streak overlay: empty by default, and the script writes a stack of
    radial gradients into its background for one clear. Multiply darkens the
    field under a light palette; screen lightens it under a dark one, where the
    same alpha would vanish. */
-body[data-dsh-claude-style] .dsh-claude-model-search-glow {
+body[data-dsh-telegram-style] .dsh-tg-model-search-glow {
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -158,16 +158,16 @@ body[data-dsh-claude-style] .dsh-claude-model-search-glow {
   z-index: 3;
   mix-blend-mode: screen;
 }
-body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-model-search-glow {
+body[data-dsh-telegram-style]:not([data-ds-dark-theme]) .dsh-tg-model-search-glow {
   mix-blend-mode: multiply;
 }
 /* The words leaving scroll with the field: the field scrolls its own text and
    the mirror is not inside it, so the offset is written onto this span. */
-body[data-dsh-claude-style] .dsh-claude-model-search-travel {
+body[data-dsh-telegram-style] .dsh-tg-model-search-travel {
   display: block;
   white-space: pre;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-clear {
+body[data-dsh-telegram-style] .dsh-tg-model-search-clear {
   position: absolute;
   top: 50%;
   right: 4px;
@@ -189,78 +189,78 @@ body[data-dsh-claude-style] .dsh-claude-model-search-clear {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--dsh-claude-duration-feedback) var(--dsh-claude-ease-standard), visibility 0s linear var(--dsh-claude-duration-feedback);
+  transition: opacity var(--dsh-tg-duration-feedback) var(--dsh-tg-ease-standard), visibility 0s linear var(--dsh-tg-duration-feedback);
   z-index: 4;
 }
 /* It stands while the field holds words and leaves with them: the clear takes
    the words away, so a control for them has nothing left to do. */
-body[data-dsh-claude-style] .dsh-claude-model-search-field[data-dsh-claude-field-filled] .dsh-claude-model-search-clear {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-filled] .dsh-tg-model-search-clear {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
-  transition: opacity var(--dsh-claude-duration-feedback) var(--dsh-claude-ease-standard), visibility 0s;
+  transition: opacity var(--dsh-tg-duration-feedback) var(--dsh-tg-ease-standard), visibility 0s;
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-clear:hover {
+body[data-dsh-telegram-style] .dsh-tg-model-search-clear:hover {
   color: var(--dsw-alias-label-secondary, #6f6a62);
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.06));
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.06));
 }
-body[data-dsh-claude-style] .dsh-claude-model-search-clear svg {
+body[data-dsh-telegram-style] .dsh-tg-model-search-clear svg {
   display: block;
 }
 /* The drawn caret stands over the mirror and the streak: both paint above the
    field's own text, and the caret is what the reader follows. */
-body[data-dsh-claude-style] .dsh-claude-model-search-field [data-dsh-claude-caret-layer] {
+body[data-dsh-telegram-style] .dsh-tg-model-search-field [data-dsh-tg-caret-layer] {
   z-index: 5;
 }
 /* The reader's animation choice, resolved onto <body> (D40): reduced takes the
    flight away whole, and the script asks the same question before it starts
    one, so no half state is left behind. */
-body[data-dsh-claude-style][data-dsh-claude-motion="reduced"] .dsh-claude-model-search-glow {
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] .dsh-tg-model-search-glow {
   opacity: 0;
 }
 
-body[data-dsh-claude-style] .dsh-claude-model-group-section {
-  position: relative !important;
-  display: flex !important;
-  flex-direction: column !important;
+body[data-dsh-telegram-style] .dsh-tg-model-group-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   /* Level 2 rows sit close together: the 3px the body uses between sections
      read as a gap between models of the same provider. */
-  gap: 1px !important;
-  min-width: 0 !important;
+  gap: 1px;
+  min-width: 0;
 }
 
-body[data-dsh-claude-style] .dsh-claude-model-group-row {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 6 !important;
-  align-self: stretch !important;
-  margin: 0 !important;
-  padding: 3px 7px 0 7px !important;
-  background: var(--dsw-alias-bg-overlay, #ffffff) !important;
+body[data-dsh-telegram-style] .dsh-tg-model-group-row {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  align-self: stretch;
+  margin: 0;
+  padding: 3px 7px 0 7px;
+  background: var(--dsh-tg-menu);
 }
 
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-model-group-row {
-  background: var(--dsh-claude-raised) !important;
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-model-group-row {
+  background: var(--dsh-tg-raised);
 }
 
-body[data-dsh-claude-style] .dsh-claude-model-group {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  margin: 0 !important;
-  padding: 1px 7px !important;
-  background: var(--dsh-claude-inverse-fill) !important;
-  color: var(--dsh-claude-inverse-ink) !important;
-  border-radius: 6px !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  line-height: 16px !important;
+body[data-dsh-telegram-style] .dsh-tg-model-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  padding: 1px 7px;
+  background: var(--dsh-tg-inverse-fill);
+  color: var(--dsh-tg-inverse-ink);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
 }
 
 /* Model / effort option and the level-2 row (label + chevron, whose hover opens
    its own level): same row metrics and hover as the drawer items. */
-body[data-dsh-claude-style] .dsh-claude-model-option,
-body[data-dsh-claude-style] .dsh-claude-model-cell {
+body[data-dsh-telegram-style] .dsh-tg-model-option,
+body[data-dsh-telegram-style] .dsh-tg-model-cell {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -276,86 +276,45 @@ body[data-dsh-claude-style] .dsh-claude-model-cell {
   cursor: pointer;
   box-sizing: border-box;
 }
-body[data-dsh-claude-style] .dsh-claude-model-option:hover,
-body[data-dsh-claude-style] .dsh-claude-model-cell:hover {
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08)) !important;
+body[data-dsh-telegram-style] .dsh-tg-model-option:hover,
+body[data-dsh-telegram-style] .dsh-tg-model-cell:hover {
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08)) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-model-copy {
+body[data-dsh-telegram-style] .dsh-tg-model-copy {
   display: flex;
   flex-direction: column;
   gap: 2px;
   flex: 1;
   min-width: 0;
 }
-body[data-dsh-claude-style] .dsh-claude-model-name {
+body[data-dsh-telegram-style] .dsh-tg-model-name {
   font-size: 13px;
   font-weight: 500;
   line-height: 16px;
 }
-/* Claude's wordmark is set in Anthropic's serif, so the rest of the label follows
-   it — the row reads as one piece of lettering rather than serif art beside sans. */
-body[data-dsh-claude-style] .dsh-claude-model-option[data-brand='claude'] .dsh-claude-model-name {
-  font-family: var(--dsh-claude-font-brand) !important;
+/* The vendor's first letter on a round avatar, coloured from the chat list's seven. */
+body[data-dsh-telegram-style] .dsh-tg-model-initial {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: var(--dsh-tg-avatar-1);
 }
-/* A vendor lockup: the mark and the vendor's own wordmark as one piece of art,
-   drawn in place of the vendor's name in the label. Its viewBox is the wordmark's
-   capital band, so the label's own cap height sizes it and the mark — which is
-   taller — paints outside the box, which is what the visible overflow is for.
-   Two mark layers ship inside the file: the colour artwork on the ivory canvas,
-   the mono one in currentColor on the warm black canvas, where a brand colour
-   like #000 or #F1F0E8 would disappear. A vendor with no colour artwork carries
-   both classes on its single layer, so it shows on either canvas. */
-body[data-dsh-claude-style] .dsh-claude-model-combine {
-  display: inline-block;
-  /* The label's own cap height sizes the mark, so the mark — which is taller —
-     paints outside the box, which is what the visible overflow is for. `cap` is
-     the unit that means "the cap height"; a browser without it takes the em
-     value here, and the rule below replaces it where the unit is understood.
-     The two heights sit in separate rules on purpose: two declarations of one
-     property in one rule are a rule the importance audit cannot judge. None of
-     the four carries a weight — the class is the skin's own and nothing else
-     styles it, which the audit confirmed by dropping each one (D9). */
-  height: 0.72em;
-  margin-right: 0.25em;
-  vertical-align: baseline;
-}
-@supports (height: 1cap) {
-  body[data-dsh-claude-style] .dsh-claude-model-combine {
-    height: 1cap;
-  }
-}
-body[data-dsh-claude-style] .dsh-claude-model-combine svg {
-  display: block;
-  height: 100%;
-  width: auto;
-  overflow: visible;
-}
-/* Dark canvas is the base: hide a *separate* colour layer. The `:not()` matters —
-   a hand-provided lockup is one layer carrying both classes so it shows on either
-   canvas, and a bare `.dsh-combine-mark-color` rule would hide it on the dark one
-   (which is how the ChatGPT knot went missing on warm black). */
-body[data-dsh-claude-style] .dsh-claude-model-combine .dsh-combine-mark-color:not(.dsh-combine-mark-mono) {
-  display: none;
-}
-body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-model-combine .dsh-combine-mark-color {
-  display: block;
-}
-body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-model-combine .dsh-combine-mark-mono:not(.dsh-combine-mark-color) {
-  display: none;
-}
-/* The word the lockup stands in for stays in the accessibility tree. */
-body[data-dsh-claude-style] .dsh-claude-model-combine-alt {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="2"] { background: var(--dsh-tg-avatar-2); }
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="3"] { background: var(--dsh-tg-avatar-3); }
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="4"] { background: var(--dsh-tg-avatar-4); }
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="5"] { background: var(--dsh-tg-avatar-5); }
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="6"] { background: var(--dsh-tg-avatar-6); }
+body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar="7"] { background: var(--dsh-tg-avatar-7); }
 /* The row carries one description line, in the shell's language: the copy
    document is localized rather than stacked, so there is no second-language
    rule to style. */
-body[data-dsh-claude-style] .dsh-claude-model-desc {
+body[data-dsh-telegram-style] .dsh-tg-model-desc {
   font-size: 11px;
   line-height: 14px;
   color: var(--dsw-alias-label-tertiary, #8f8d84);
@@ -366,11 +325,11 @@ body[data-dsh-claude-style] .dsh-claude-model-desc {
    this sheet states, in the same language: a 0.5px border of the border ladder's
    second rung, the rung the host picks on a menu surface (Menu.module.css). It is
    a border on a zero-height box so the line belongs to the layout. */
-body[data-dsh-claude-style] .dsh-claude-model-rule::after {
+body[data-dsh-telegram-style] .dsh-tg-model-rule::after {
   height: 0;
   border-top: 0.5px solid var(--dsw-alias-border-l2, #dedcd2);
 }
-body[data-dsh-claude-style] .dsh-claude-model-divider {
+body[data-dsh-telegram-style] .dsh-tg-model-divider {
   margin: 2px 4px;
   flex: none;
 }
@@ -379,18 +338,18 @@ body[data-dsh-claude-style] .dsh-claude-model-divider {
    — one rule per provider boundary, and nothing more. An empty label leaves the
    bare rule, which is how a provider that needs no naming (the official source)
    is separated. */
-body[data-dsh-claude-style] .dsh-claude-model-rule {
+body[data-dsh-telegram-style] .dsh-tg-model-rule {
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
   margin: 2px 4px !important;
   flex: none !important;
 }
-body[data-dsh-claude-style] .dsh-claude-model-rule::after {
+body[data-dsh-telegram-style] .dsh-tg-model-rule::after {
   content: "" !important;
   flex: 1 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-model-rule-name {
+body[data-dsh-telegram-style] .dsh-tg-model-rule-name {
   flex: none !important;
   font-size: 11px !important;
   line-height: 14px !important;
@@ -401,14 +360,14 @@ body[data-dsh-claude-style] .dsh-claude-model-rule-name {
    decoration tier: on a light card it reads 2.45:1 (#a6a094 on #f8f8f8), under
    the 4.5:1 an 11px label needs. Secondary is the tier that carries a name; the
    fallback is the value that clears the threshold when the token is absent. */
-body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-model-rule-name {
+body[data-dsh-telegram-style]:not([data-ds-dark-theme]) .dsh-tg-model-rule-name {
   color: var(--dsw-alias-label-secondary, #6f6a62) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-model-cell-label {
+body[data-dsh-telegram-style] .dsh-tg-model-cell-label {
   flex: 1;
   min-width: 0;
 }
-body[data-dsh-claude-style] .dsh-claude-model-cell-chevron {
+body[data-dsh-telegram-style] .dsh-tg-model-cell-chevron {
   flex: none;
   display: inline-flex;
   align-items: center;

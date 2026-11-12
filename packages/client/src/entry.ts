@@ -1,25 +1,25 @@
 import { ACCOUNT_MENU_ATTR, HANDOFF_ATTR, HERO_MENU_ATTR, HOLDS_ATTR, LIVE_PREFS, PACKAGE_NAME, PART_ATTR, QUIET_ATTR, READER_HOLD_ATTR } from './constants'
 import type { LivePref } from './constants'
-import { installParts } from '@dsh-claude-style/engine/parts'
-import { adoptSkin } from '@dsh-claude-style/engine/skin'
+import { installParts } from '@dsh-telegram-style/engine/parts'
+import { adoptSkin } from '@dsh-telegram-style/engine/skin'
 import { motionReduced } from './core/prefs'
 import { setHostContext } from './core/host-context'
 import { loadHdsl, loadUsername } from './shared/identity'
-import type { HostContext } from '@dsh-claude-style/engine/host'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
 import { loadModelCopy } from './features/model/model-copy'
 import { adoptPrefs, adoptSettingsForm, clearPrefsAttributes, disposePrefsBinding, prefs, readPrefs, retireComposerRestyle, retireFooterTakeover, subscribePrefs } from './core/prefs'
-import { reportFeatureFailure } from '@dsh-claude-style/engine/scheduler'
+import { reportFeatureFailure } from '@dsh-telegram-style/engine/scheduler'
 import { installScheduler } from './core/scheduler'
 import type { HandleName, Ui } from './core/scheduler'
-import { mountStylesheet, parkForeignSheets } from './core/stylesheet'
+import { mountStylesheet, parkForeignSheets, unparkForeignSheets } from './core/stylesheet'
 import { peerPresent, subscribePeerPresence } from './shared/peer-plugin'
 import { pageOwner, subscribePageOwner } from './shared/visual-owner'
 import type { PageOwner } from './shared/visual-owner'
 import { loadFeatureChunk } from './core/chunks'
 import { handleName, setFeatureRegistry } from './core/feature'
 import type { Feature, FeatureInstall } from './core/feature'
-import { FEATURES } from 'virtual:dsh-claude-style/features'
-import { BUILD_ID } from 'virtual:dsh-claude-style/generated'
+import { FEATURES } from 'virtual:dsh-telegram-style/features'
+import { BUILD_ID } from 'virtual:dsh-telegram-style/generated'
 
 // The engine runs on the skin's own vocabulary: the attributes this package
 // writes, and the two answers only the skin can give (D73). Handed over before
@@ -66,15 +66,12 @@ function isWanted(feature: Feature) {
 }
 
 /**
- * The features that stay while another owner has the page (D74). A skin takes
- * the page whole: the way back is the skin center's own row for this theme.
- * Beside ds-bot's Bot surface the Chat / Code switch stays, because it is the
- * reader's way back to the theme's own interface and carries the one sheet
- * that reads the host's tokens alone.
+ * The features that stay while another owner has the page (D74): none — a
+ * skin or ds-bot takes the page whole.
  */
 const KEPT_FOR: Record<PageOwner, string[]> = {
   'skin': [],
-  'ds-bot': ['surface'],
+  'ds-bot': [],
 }
 
 export function apply(ctx: HostContext) {
@@ -124,7 +121,7 @@ export function apply(ctx: HostContext) {
     // Each body attribute goes with whoever writes it: a feature's own with
     // its teardown above, the preference mirror's here, the stamps last.
     clearPrefsAttributes()
-    body.removeAttribute('data-dsh-claude-style')
+    body.removeAttribute('data-dsh-telegram-style')
     body.removeAttribute(HANDOFF_ATTR)
     // This generation's own sheet, handed over rather than taken away when a
     // newer generation has mounted after it (mountStylesheet).
@@ -157,6 +154,8 @@ export function apply(ctx: HostContext) {
       offPeerWatch()
       offPeerWatch = null
     }
+    // After the peer watch, which parks: a stood-down package leaves no tag on a sibling's sheet.
+    unparkForeignSheets()
     setHostContext(null)
     disposePrefsBinding()
   }
@@ -164,7 +163,7 @@ export function apply(ctx: HostContext) {
   // Registered before anything is installed: registered last, a feature that
   // threw half-way through left the stylesheet and every listener installed
   // so far on the page with no teardown the host could ever run.
-  ctx.effect(() => teardown, 'dsh-claude-style: Claude Code desktop theme')
+  ctx.effect(() => teardown, 'dsh-telegram-style: Telegram Web theme')
 
   /**
    * Switch one feature off for the rest of this generation: run its own
@@ -336,7 +335,7 @@ export function apply(ctx: HostContext) {
   function own() {
     // The value is the build id (scripts/build.mjs): the stylesheet keys on
     // the attribute alone, and a live page reads which lib/client.js it runs.
-    body.setAttribute('data-dsh-claude-style', BUILD_ID)
+    body.setAttribute('data-dsh-telegram-style', BUILD_ID)
     // The handoff marker rides the live stamp: its presence is what lets the
     // skin center offer this theme as a selectable look (D74).
     body.setAttribute(HANDOFF_ATTR, BUILD_ID)

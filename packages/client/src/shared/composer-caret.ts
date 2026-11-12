@@ -1,4 +1,4 @@
-import { COMPOSER_INPUT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { COMPOSER_INPUT_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 
 /**
  * The composer's selection, carried across the two focus moves the skin makes

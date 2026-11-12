@@ -15,9 +15,9 @@ interface Navigator {
 interface Window {
   /**
    * The host's boot manifest: every client entry the loader will evaluate (D74's
-   * peer check reads it), and the host release it was composed for (D78).
+   * peer check reads it).
    */
-  readonly __DSH_BOOT__?: { entries?: unknown, release?: { version?: unknown } }
+  readonly __DSH_BOOT__?: { entries?: unknown }
   /** ds-bot's registry, present while its browser half runs (D74 reads only its presence). */
   readonly dshBot?: unknown
 }
@@ -36,7 +36,6 @@ interface Element {
   __dshContextLineToken?: object
   /** The host's account row bound by this generation (features/account). */
   __dshHostRowToken?: object
-  __dshBanBound?: boolean
   /** A mirrored footer entry: the icon markup it carries, the host entry and the click it forwards. */
   __dshIconHtml?: string
   __dshEntry?: Element | null

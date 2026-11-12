@@ -12,15 +12,16 @@
   var remote = host.remote
   var sessions = host.sessions
   var workspacesService = host.workspacesService
-  var deepy = host.deepy
+  var mascotFixture = host.mascotFixture
   var turnNav = host.turnNav
+  var chatList = host.chatList
   var waitChat = host.waitChat
   var localeService = host.localeService
   var slotRegistry = host.slotRegistry
 
   window.__permissionCommands = host.permissionCommands
   window.__ctx = {
-    fiber: { entry: { id: 'ui-skin-claude-style' } },
+    fiber: { entry: { id: 'ui-skin-telegram-style' } },
     get: function (name) {
       if (name === 'configForms') return forms
       if (name === 'remote.account') return account
@@ -29,8 +30,8 @@
       if (name === 'sessions') return sessions
       if (name === 'modelDirectories') return host.modelDirectories
       if (name === 'workspaces') return workspacesService
-      if (name === 'uiConversation') return deepy !== undefined ? deepy.conversation : turnNav !== undefined ? turnNav.conversation : waitChat
-      if (name === 'uiSession') return deepy !== undefined ? deepy.uiSession : undefined
+      if (name === 'uiConversation') return mascotFixture !== undefined ? mascotFixture.conversation : turnNav !== undefined ? turnNav.conversation : waitChat
+      if (name === 'uiSession') return mascotFixture !== undefined ? mascotFixture.uiSession : chatList !== undefined ? chatList.uiSession : undefined
       if (name === 'locale') return localeService
       if (name === 'slots') return slotRegistry
       return undefined

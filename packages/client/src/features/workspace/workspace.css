@@ -17,67 +17,67 @@
    The two swap by opacity rather than display, so they cross-fade; the control
    is laid over the label's own slot (absolute, same 16px) so neither the header's
    height nor the actions' position moves while they swap. */
-body[data-dsh-claude-style] [data-dsh-claude-part~="section-header"] {
+body[data-dsh-telegram-style] [data-dsh-tg-part~="section-header"] {
   position: relative;
 }
-body[data-dsh-claude-style] .dsh-claude-ws-segments {
+body[data-dsh-telegram-style] .dsh-tg-ws-segments {
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
   opacity: 1;
   visibility: visible;
-  transition: opacity var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard), visibility var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard);
+  transition: opacity var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard), visibility var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard);
 }
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="active"] .dsh-claude-ws-segments {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="active"] .dsh-tg-ws-segments {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="active"]:hover .dsh-claude-ws-segments,
-body[data-dsh-claude-style] [data-dsh-claude-part~="section-header"]:hover .dsh-claude-ws-segments {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="active"]:hover .dsh-tg-ws-segments,
+body[data-dsh-telegram-style] [data-dsh-tg-part~="section-header"]:hover .dsh-tg-ws-segments {
   /* The hover rule outranks the hidden state above on specificity alone: it
      carries one pseudo-class more (D9). */
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
-body[data-dsh-claude-style] [data-dsh-claude-part~="section-label"][data-dsh-claude-ws-label] {
+body[data-dsh-telegram-style] [data-dsh-tg-part~="section-label"][data-dsh-tg-ws-label] {
   /* The heading is a label, not a target: it must not swallow clicks aimed at the
      control laid over it, nor start a selection drag. */
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   opacity: 0;
-  transition: opacity var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard);
+  transition: opacity var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard);
 }
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="active"] [data-dsh-claude-part~="section-label"][data-dsh-claude-ws-label] {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="active"] [data-dsh-tg-part~="section-label"][data-dsh-tg-ws-label] {
   opacity: 1;
 }
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="active"]:hover [data-dsh-claude-part~="section-label"][data-dsh-claude-ws-label],
-body[data-dsh-claude-style] [data-dsh-claude-part~="section-header"]:hover [data-dsh-claude-part~="section-label"][data-dsh-claude-ws-label] {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="active"]:hover [data-dsh-tg-part~="section-label"][data-dsh-tg-ws-label],
+body[data-dsh-telegram-style] [data-dsh-tg-part~="section-header"]:hover [data-dsh-tg-part~="section-label"][data-dsh-tg-ws-label] {
   opacity: 0 !important;
 }
-body[data-dsh-claude-style] .dsh-claude-ws-segment {
+body[data-dsh-telegram-style] .dsh-tg-ws-segment {
   padding: 0 8px;
   height: 20px;
   /* The checked plate cross-fades here, where the view tabs only fade their ink. */
-  transition: background-color var(--dsh-claude-timing-feedback), color var(--dsh-claude-timing-feedback);
+  transition: background-color var(--dsh-tg-timing-feedback), color var(--dsh-tg-timing-feedback);
 }
-body[data-dsh-claude-style] .dsh-claude-ws-segment:hover {
+body[data-dsh-telegram-style] .dsh-tg-ws-segment:hover {
   color: var(--dsw-alias-label-primary, #141413);
 }
 /* ---------- workspace view: the skin's own archived list ---------- */
 /* 已归档 is the skin's list (packages/client/src/features/workspace/workspace-view.ts), flat on purpose:
    the host's own filter buries archived rows inside collapsed workspace groups
    and its state is not reachable without clicking its menu. */
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="archived"] [data-dsh-claude-ws-tree] {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="archived"] [data-dsh-tg-ws-tree] {
   display: none !important;
 }
-body[data-dsh-claude-style] [data-dsh-claude-ws-view="active"] .dsh-claude-archive-list {
+body[data-dsh-telegram-style] [data-dsh-tg-ws-view="active"] .dsh-tg-archive-list {
   display: none;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-list {
+body[data-dsh-telegram-style] .dsh-tg-archive-list {
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -97,7 +97,7 @@ body[data-dsh-claude-style] .dsh-claude-archive-list {
   scrollbar-width: thin;
   scrollbar-gutter: stable;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-row {
+body[data-dsh-telegram-style] .dsh-tg-archive-row {
   /* The list scrolls at a fixed height; its rows keep theirs instead of
      shrinking to fit. */
   flex: none !important;
@@ -117,20 +117,20 @@ body[data-dsh-claude-style] .dsh-claude-archive-row {
   font-family: var(--dsw-font-family) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
-  transition: background-color var(--dsh-claude-timing-feedback), color var(--dsh-claude-timing-feedback) !important;
+  transition: background-color var(--dsh-tg-timing-feedback), color var(--dsh-tg-timing-feedback) !important;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-archive-row {
-  color: var(--dsh-claude-session-ink) !important;
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-archive-row {
+  color: var(--dsh-tg-session-ink) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-row:is(:hover, :focus-visible) {
+body[data-dsh-telegram-style] .dsh-tg-archive-row:is(:hover, :focus-visible) {
   color: var(--dsw-alias-label-primary, #141413) !important;
 }
-body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-archive-row:is(:hover, :focus-visible) {
-  color: var(--dsh-claude-ink-strong) !important;
+body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-archive-row:is(:hover, :focus-visible) {
+  color: var(--dsh-tg-ink-strong) !important;
 }
 /* The leading slot the host's rows carry (a 6px circle centred in 14px), so the
    two lists start their titles at the same x. */
-body[data-dsh-claude-style] .dsh-claude-archive-row::before {
+body[data-dsh-telegram-style] .dsh-tg-archive-row::before {
   content: "" !important;
   flex: none !important;
   width: 6px !important;
@@ -141,17 +141,17 @@ body[data-dsh-claude-style] .dsh-claude-archive-row::before {
   border: 1px solid var(--dsw-alias-label-caption, #a6a094) !important;
   box-sizing: border-box !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-row:hover {
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.06)) !important;
+body[data-dsh-telegram-style] .dsh-tg-archive-row:hover {
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.06)) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-title {
+body[data-dsh-telegram-style] .dsh-tg-archive-title {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   overflow: hidden !important;
   white-space: nowrap !important;
   text-overflow: ellipsis !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-time {
+body[data-dsh-telegram-style] .dsh-tg-archive-time {
   flex: none !important;
   color: var(--dsw-alias-label-caption, #a6a094) !important;
   font-size: 11px !important;
@@ -159,8 +159,8 @@ body[data-dsh-claude-style] .dsh-claude-archive-time {
 /* Hover swaps the trailing time for the two row actions, the way the host's
    own session rows swap their time cell for the action buttons — so at rest
    the time right-aligns with the row and nothing sits reserved beside it. */
-body[data-dsh-claude-style] .dsh-claude-archive-row:hover .dsh-claude-archive-time,
-body[data-dsh-claude-style] .dsh-claude-archive-row:focus-visible .dsh-claude-archive-time {
+body[data-dsh-telegram-style] .dsh-tg-archive-row:hover .dsh-tg-archive-time,
+body[data-dsh-telegram-style] .dsh-tg-archive-row:focus-visible .dsh-tg-archive-time {
   display: none !important;
 }
 /* The two row actions follow the host's own session rows: display none while
@@ -169,16 +169,16 @@ body[data-dsh-claude-style] .dsh-claude-archive-row:focus-visible .dsh-claude-ar
    while the row holds keyboard focus (a display:none button cannot be tabbed
    to), they take the time's place. Each button lives in the span its React
    root renders into. */
-body[data-dsh-claude-style] .dsh-claude-archive-action {
+body[data-dsh-telegram-style] .dsh-tg-archive-action {
   display: none !important;
   flex: none !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-row:hover .dsh-claude-archive-action,
-body[data-dsh-claude-style] .dsh-claude-archive-row:focus-visible .dsh-claude-archive-action {
+body[data-dsh-telegram-style] .dsh-tg-archive-row:hover .dsh-tg-archive-action,
+body[data-dsh-telegram-style] .dsh-tg-archive-row:focus-visible .dsh-tg-archive-action {
   display: inline-flex !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-delete,
-body[data-dsh-claude-style] .dsh-claude-archive-restore {
+body[data-dsh-telegram-style] .dsh-tg-archive-delete,
+body[data-dsh-telegram-style] .dsh-tg-archive-restore {
   flex: none !important;
   display: inline-flex !important;
   align-items: center !important;
@@ -191,17 +191,17 @@ body[data-dsh-claude-style] .dsh-claude-archive-restore {
   background: transparent !important;
   color: var(--dsw-alias-label-caption, #a6a094) !important;
   cursor: pointer !important;
-  transition: background-color var(--dsh-claude-timing-feedback), color var(--dsh-claude-timing-feedback) !important;
+  transition: background-color var(--dsh-tg-timing-feedback), color var(--dsh-tg-timing-feedback) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-restore:hover {
-  background: var(--dsh-claude-hover-bg, rgba(0, 0, 0, 0.08)) !important;
+body[data-dsh-telegram-style] .dsh-tg-archive-restore:hover {
+  background: var(--dsh-tg-hover-bg, rgba(0, 0, 0, 0.08)) !important;
   color: var(--dsw-alias-label-primary, #141413) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-delete:hover {
+body[data-dsh-telegram-style] .dsh-tg-archive-delete:hover {
   background: rgba(192, 57, 43, 0.12) !important;
   color: var(--dsw-alias-state-error-primary, #c0392b) !important;
 }
-body[data-dsh-claude-style] .dsh-claude-archive-status {
+body[data-dsh-telegram-style] .dsh-tg-archive-status {
   padding: 8px;
   color: var(--dsw-alias-label-caption, #a6a094);
   font-family: var(--dsw-font-family);

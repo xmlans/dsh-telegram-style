@@ -16,7 +16,7 @@ index 566c88d..ae982ed 100644
 @@ -491,7 +491,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
        const it = items[j]
        const isCurrent = it.getAttribute('data-preset') === preset
-       const check = it.querySelector<HTMLElement>('.dsh-claude-popover-check')
+       const check = it.querySelector<HTMLElement>('.dsh-tg-popover-check')
 -      if (check) check.hidden = !isCurrent
 +      if (check) check.toggleAttribute('hidden', !isCurrent)
        it.toggleAttribute('data-active', isCurrent)

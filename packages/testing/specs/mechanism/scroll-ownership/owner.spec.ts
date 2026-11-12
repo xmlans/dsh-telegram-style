@@ -10,9 +10,9 @@
  * @risk While the reader scrolls up to re-read something, a streaming answer drags them back to the bottom; or after they return to the end, the conversation stops following the stream.
  */
 import { afterEach, expect, test } from 'vitest'
-import { adoptSkin } from '@dsh-claude-style/engine/skin'
-import { easeScrollFor, easeScrollToEndFor, holdReader, joinScrollOwner, readerHolds, readerMovedSince, releaseReader, stopScrollFor, submissionHolds, writeScroll } from '@dsh-claude-style/engine/scroll-owner'
-import { CONVERSATION_SCROLL_SELECTOR, CONVERSATION_SESSION_ATTRIBUTE, CONVERSATION_SESSION_SELECTOR, FLOW_KIND_ATTRIBUTE, PHASE_ATTRIBUTE, PROCESS_BODY_SELECTOR, USER_ROW_KIND } from '@dsh-claude-style/contracts/dom'
+import { adoptSkin } from '@dsh-telegram-style/engine/skin'
+import { easeScrollFor, easeScrollToEndFor, holdReader, joinScrollOwner, readerHolds, readerMovedSince, releaseReader, stopScrollFor, submissionHolds, writeScroll } from '@dsh-telegram-style/engine/scroll-owner'
+import { CONVERSATION_SCROLL_SELECTOR, CONVERSATION_SESSION_ATTRIBUTE, CONVERSATION_SESSION_SELECTOR, FLOW_KIND_ATTRIBUTE, PHASE_ATTRIBUTE, PROCESS_BODY_SELECTOR, USER_ROW_KIND } from '@dsh-telegram-style/contracts/dom'
 import { hostElement } from '../../fixtures/host-markup'
 import { MOTION_ATTR, MOTION_FULL, MOTION_REDUCED, READER_HOLD_ATTR, TEST_SKIN } from '../../fixtures/vocabulary'
 

@@ -1,21 +1,21 @@
 import { QUIET_ATTR } from '../../constants'
-import { observeMatches } from '@dsh-claude-style/engine/bus'
-import { requestFrame } from '@dsh-claude-style/engine/frame'
-import { closestConversationSession, conversationSessionId, findChatTarget } from '@dsh-claude-style/engine/host'
-import { hostChatCopy, hostChatSeat } from '../../core/i18n'
+import { observeMatches } from '@dsh-telegram-style/engine/bus'
+import { requestFrame } from '@dsh-telegram-style/engine/frame'
+import { closestConversationSession, conversationSessionId, findChatTarget } from '@dsh-telegram-style/engine/host'
+import { hostChatSeat } from '../../core/i18n'
 import { readPrefs, subscribePrefs } from '../../core/prefs'
-import { buildElement, writeTextInPlace } from '@dsh-claude-style/engine/dom'
+import { buildElement, writeTextInPlace } from '@dsh-telegram-style/engine/dom'
 import { formatHostDuration } from '../../shared/format'
 import { motionMs } from '../../shared/motion'
 import { releaseSwappingText, setSwappingText } from '../../shared/swapping-text'
-import { activityWords, waitingWord, THINKING_KEY } from '../../shared/turn-activity'
+import { activityWords, THINKING_KEY } from '../../shared/turn-activity'
 import { startWaitLoader, releaseWaitLoader } from './wait-loader'
-import { CHAT_RUNNING_SELECTOR, CHAT_RUNNING_TEXT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { CHAT_RUNNING_SELECTOR, CHAT_RUNNING_TEXT_SELECTOR } from '@dsh-telegram-style/contracts/dom'
 import { WAIT_OVERTIME_MS, openTurn, waitStart, wordForPass } from './wait-state'
 import { foreignRunningLineOwns } from './running-owner'
 import type { RowWords } from './wait-state'
-import type { HostChatTarget } from '@dsh-claude-style/contracts/services'
-import type { HostContext, HostText } from '@dsh-claude-style/engine/host'
+import type { HostChatTarget } from '@dsh-telegram-style/contracts/services'
+import type { HostContext, HostText } from '@dsh-telegram-style/engine/host'
 import type { FeatureUi } from '../../core/feature'
 import type manifest from './chat-wait.manifest'
 import { copy, copyState } from './copy'
@@ -33,9 +33,8 @@ interface WaitLine {
 
 /**
  * The live turn's running row: what the turn is doing now in this line's own
- * words (shared/turn-activity.ts), the word its brand waits on where no state
- * can be read — the skin's own 「正在思考」 under the Claude brand, the host's own
- * 「深度求索中」 under the DeepSeek brand — the turn's elapsed time as a quiet
+ * words (shared/turn-activity.ts), the skin's own word 「正在思考」 where no
+ * state can be read, the turn's elapsed time as a quiet
  * clock beside it, and 「暂未响应」 once the model has been silent for ten seconds
  * (wait-state.ts). Under the
  * Precise choice three of those states name more than a state: a call in
@@ -51,17 +50,17 @@ interface WaitLine {
  * The host keeps its row, its divider and its live region: the line is a span of
  * the skin's own beside the host's own icon, marked quiet so its ticking wakes
  * no pass, and the stylesheet hides the host's words while it stands
- * (chat-wait.css). Under the Claude brand the host's whale tail gives way to the
+ * (chat-wait.css). The host's whale tail gives way to the
  * skin's own loading dots, which lead the line where the whale did. The words,
  * the clock's units and the session's turns are the host's.
  */
 export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   /** On the host's running row while the line stands in for its words. */
-  const WAIT_ATTR = 'data-dsh-claude-wait'
+  const WAIT_ATTR = 'data-dsh-tg-wait'
   /** On the host's words alone, leaving sibling plugin lines visible. */
-  const WORDS_ATTR = 'data-dsh-claude-wait-words'
+  const WORDS_ATTR = 'data-dsh-tg-wait-words'
   /** On the overtime badge while it plays its way out (syncBadge). */
-  const BADGE_LEAVING_ATTR = 'data-dsh-claude-wait-badge-leaving'
+  const BADGE_LEAVING_ATTR = 'data-dsh-tg-wait-badge-leaving'
   /**
    * The clock's step: fast enough that a replacement which stops owning the
    * words hands the line back without a visible pause, and that the seconds
@@ -135,7 +134,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   }
 
   /**
-   * The loader the Claude brand leads the row with, where the host draws its
+   * The loader that leads the row, where the host draws its
    * whale tail: one lane of dots of the accent in force for each of the loader's
    * three motions (chat-wait.css) — three hopping, three walking their own lines,
    * four swapping the corners of a 45 : 55 rectangle. Every motion is built up
@@ -145,12 +144,12 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
    * and when it is swapped for another, is features/chat-wait/wait-loader.ts's.
    */
   function buildLoader() {
-    const loader = buildElement('span', 'dsh-claude-chat-wait-loader')
+    const loader = buildElement('span', 'dsh-tg-chat-wait-loader')
     loader.setAttribute('aria-hidden', 'true')
     const laneDots: [string, number][] = [['is-bounce', 3], ['is-line', 3], ['is-orbit', 4]]
     for (const [lane, count] of laneDots) {
-      const dots = buildElement('span', `dsh-claude-chat-wait-lane ${lane}`)
-      for (let dot = 0; dot < count; dot += 1) dots.append(buildElement('span', 'dsh-claude-chat-wait-dot'))
+      const dots = buildElement('span', `dsh-tg-chat-wait-lane ${lane}`)
+      for (let dot = 0; dot < count; dot += 1) dots.append(buildElement('span', 'dsh-tg-chat-wait-dot'))
       loader.append(dots)
     }
     return loader
@@ -171,17 +170,17 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       standing.key = key
       return standing
     }
-    const line = buildElement('span', 'dsh-claude-chat-wait')
+    const line = buildElement('span', 'dsh-tg-chat-wait')
     line.setAttribute(QUIET_ATTR, '')
     // The host's own words are hidden while this line stands in for them
     // (chat-wait.css), so the line carries what a reader gets: the wording, the
     // clock and the wait badge are ordinary text, and the host's live region
     // still announces the row. The loader leads them, where the host's own icon
-    // stands and stays under the other brands.
+    // stands.
     // The badge starts hidden: it comes out only once a wait runs over (syncBadge).
-    const label = buildElement('span', 'dsh-claude-chat-wait-label')
-    const clock = buildElement('span', 'dsh-claude-chat-wait-clock')
-    const badge = buildElement('span', 'dsh-claude-chat-wait-badge')
+    const label = buildElement('span', 'dsh-tg-chat-wait-label')
+    const clock = buildElement('span', 'dsh-tg-chat-wait-clock')
+    const badge = buildElement('span', 'dsh-tg-chat-wait-badge')
     badge.hidden = true
     const loader = buildLoader()
     line.append(loader, label, clock, badge)
@@ -215,7 +214,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     if (typeof key === 'string') live.add(key)
     const line = lineOf(row, words, key)
     const { loader, label, clock, badge } = line
-    // What the turn is doing, and the one word its brand waits on for a turn
+    // What the turn is doing, and the one word it waits on for a turn
     // whose state cannot be read (D74): the line says the model's work, never a
     // guess.
     // Under the Precise choice three states carry words of their own — the
@@ -230,11 +229,10 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     const precise = prefs.statusDetail === true
     const activity = activityWords(snapshot, turn, precise)
     // One word stands for the model thinking and for a wait nothing can be read
-    // from (shared/turn-activity): the skin's own under the Claude brand, the
-    // host's own under the DeepSeek brand. The thinking state answers no word of
+    // from (shared/turn-activity): the skin's own. The thinking state answers no word of
     // its own — that word is the one below — so the clause standing from before
     // holds the line instead of a fallback and a return.
-    const waiting = waitingWord(prefs.brand, hostChatCopy('chat.deepDiving', 'Deep diving', ctx), copy(THINKING_KEY))
+    const waiting = copy(THINKING_KEY)
     const own = activity !== null && activity.key === null && activity.aboutCall === undefined
     const said = activity === null || activity.key === THINKING_KEY
       ? null
@@ -286,7 +284,7 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
       if (!badge.hasAttribute(BADGE_LEAVING_ATTR)) return
       badge.removeAttribute(BADGE_LEAVING_ATTR)
       badge.hidden = true
-    }, motionMs('--dsh-claude-duration-exit'))
+    }, motionMs('--dsh-tg-duration-exit'))
   }
 
   /** Take one row's line down and give the host's words back. */

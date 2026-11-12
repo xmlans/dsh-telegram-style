@@ -9,12 +9,12 @@
  * package still loads the skin — it just loses the settings form.
  *
  * The preference list itself is the shared table, so both halves declare the
- * fields from one declaration (`@dsh-claude-style/contracts/prefs`, D73).
+ * fields from one declaration (`@dsh-telegram-style/contracts/prefs`, D73).
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
-import { PREFS } from '@dsh-claude-style/contracts/prefs'
-import type { PrefKey } from '@dsh-claude-style/contracts/prefs'
-import type { DshContext, DshScope } from '@dsh-claude-style/engine/node/dsh'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
+import { PREFS } from '@dsh-telegram-style/contracts/prefs'
+import type { PrefKey } from '@dsh-telegram-style/contracts/prefs'
+import type { DshContext, DshScope } from '@dsh-telegram-style/engine/node/dsh'
 
 /**
  * The schemastery instance the HARNESS itself resolves.

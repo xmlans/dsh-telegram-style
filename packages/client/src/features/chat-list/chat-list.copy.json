@@ -1,0 +1,6 @@
+{
+  "rowTyping": { "zh": "正在输入", "en": "typing" },
+  "rowWaiting": { "zh": "等待你的操作", "en": "Waiting for you" },
+  "rowUnread": { "zh": "有新回复", "en": "New reply" },
+  "rowLastActive": { "zh": "上次活动 {time}", "en": "Last active {time}" }
+}

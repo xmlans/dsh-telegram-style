@@ -1,15 +1,15 @@
 import { HOME_HEAT_RAMP, USAGE_ROUTE } from '../../constants'
 import { activeLocale } from '../../core/i18n'
 import { pad2 } from '../../shared/format'
-import { notifyAll } from '@dsh-claude-style/engine/notify'
-import type { HostContext } from '@dsh-claude-style/engine/host'
-import type { HostRemoteListAnswer, HostSessionRow } from '@dsh-claude-style/contracts/services'
-import type { UsageAnswer, UsageDay, UsageModel, UsageReport, UsageTotals } from '@dsh-claude-style/contracts/usage'
+import { notifyAll } from '@dsh-telegram-style/engine/notify'
+import type { HostContext } from '@dsh-telegram-style/engine/host'
+import type { HostRemoteListAnswer, HostSessionRow } from '@dsh-telegram-style/contracts/services'
+import type { UsageAnswer, UsageDay, UsageModel, UsageReport, UsageTotals } from '@dsh-telegram-style/contracts/usage'
 import { copy } from './copy'
 import type { CopyKey } from './copy'
 import { homeRefreshDue } from './usage-refresh'
 import type { HomeRefreshReason } from './usage-refresh'
-import { hostRemoteSession } from '@dsh-claude-style/engine/host'
+import { hostRemoteSession } from '@dsh-telegram-style/engine/host'
 
 /**
  * The roll-up store's snapshot: the route's last answer (the host half's

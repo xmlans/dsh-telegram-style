@@ -51,7 +51,7 @@ const tierName = () => tier
  * follow an animation, a glide or a dwell over time. The quick tier skips them
  * whole, and says so in its log.
  */
-const TIMING_CASES = ['chat-follow', 'chat-fold', 'chat-reveal', 'chat-send', 'crab-states', 'deepy', 'popovers']
+const TIMING_CASES = ['chat-follow', 'chat-fold', 'chat-reveal', 'chat-send', 'popovers']
 
 /**
  * Which cases cover which directory under `packages/client/src/features/`, gathered from the
@@ -103,14 +103,9 @@ function deferredWanted(values) {
  * runs every selected case it carries, so cases that read the same stand-in
  * configuration and the same markup cost one page load between them instead of
  * one each. A case named in no page here is a page of its own.
- *
- * `header-band` stands alone: the feature lifts the first tab strip in the
- * document, and the case's own header has to carry that strip, while the
- * `view-tabs` case mounts a strip of its own for the pill it reads. On one page
- * the two contest the same seat.
  */
 const PAGES = {
-    shell: ['brand', 'hero', 'view-tabs', 'composer', 'search', 'account', 'permissions', 'sidebar-layout'],
+    shell: ['brand', 'hero', 'view-tabs', 'composer', 'search', 'account', 'permissions', 'wallpaper'],
 }
 
 /**

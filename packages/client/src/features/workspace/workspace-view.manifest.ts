@@ -3,7 +3,7 @@ import type { FeatureManifest } from '../../core/feature'
 export default {
   id: 'workspace',
   order: 150,
-  contracts: [],
+  contracts: ['shell.sidebar-root', 'shell.tree-row-key'],
   pref: 'workspaceView',
   stylesheets: [{ file: 'workspace.css', rank: 120 }],
   settingsRows: [{

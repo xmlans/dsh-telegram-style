@@ -2,7 +2,7 @@ diff --git a/packages/client/src/theme/sidebar.css b/packages/client/src/theme/s
 index eabadbb..38dd66f 100644
 --- a/packages/client/src/theme/sidebar.css
 +++ b/packages/client/src/theme/sidebar.css
-@@ -233,10 +233,19 @@ body[data-dsh-claude-style] [data-dsh-claude-part~="section-label"] {
+@@ -233,10 +233,19 @@ body[data-dsh-telegram-style] [data-dsh-tg-part~="section-label"] {
  }
  
  /* Compact scale: shrunken heights, margins and paddings */
@@ -14,7 +14,7 @@ index eabadbb..38dd66f 100644
 +   the same x. The second declaration restores the indentation on the skin's own
 +   6px base. The variable is unset in the flat list and `0px` in the
 +   group-by-workspace list, so both keep the 6px row they have today. */
- body[data-dsh-claude-style] [data-dsh-claude-part~="project-row"] {
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="project-row"] {
    height: 28px;
    min-height: 28px;
    padding: 0 6px;
@@ -22,7 +22,7 @@ index eabadbb..38dd66f 100644
    gap: 4px;
    border-radius: 6px;
  }
-@@ -244,6 +253,7 @@ body[data-dsh-claude-style] [data-dsh-claude-part~="session-row"] {
+@@ -244,6 +253,7 @@ body[data-dsh-telegram-style] [data-dsh-tg-part~="session-row"] {
    height: 28px;
    min-height: 28px;
    padding: 0 6px;

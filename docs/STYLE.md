@@ -1,112 +1,135 @@
 # Style Guide · 设计令牌
 
-Design tokens for `dsh-claude-style`, recreating the Claude Code Desktop aesthetic.
+Design tokens and rules for `dsh-telegram-style`, which recreates the look of Telegram Web.
 
-## Palette
+## Palette · 配色
 
-| Token | Value | Use |
-|---|---|---|
-| ivory light | `#FCFCFB` | light canvas / layer 1 |
-| sidebar light | `#FBFBF9` | light sidebar / layer 2 |
-| ivory neutral | `#F9F9F6` | layer 3 / section bg |
-| ivory border | `#E8E6DC` | border l1 |
-| slate dark | `#141413` | text (light mode), canvas (dark mode) |
-| warm gray | `#B0AEA5` | metadata |
-| clay | `#D97757` | single accent — CTA / links |
-| accent deep | `#C6613F` | accent hover |
-| hairline | `#1414131a` | 1px warm border |
+Three palettes, each with a light and a dark side that follow the host's own light/dark switch: **Classic** (`telegram`: Telegram's default colours), **Glass** (`glass`: translucent, blurred cards) and **Pink** (`trans`: a light pink wallpaper with deeper pink patterns, blue bubbles and buttons). The settings page picks one with a segmented control; there is no "follow the host" option.
 
-Rules:
+The wallpaper is a plain colour (`--dsh-tg-wallpaper`) with a pattern laid over it. The pattern is a supplied image, tinted per palette (`--dsh-tg-doodle-ink`, `--dsh-tg-doodle-opacity`), and the settings page can turn it off to leave the plain colour.
 
-- Never pure white, never pure black, never cool grays. The reader's own message
-  plate is the one fill that is not a step of the warm surface ladder and not the
-  canvas either (`--dsw-specific-bubble`: the neutral the table header wears in
-  light, a 6% white lift in dark) — the product's own light tint is a cool
-  blue-grey, which reads blue beside this canvas.
-- Accent usage stays under ~10% of visible elements.
+How the three accent tokens divide the work:
 
-**The DeepSeek brand's palettes.** The DeepSeek brand turns both palettes
-blue. The single accent is DeepSeek's brand blue `#4D6BFE` — the colour of its
-whale logo and of Deepy — with a darker step for text links on the light canvas
-and a lighter one on the dark; the sidebar's whale and wordmark and the hero's
-fish take it as their ink. The neutrals are the host's own cool family (its
-`neutral-bluish` ramp) under a white carrying only a hint of sky in light and a
-blue-black in dark. User bubbles take a blue tint as the host's own do, and
-inline code keeps the body ink as the host draws it. The skin's Claude marks
-(the account row's
-picture without an avatar) become DeepSeek's
-whale (`packages/assets/src/brand/deepseek-mark.svg`, the host's `FISH_LOGO_PATH`); the
-violet top rung of the reasoning slider stays.
+- **Accent** (`--dsh-tg-accent`): icons, underlines and progress lines only.
+- **Accent text** (`--dsh-tg-accent-text`): links, accent-coloured text and labels; it holds 4.5:1 against its surface.
+- **Accent fill** (`--dsh-tg-accent-fill`, with `--dsh-tg-on-accent` on top): anything that carries white text, such as the selected row, badges, the selected segment and the send button; the text on it holds 4.5:1.
+- **Primary text** is `#111111` in Classic light, never pure black.
+- The token table is the single source for every value; a private colour token needs a value for each of the six palette sides (the build refuses a missing one).
+- Every "text colour on surface" pair is checked by the contrast spec under `packages/testing/specs/logic/palette-contrast/`; a translucent surface is composited over the palette's lightest wallpaper colour before it is measured.
+
 
 The table below is generated from `packages/client/src/theme/tokens.json` by `npm run build`;
-edit the JSON, not the table. A DeepSeek cell shows the Claude value the brand
-keeps where it states none of its own; `—` is a token that theme leaves unset.
+edit the JSON, not the table. `—` is a token that palette leaves unset.
 
 <!-- generated:tokens (packages/client/src/theme/tokens.json) -->
-| Token | Claude light | DeepSeek light | Claude dark | DeepSeek dark | Host alias | Use |
-|---|---|---|---|---|---|---|
-| `--dsw-alias-bg-base` | `#fcfcfb` | `#fafbff` | `#141413` | `#13161d` | host's own |  |
-| `--dsw-alias-bg-layer-1` | `#fcfcfb` | `#fafbff` | `#1c1b1a` | `#1a1e27` | host's own |  |
-| `--dsw-alias-bg-layer-2` | `#fbfbf9` | `#f7f9ff` | `#242320` | `#212631` | host's own |  |
-| `--dsw-alias-bg-layer-3` | `#f9f9f6` | `#f4f7fe` | `#2e2c29` | `#2a303c` | host's own |  |
-| `--dsw-alias-bg-overlay` | `#ffffff` | `#ffffff` | `#242320` | `#212631` | host's own |  |
-| `--dsw-alias-border-l1` | `#e8e6dc` | `#e7ecf7` | `rgba(255, 255, 255, 0.09)` | `#212631` | host's own | the standard edge: card and panel outlines, dividers, field outlines |
-| `--dsw-alias-border-l2` | `#dedcd2` | `#dde4f1` | `rgba(255, 255, 255, 0.18)` | `#2a303c` | host's own |  |
-| `--dsw-alias-border-l3` | `#d0cdc1` | `#cfd8ea` | `rgba(255, 255, 255, 0.30)` | `#363d4b` | host's own |  |
-| `--dsw-alias-brand-primary` | `#d97757` | `#4d6bfe` | `#d97757` | `#4d6bfe` | host's own | the single accent: checks, focus rings, selected marks |
-| `--dsw-alias-brand-text` | `#faf9f5` | `#fafbff` | `#faf9f5` | `#eef1f8` | host's own |  |
-| `--dsw-alias-button-primary-fill` | `#d97757` | `#4d6bfe` | `#d97757` | `#4d6bfe` | host's own |  |
-| `--dsw-alias-button-primary-hover` | `#c6613f` | `#3a57e8` | `#e08a6d` | `#6a84ff` | host's own |  |
-| `--dsw-alias-button-elevated-fill` | `#ffffff` | `#ffffff` | `#242320` | `#212631` | host's own |  |
-| `--dsw-alias-button-floating-fill` | `#ffffff` | `#ffffff` | `#242320` | `#212631` | host's own |  |
-| `--dsw-alias-button-floating-hover` | `#ffffff` | `#ffffff` | `#2e2c29` | `#2a303c` | host's own |  |
-| `--dsw-alias-button-info-fill` | `#d97757` | `#4d6bfe` | `#d97757` | `#4d6bfe` | host's own |  |
-| `--dsw-alias-button-info-hover` | `#c6613f` | `#3a57e8` | `#e08a6d` | `#6a84ff` | host's own |  |
-| `--dsw-alias-interactive-bg-active` | `rgba(217, 119, 87, 0.30)` | `rgba(77, 107, 254, 0.22)` | `rgba(217, 119, 87, 0.30)` | `rgba(77, 107, 254, 0.30)` | host's own |  |
-| `--dsh-claude-hover-bg` | `rgba(0, 0, 0, 0.08)` | `rgba(38, 49, 72, 0.08)` | `rgba(255, 255, 255, 0.08)` | `rgba(255, 255, 255, 0.08)` | `var(--dsw-alias-interactive-bg-hover)` | hover wash |
-| `--dsh-claude-inline-code-bg` | `rgba(0, 0, 0, 0.05)` | `rgba(38, 49, 72, 0.05)` | `rgba(255, 255, 255, 0.05)` | `rgba(255, 255, 255, 0.05)` | `var(--dsw-alias-markdown-inline-code)` | inline code fill |
-| `--dsh-claude-inline-code-fg` | `#943333` | `var(--dsw-alias-label-primary)` | `#e8a08a` | `var(--dsw-alias-label-primary)` | `var(--dsw-alias-label-primary)` | inline code ink |
-| `--dsh-claude-link` | `#184f95` | `#3b56d9` | `#8ab4f8` | `#8fa4ff` | `var(--dsw-alias-link)` | markdown links |
-| `--dsh-claude-link-underline` | `rgba(24, 79, 149, 0.6)` | `rgba(59, 86, 217, 0.6)` | `rgba(138, 180, 248, 0.6)` | `rgba(143, 164, 255, 0.6)` | `color-mix(in srgb, var(--dsw-alias-link) 60%, transparent)` | markdown link underline |
-| `--dsw-alias-markdown-code-block` | `#ffffff` | `#ffffff` | `#1c1b1a` | `#1a1e27` | host's own |  |
-| `--dsw-alias-markdown-code-block-banner` | `#ffffff` | `#ffffff` | `#242320` | `#212631` | host's own |  |
-| `--dsw-alias-interactive-bg-hover` | `var(--dsh-claude-hover-bg)` | `var(--dsh-claude-hover-bg)` | `var(--dsh-claude-hover-bg)` | `var(--dsh-claude-hover-bg)` | host's own |  |
-| `--dsw-alias-interactive-bg-hover-solid` | `#f0efe9` | `#eef3fc` | `#2e2c29` | `#2a303c` | host's own | the host's solid hover chip |
-| `--dsw-alias-label-primary` | `#141413` | `#0f1115` | `#faf9f5` | `#eef1f8` | host's own |  |
-| `--dsw-alias-label-primary-bluish` | `#141413` | `#0f1115` | `#faf9f5` | `#eef1f8` | host's own |  |
-| `--dsw-alias-label-secondary` | `#6e6a60` | `#61666b` | `#b0aea5` | `#aeb5c4` | host's own |  |
-| `--dsw-alias-label-tertiary` | `#8f8a7e` | `#81858c` | `#8f8d84` | `#8a92a3` | host's own |  |
-| `--dsw-alias-label-caption` | `#a6a094` | `#adb2b8` | `#6b6a65` | `#666e7e` | host's own |  |
-| `--dsw-alias-label-shimmer` | `color-mix(in srgb, #141413 30%, transparent)` | `color-mix(in srgb, #141413 30%, transparent)` | `color-mix(in srgb, #faf9f5 45%, transparent)` | `color-mix(in srgb, #faf9f5 45%, transparent)` | host's own | the highlight band's tint over running words: the host's own rows and the skin's band (shared/sweep-band.ts) alike |
-| `--dsw-alias-label-deep-diving-shimmer` | `color-mix(in srgb, #141413 30%, transparent)` | `color-mix(in srgb, #141413 30%, transparent)` | `color-mix(in srgb, #faf9f5 45%, transparent)` | `color-mix(in srgb, #faf9f5 45%, transparent)` | host's own | the band's tint inside the running row, which the host points --dsw-alias-label-shimmer at; under Claude it is the same warm band as everywhere else |
-| `--dsw-alias-state-business-primary` | `#d97757` | `#4d6bfe` | `#d97757` | `#6a84ff` | host's own |  |
-| `--dsw-alias-state-business-tertiary` | `#e9dfd2` | `#e9eeff` | `#3a2a22` | `#253056` | host's own |  |
-| `--dsw-alias-link` | `#c6613f` | `#3b56d9` | `#e08a6d` | `#8fa4ff` | host's own | text link at rest |
-| `--dsw-shadow-lv2` | `0 4px 18px rgba(20, 20, 19, 0.10), 0 1px 3px rgba(20, 20, 19, 0.05)` | `0 4px 18px rgba(20, 20, 19, 0.10), 0 1px 3px rgba(20, 20, 19, 0.05)` | `0 4px 16px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.14)` | `0 4px 16px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.14)` | host's own |  |
-| `--dsw-specific-input-major` | `#ffffff` | `#ffffff` | `#0f0e0d` | `#0e1117` | host's own |  |
-| `--dsw-specific-selector` | `#fbfbf9` | `#f7f9ff` | `#2e2c29` | `#2a303c` | host's own |  |
-| `--dsw-specific-sidebar-fill` | `#fbfbf9` | `#f7f9ff` | `#141413` | `#13161d` | host's own |  |
-| `--dsw-alias-brand-primary-new-colorprimary-new-color` | `#d97757` | `#4d6bfe` | `#d97757` | `#4d6bfe` | host's own |  |
-| `--dsh-claude-canvas` | `#fcfcfb` | `#fafbff` | `#141413` | `#13161d` | `var(--dsw-alias-bg-base)` | the page canvas, the search box |
-| `--dsh-claude-sidebar-canvas` | `#fbfbf9` | `#f7f9ff` | `#141413` | `#13161d` | `var(--dsw-specific-sidebar-fill)` | the sidebar |
-| `--dsh-claude-raised` | — | — | `#1e1e1d` | `#1b1f28` | `var(--dsw-alias-bg-overlay)` | popovers and menus raised above the dark canvas |
-| `--dsh-claude-card` | `#fcfcfb` | `#fafbff` | `#1e1e1d` | `#1b1f28` | `var(--dsw-alias-bg-overlay)` | cards on the canvas in light and raised in dark: the account popover, the search palette |
-| `--dsh-claude-inverse-fill` | `#141413` | `#141413` | `#faf9f5` | `#faf9f5` | `var(--dsw-alias-interactive-bg-hover)` | the model picker's group label fill: an inverted chip under Claude, a hover-plate chip under the host |
-| `--dsh-claude-inverse-ink` | `#faf9f5` | `#faf9f5` | `#141413` | `#141413` | `var(--dsw-alias-label-primary)` | the model picker's group label ink |
-| `--dsh-claude-ink-strong` | — | — | `#f5f4ef` | `#e9edf6` | `var(--dsw-alias-label-primary)` | active row ink |
-| `--dsh-claude-session-ink` | — | — | `#8c8983` | `#8a91a0` | `var(--dsw-alias-label-secondary)` | session title at rest |
-| `--dsh-claude-table-head` | `#f0f0ef` | `#eff3fb` | `#242320` | `#212631` | `var(--dsw-alias-bg-layer-2)` | table header row |
-| `--dsh-claude-ripple-ink` | `#8a8a85` | `#8a92a6` | `#8c8a82` | `#8b93a7` | `var(--dsw-alias-label-secondary, #8a8a85)` | the new-conversation page's glyph field, and the wake a ripple leaves in it |
-| `--dsh-claude-ripple-wave` | `#3b6ef0` | `#3b6ef0` | `#7fa6ff` | `#7fa6ff` | `var(--dsw-alias-link, #3b6ef0)` | the front of a ripple in the new-conversation page's glyph field |
-| `--dsh-claude-scrollbar` | `rgba(208, 205, 193, 0.9)` | `rgba(206, 216, 233, 0.9)` | `rgba(58, 56, 51, 0.9)` | `rgba(54, 61, 75, 0.9)` | `var(--dsw-alias-border-l2)` | scrollbar thumb |
-| `--dsh-claude-scrollbar-hover` | `rgba(143, 138, 126, 0.8)` | `rgba(129, 133, 140, 0.8)` | `rgba(107, 106, 101, 0.9)` | `rgba(104, 112, 128, 0.9)` | `var(--dsw-alias-label-caption)` | scrollbar thumb under the pointer |
-| `--dsh-claude-link-hover` | `#a94f2f` | `#2c43b8` | `#f0a488` | `#b0c0ff` | `var(--dsw-alias-link)` | text link under the pointer |
-| `--dsh-claude-logo-ink` | `#141413` | `#4d6bfe` | `#faf9f5` | `#4d6bfe` | `var(--dsw-alias-label-primary)` | sidebar brand art: the whale and the wordmark |
-| `--dsw-specific-menu` | `#ffffff` | `#ffffff` | — | — | host's own |  |
-| `--dsw-specific-bubble` | `#f0f0ef` | `#eaf0fe` | `rgba(255, 255, 255, 0.06)` | `#232a3a` | host's own | user message bubble |
-| `--dsh-claude-chip` | `#f6f6f4` | `#f2f6fd` | — | — | `var(--dsw-specific-selector)` | segmented control and switch at rest |
-| `--dsh-claude-meter-peak` | `#a4621d` | `#9a5a1a` | `#e2a45f` | `#e5ae67` | `var(--dsw-alias-state-warn-label)` | the peak rate badge: the expensive end of a provider's own billing clock |
-| `--dsh-claude-meter-valley` | `#3d7550` | `#2e7554` | `#8cbf96` | `#7cc2a0` | `var(--dsw-alias-state-success-primary)` | the off-peak rate badge, and the dated promotions priced below it |
+| Token | 经典 亮 | 经典 暗 | 玻璃 亮 | 玻璃 暗 | 粉色 亮 | 粉色 暗 | Use |
+|---|---|---|---|---|---|---|---|
+| `--dsh-tg-wallpaper` | `#C8DAAE` | `#231F36` | `#D8E0FB` | `#121530` | `#FCE4EC` | `#2A1F33` | the window's wallpaper: the plain colour under the pattern (spec 4.1) |
+| `--dsh-tg-doodle-ink` | `#557E43` | `#FFFFFF` | `#4F5FB8` | `#A9B2FF` | `#D94F8C` | `#F59AC2` | the doodles' line colour |
+| `--dsh-tg-doodle-opacity` | `0.42` | `0.08` | `0.32` | `0.12` | `0.45` | `0.14` | the doodle layer's opacity |
+| `--dsh-tg-surface` | `#FFFFFF` | `#212121` | `#F4F8FF` | `#172130` | `#FCFDFF` | `#223246` | an opaque surface: host dialogs, the host's base layers |
+| `--dsh-tg-card` | `#FFFFFF` | `#212121` | `rgba(255, 255, 255, 0.55)` | `rgba(23, 33, 46, 0.58)` | `#FCFDFF` | `#223246` | the floating cards: the chat list, the right panel, the input bar, the header pill |
+| `--dsh-tg-menu` | `#FFFFFF` | `#2A2A2A` | `rgba(255, 255, 255, 0.82)` | `rgba(28, 40, 55, 0.78)` | `#FFFFFF` | `#26374A` | dropdown menus and popover cards |
+| `--dsh-tg-card-blur` | `none` | `none` | `blur(26px) saturate(1.8)` | `blur(26px) saturate(1.8)` | `none` | `none` | the backdrop filter a card, a menu and an incoming bubble take |
+| `--dsh-tg-card-shadow` | `0 0 4px rgba(0, 0, 0, 0.10)` | `0 0 4px rgba(0, 0, 0, 0.35)` | `inset 0 1px 0 rgba(255, 255, 255, 0.75), inset 0 0 0 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(31, 64, 110, 0.10)` | `inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.35)` | `0 0 4px rgba(0, 0, 0, 0.10)` | `0 0 4px rgba(0, 0, 0, 0.35)` | a floating card's shadow, with the glass palettes' inner highlight |
+| `--dsh-tg-menu-shadow` | `0 4px 16px rgba(0, 0, 0, 0.16)` | `0 4px 16px rgba(0, 0, 0, 0.45)` | `0 4px 16px rgba(0, 0, 0, 0.16)` | `0 4px 16px rgba(0, 0, 0, 0.45)` | `0 4px 16px rgba(0, 0, 0, 0.16)` | `0 4px 16px rgba(0, 0, 0, 0.45)` | a dropdown menu's shadow (spec 4.10) |
+| `--dsh-tg-ink` | `#111111` | `#F5F5F5` | `#0D1B2A` | `#F2F6FA` | `#16212F` | `#F1F6FC` | primary text |
+| `--dsh-tg-ink-secondary` | `#686C70` | `#AAAAAA` | `rgba(13, 27, 42, 0.68)` | `rgba(226, 236, 244, 0.66)` | `#526779` | `#BCCBDB` | secondary text: the list's second line, descriptions |
+| `--dsh-tg-line` | `#E6E8EA` | `#303030` | `rgba(13, 27, 42, 0.10)` | `rgba(255, 255, 255, 0.08)` | `#D2E1EC` | `rgba(255, 255, 255, 0.09)` | hairlines and borders |
+| `--dsh-tg-hover-bg` | `rgba(0, 0, 0, 0.05)` | `rgba(255, 255, 255, 0.06)` | `rgba(13, 27, 42, 0.06)` | `rgba(255, 255, 255, 0.06)` | `rgba(23, 100, 137, 0.06)` | `rgba(255, 255, 255, 0.06)` | the wash under a hovered row or button |
+| `--dsh-tg-accent` | `#3390EC` | `#8774E1` | `#0A84FF` | `#6AB3F3` | `#176489` | `#80D8FB` | the accent for icons, underlines and progress lines only |
+| `--dsh-tg-accent-text` | `#1C6CBE` | `#A896FF` | `#0063CC` | `#8FC6FF` | `#176489` | `#80D8FB` | accent text: links, accent labels, group titles (4.5:1) |
+| `--dsh-tg-accent-fill` | `#2176D2` | `#7461D6` | `linear-gradient(135deg, #1677C9, #0060C9)` | `linear-gradient(135deg, #1D6FA8, #4B3BC4)` | `#176489` | `#80D8FB` | the fill white text sits on: the selected row, badges, the selected segment, the send button, the new-chat button |
+| `--dsh-tg-accent-solid` | `#2176D2` | `#7461D6` | `#1677C9` | `#1D6FA8` | `#176489` | `#80D8FB` | the accent fill as one colour, where a gradient cannot go: borders, outlines, color-mix() |
+| `--dsh-tg-on-accent` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#16212F` | text and icons on the accent fill |
+| `--dsh-tg-bubble-out` | `#EEFFDE` | `#766AC8` | `linear-gradient(135deg, #1677C9, #0060C9)` | `linear-gradient(135deg, #1D6FA8, #4B3BC4)` | `#FCE9EF` | `#493247` | the reader's own bubbles |
+| `--dsh-tg-bubble-out-tail` | `#EEFFDE` | `#766AC8` | `#0060C9` | `#4B3BC4` | `#FCE9EF` | `#493247` | the outgoing bubble's tail, the colour the bubble ends in at its bottom right |
+| `--dsh-tg-bubble-out-solid` | `#EEFFDE` | `#766AC8` | `#1677C9` | `#1D6FA8` | `#FCE9EF` | `#493247` | the outgoing bubble as one colour, for the host's own bubble token |
+| `--dsh-tg-bubble-out-ink` | `#111111` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#16212F` | `#F1F6FC` | text in an outgoing bubble |
+| `--dsh-tg-bubble-out-meta` | `#3A8238` | `#E4DFFF` | `rgba(255, 255, 255, 0.8)` | `rgba(255, 255, 255, 0.8)` | `#9B4A63` | `#F5A9B8` | the time and ticks in an outgoing bubble (3:1) |
+| `--dsh-tg-bubble-in` | `#FFFFFF` | `#212121` | `rgba(255, 255, 255, 0.62)` | `rgba(26, 39, 54, 0.62)` | `#FFFFFF` | `#223246` | the answer's bubble |
+| `--dsh-tg-bubble-in-meta` | `#707579` | `#AAAAAA` | `rgba(13, 27, 42, 0.5)` | `rgba(226, 236, 244, 0.66)` | `#526779` | `#BCCBDB` | the time and usage around an incoming bubble (3:1) |
+| `--dsh-tg-service` | `rgba(25, 45, 18, 0.60)` | `rgba(0, 0, 0, 0.45)` | `rgba(255, 255, 255, 0.45)` | `rgba(10, 18, 28, 0.5)` | `rgba(23, 100, 137, 0.85)` | `rgba(0, 0, 0, 0.4)` | the service-message pill's fill |
+| `--dsh-tg-service-ink` | `#FFFFFF` | `#FFFFFF` | `#0D1B2A` | `#DBE7F0` | `#FFFFFF` | `#F1F6FC` | text on the service pill |
+| `--dsh-tg-selected` | `#2176D2` | `#7461D6` | `linear-gradient(135deg, #1677C9, #0060C9)` | `linear-gradient(135deg, #1D6FA8, #4B3BC4)` | `#D9F2FE` | `#80D8FB` | the selected chat row's fill |
+| `--dsh-tg-selected-solid` | `#2176D2` | `#7461D6` | `#1677C9` | `#1D6FA8` | `#D9F2FE` | `#80D8FB` | the selected fill as one colour, for the host's selector token |
+| `--dsh-tg-selected-ink` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` | `#16212F` | `#16212F` | both lines of the selected chat row |
+| `--dsh-tg-inline-code-bg` | `#F1F3F5` | `#2B2B2B` | `rgba(13, 27, 42, 0.06)` | `rgba(255, 255, 255, 0.08)` | `#EEF4F8` | `#2C3E54` | inline code |
+| `--dsh-tg-code-block` | `#F4F6F8` | `#181818` | `rgba(255, 255, 255, 0.5)` | `rgba(0, 0, 0, 0.25)` | `#F3F7FA` | `#1B2838` | a code block inside a bubble |
+| `--dsh-tg-table-head` | `#F1F3F5` | `#2B2B2B` | `rgba(13, 27, 42, 0.05)` | `rgba(255, 255, 255, 0.06)` | `#EEF4F8` | `#2C3E54` | a table's header row inside a bubble |
+| `--dsh-tg-deco-blue` | `#3390EC` | `#8774E1` | `#0A84FF` | `#6AB3F3` | `#5BCEFA` | `#5BCEFA` | decoration only: underlines, ticks |
+| `--dsh-tg-deco-pink` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | `#F5A9B8` | `#F5A9B8` | decoration only: the folder tab's underline second stop, small accents |
+| `--dsh-tg-settings-page` | `#F6F7F8` | `#181818` | `rgba(255, 255, 255, 0.35)` | `rgba(10, 18, 28, 0.35)` | `#EEF3F8` | `#1A2738` | the settings page's ground, one step deeper than a card |
+| `--dsh-tg-scrollbar` | `rgba(0, 0, 0, 0.18)` | `rgba(255, 255, 255, 0.18)` | `rgba(13, 27, 42, 0.20)` | `rgba(255, 255, 255, 0.18)` | `rgba(23, 100, 137, 0.22)` | `rgba(255, 255, 255, 0.18)` | a scrollbar thumb |
+| `--dsh-tg-scrollbar-hover` | `rgba(0, 0, 0, 0.32)` | `rgba(255, 255, 255, 0.32)` | `rgba(13, 27, 42, 0.34)` | `rgba(255, 255, 255, 0.32)` | `rgba(23, 100, 137, 0.38)` | `rgba(255, 255, 255, 0.32)` | a hovered scrollbar thumb |
+| `--dsh-tg-avatar-1` | `#E06F75` | `#E06F75` | `#E06F75` | `#E06F75` | `#E06F75` | `#E06F75` | avatar colour 1 (white initial, 3:1) |
+| `--dsh-tg-avatar-2` | `#C4835B` | `#C4835B` | `#C4835B` | `#C4835B` | `#C4835B` | `#C4835B` | avatar colour 2 |
+| `--dsh-tg-avatar-3` | `#9788D2` | `#9788D2` | `#9788D2` | `#9788D2` | `#9788D2` | `#9788D2` | avatar colour 3 |
+| `--dsh-tg-avatar-4` | `#63A14F` | `#63A14F` | `#63A14F` | `#63A14F` | `#63A14F` | `#63A14F` | avatar colour 4 |
+| `--dsh-tg-avatar-5` | `#569D9E` | `#569D9E` | `#569D9E` | `#569D9E` | `#569D9E` | `#569D9E` | avatar colour 5 |
+| `--dsh-tg-avatar-6` | `#5A98C6` | `#5A98C6` | `#5A98C6` | `#5A98C6` | `#5A98C6` | `#5A98C6` | avatar colour 6 |
+| `--dsh-tg-avatar-7` | `#D96F9E` | `#D96F9E` | `#D96F9E` | `#D96F9E` | `#D96F9E` | `#D96F9E` | avatar colour 7 |
+| `--dsh-tg-heat-0` | `#EBEDF0` | `#2A2F36` | `#EBEDF0` | `#2A2F36` | `#EBEDF0` | `#2A2F36` | a heat cell with no usage |
+| `--dsh-tg-heat-1` | `#C6E2FF` | `#0E3A66` | `#C6E2FF` | `#0E3A66` | `#C6E2FF` | `#0E3A66` | heat level 1 |
+| `--dsh-tg-heat-2` | `#79B8FF` | `#1565C0` | `#79B8FF` | `#1565C0` | `#79B8FF` | `#1565C0` | heat level 2 |
+| `--dsh-tg-heat-3` | `#2F80ED` | `#3D8FE0` | `#2F80ED` | `#3D8FE0` | `#2F80ED` | `#3D8FE0` | heat level 3 |
+| `--dsh-tg-heat-4` | `#0B4F9C` | `#8EC5FF` | `#0B4F9C` | `#8EC5FF` | `#0B4F9C` | `#8EC5FF` | heat level 4 |
+| `--dsh-tg-heart` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | `#FF5C8A` | the pink of the mascot's hearts |
+
+| Alias | Value | Use |
+|---|---|---|
+| `--dsw-alias-bg-base` | `var(--dsh-tg-surface)` | the host's base layer |
+| `--dsw-alias-bg-layer-1` | `var(--dsh-tg-surface)` | the host's first raised layer |
+| `--dsw-alias-bg-layer-2` | `color-mix(in srgb, var(--dsh-tg-surface) 94%, var(--dsh-tg-ink))` | the host's second layer |
+| `--dsw-alias-bg-layer-3` | `color-mix(in srgb, var(--dsh-tg-surface) 90%, var(--dsh-tg-ink))` | the host's third layer |
+| `--dsw-alias-bg-overlay` | `var(--dsh-tg-menu)` | the host's floating surfaces (menus, popovers, dialogs); opaque, as upstream had it |
+| `--dsw-alias-border-l1` | `var(--dsh-tg-line)` | the host's strongest border |
+| `--dsw-alias-border-l2` | `color-mix(in srgb, var(--dsh-tg-line) 70%, transparent)` | the host's middle border |
+| `--dsw-alias-border-l3` | `color-mix(in srgb, var(--dsh-tg-line) 45%, transparent)` | the host's faintest border |
+| `--dsw-alias-brand-primary` | `var(--dsh-tg-accent)` | the host's brand colour |
+| `--dsw-alias-brand-text` | `var(--dsh-tg-accent-text)` | the host's brand-coloured text |
+| `--dsw-alias-brand-primary-new-colorprimary-new-color` | `var(--dsh-tg-accent)` | the host's newer brand colour token |
+| `--dsw-alias-button-primary-fill` | `var(--dsh-tg-accent-solid)` | the host's primary button |
+| `--dsw-alias-button-primary-hover` | `color-mix(in srgb, var(--dsh-tg-accent-solid) 88%, var(--dsh-tg-ink))` | the host's primary button, hovered |
+| `--dsw-alias-button-elevated-fill` | `var(--dsh-tg-surface)` | the host's elevated button |
+| `--dsw-alias-button-floating-fill` | `var(--dsh-tg-surface)` | the host's floating button |
+| `--dsw-alias-button-floating-hover` | `color-mix(in srgb, var(--dsh-tg-surface) 94%, var(--dsh-tg-ink))` | the host's floating button, hovered |
+| `--dsw-alias-button-info-fill` | `color-mix(in srgb, var(--dsh-tg-accent) 14%, transparent)` | the host's info button |
+| `--dsw-alias-button-info-hover` | `color-mix(in srgb, var(--dsh-tg-accent) 22%, transparent)` | the host's info button, hovered |
+| `--dsw-alias-interactive-bg-active` | `color-mix(in srgb, var(--dsh-tg-accent) 14%, transparent)` | the host's pressed or active wash |
+| `--dsw-alias-interactive-bg-hover` | `var(--dsh-tg-hover-bg)` | the host's hover wash |
+| `--dsw-alias-interactive-bg-hover-solid` | `color-mix(in srgb, var(--dsh-tg-surface) 94%, var(--dsh-tg-ink))` | the host's opaque hover |
+| `--dsw-alias-markdown-code-block` | `var(--dsh-tg-code-block)` | the host's code block |
+| `--dsw-alias-markdown-code-block-banner` | `var(--dsh-tg-table-head)` | the host's code block banner |
+| `--dsw-alias-label-primary` | `var(--dsh-tg-ink)` | the host's primary text |
+| `--dsw-alias-label-primary-bluish` | `var(--dsh-tg-ink)` | the host's bluish primary text |
+| `--dsw-alias-label-secondary` | `var(--dsh-tg-ink-secondary)` | the host's secondary text |
+| `--dsw-alias-label-tertiary` | `var(--dsh-tg-ink-secondary)` | the host's tertiary text, held to the secondary text's contrast |
+| `--dsw-alias-label-caption` | `var(--dsh-tg-ink-secondary)` | the host's caption text |
+| `--dsw-alias-label-shimmer` | `var(--dsh-tg-accent-text)` | the host's shimmer highlight |
+| `--dsw-alias-label-deep-diving-shimmer` | `var(--dsh-tg-accent-text)` | the host's thinking shimmer |
+| `--dsw-alias-state-business-primary` | `var(--dsh-tg-accent-solid)` | the host's business state colour |
+| `--dsw-alias-state-business-tertiary` | `color-mix(in srgb, var(--dsh-tg-accent) 14%, transparent)` | the host's business state wash |
+| `--dsw-alias-link` | `var(--dsh-tg-accent-text)` | the host's links |
+| `--dsw-shadow-lv2` | `var(--dsh-tg-menu-shadow)` | the host's menu shadow |
+| `--dsw-specific-input-major` | `var(--dsh-tg-card)` | the host's input card |
+| `--dsw-specific-selector` | `var(--dsh-tg-selected-solid)` | the host's selected row |
+| `--dsw-specific-sidebar-fill` | `var(--dsh-tg-card)` | the host's sidebar fill |
+| `--dsw-specific-menu` | `var(--dsh-tg-menu)` | the host's menus |
+| `--dsw-specific-bubble` | `var(--dsh-tg-bubble-out-solid)` | the host's own user bubble |
+| `--dsh-tg-canvas` | `var(--dsh-tg-surface)` | the upstream sheets' canvas |
+| `--dsh-tg-sidebar-canvas` | `var(--dsh-tg-card)` | the upstream sheets' sidebar ground |
+| `--dsh-tg-raised` | `var(--dsh-tg-surface)` | the upstream sheets' raised surface |
+| `--dsh-tg-inverse-fill` | `var(--dsh-tg-ink)` | an inverted chip's fill |
+| `--dsh-tg-inverse-ink` | `var(--dsh-tg-surface)` | an inverted chip's text |
+| `--dsh-tg-ink-strong` | `var(--dsh-tg-ink)` | the upstream sheets' strong text |
+| `--dsh-tg-session-ink` | `var(--dsh-tg-ink)` | the upstream sheets' session title text |
+| `--dsh-tg-inline-code-fg` | `var(--dsh-tg-ink)` | inline code text |
+| `--dsh-tg-link` | `var(--dsh-tg-accent-text)` | links in the skin's own copy |
+| `--dsh-tg-link-underline` | `color-mix(in srgb, var(--dsh-tg-accent-text) 40%, transparent)` | a link's underline |
+| `--dsh-tg-link-hover` | `var(--dsh-tg-accent-text)` | a hovered link |
+| `--dsh-tg-logo-ink` | `var(--dsh-tg-accent)` | a mark drawn as a shape in the accent |
+| `--dsh-tg-chip` | `var(--dsh-tg-card)` | a chip's fill |
 <!-- /generated:tokens -->
 
 **Host token bindings.** The skin supplies its palette through the host's own
@@ -121,42 +144,21 @@ Two fills are palette-specific rather than carried over from the dark base:
 in light) and `--dsw-alias-button-elevated-fill` (a surface above the canvas in
 light, a raised gray in dark).
 
-## Two palettes · 两套配色归属
+## Palette gate · 配色归属
 
-The Colours and Typefaces rows each choose who paints: **Claude** (the default)
-or **Follow the host**. Every rule that writes a host token carries the Claude
-gate in its selector — `[data-dsh-claude-palette="claude"]` for colours,
-`[data-dsh-claude-typeface="claude"]` for `--dsw-font-*` — and so does every
-rule that paints the skin's canvas onto the host's frame (`<html>`, `<body>`,
-`#root`, the sidebar and conversation
-columns); the build refuses an ungated one. Under "follow the host" those rules
-drop out: the host's own tokens stand, or another theme plugin's, such as a
-wallpaper plugin that clears the canvas and turns the overlays to glass.
+The skin always paints; the palette preference only picks which of the three palettes does. Every rule that writes a host token or paints the skin's canvas onto the host's frame (`<html>`, `<body>`, `#root`, the sidebar and conversation columns) sits under `body[data-dsh-telegram-style]`, and the palette is carried by `data-dsh-tg-palette` on the body, so one palette's tokens replace another's wholesale and feature stylesheets never branch on it.
 
-The skin's own surfaces read only its private tokens and host tokens. Under the
-host palette each private token is an alias of a host token (the token table's
-Host alias column), so those surfaces follow whoever paints the host's. A new
-private colour token gets its Claude values and its host alias in
-`packages/client/src/theme/tokens.json`; the build refuses a private token without an alias.
-Cards take the host's overlay layer rather than its canvas: a plugin that
-clears the canvas still gives its overlays a readable fill, and the shared
-popover card blurs what lies behind it (`blur(16px) saturate(1.4)`).
+The skin's own surfaces read only its private tokens and host tokens. A new private colour token gets a value for each palette side and its host alias in `packages/client/src/theme/tokens.json`; the build refuses a private token without them. The token table has three groups: palette tokens (per palette side), shared tokens (the same in every palette) and aliases (the host tokens the skin rewrites).
 
-Under the host typeface the skin's own faces fall back to the host's:
-`--dsh-claude-font-serif`, `-prose` and `-brand` to `--dsw-font-family` (the host
-carries no serif), `--dsh-claude-font-code` to `--ds-font-family-code`.
+Cards take the host's overlay layer rather than its canvas, and the shared popover card blurs what lies behind it only in the Glass palette.
 
-Two colours stay whoever paints: the reasoning slider's violet top rung
-(`--dsh-claude-apex*`) and the account-hold page, which reproduces a Claude
-screen. Translucent neutral hover tints and the usage panel's data colours stay
-literal; they read on any canvas. Every other colour that paints a surface, a
-text, a border or an accent reads a token.
+Two colours are fixed in every palette: the reasoning slider's violet top rung (`--dsh-tg-apex*`) and the usage panel's data colours. Every other colour that paints a surface, a text, a border or an accent reads a token.
 
 ## Windows titlebar · 桌面顶栏
 
 On the Windows desktop the 40px caption row has no colour of its own: the
 sidebar and the conversation run to the window's top edge, each in its own
-fill (`--dsh-claude-sidebar-canvas`, `--dsh-claude-canvas`), and the sidebar's
+fill (`--dsh-tg-sidebar-canvas`, `--dsh-tg-canvas`), and the sidebar's
 0.5px `--dsw-alias-border-l1` hairline runs with them from the top edge to the
 bottom. The conversation column and the fullscreen file panel lose the host's
 16px top-left corner, so the hairline meets them straight. The three window
@@ -185,7 +187,7 @@ them.
 above; off drops every rule that draws one, so the pane stands in the host's
 own fill, flush with the column on all four sides, and a split's two panes meet
 at the dock's own resting line. Every card rule is gated on
-`<body data-dsh-claude-dock-look="card">`, so off is the host's own panel look
+`<body data-dsh-tg-dock-look="card">`, so off is the host's own panel look
 with nothing added.
 
 **The start page.** The host centers its stack of entries in a box that never
@@ -198,15 +200,23 @@ and scrolls to its end.
 
 ## Typography
 
-- **Serif display** — headings / editorial statements (`--dsh-claude-font-serif`).
-- **Sans UI** — chrome, body (`--dsw-font-family`).
-- **Mono** — code, technical labels (`--dsh-claude-font-code`).
+- **Body**: the system UI stack, `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif`.
+- **Code**: `"JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace`; JetBrains Mono ships with the plugin. Both are fixed; there is no typeface preference.
+- **Numbers**: times, usage and prices use tabular figures.
+- **Headings**: sans-serif throughout.
 
+| Where | Size | Weight |
+|---|---|---|
+| list title | 16px | 500 |
+| list second line | 14px | 400 |
+| message text | 15px | 400 |
+| auxiliary text (time, usage) | 12px | 400 |
+| group title | 13px | 500 |
 
 ## Shapes
 
-- Radius: 4 / 8 / 16 px; 12px for a popover card and 6px for its rows (the
-  popover table below); pills for CTAs (`9999px`). A shape copied from a host
+- Radius: cards 16px, menus and popover cards 12px (rows 6px), bubbles 16px with a 4px
+  tail corner, buttons fully round (`9999px`), and the 4 / 8 px steps for small controls. A shape copied from a host
   control keeps that control's own geometry rather than the scale above: the
   composer card's 18px (the host's 22px less 4), the inline composer's 14px and
   11px, the permission and workspace segments' 7px, the view tabs' 5px, the
@@ -243,6 +253,8 @@ and scrolls to its end.
 
 ## Motion
 
+With the animation choice resolved to "reduced" every displacement is dropped, leaving at most a fade.
+
 Every duration, curve, distance, blur and scale the skin uses is a token here,
 and a stylesheet or a Web Animations call reads the token rather than writing the
 value (D9). One value per role, so a faster feedback or a calmer swap is one
@@ -274,76 +286,87 @@ edit the JSON, not the table.
 <!-- generated:motion (packages/client/src/theme/tokens.json) -->
 | Token | Value | Use |
 |---|---|---|
-| `--dsh-claude-duration-instant` | `80ms` | the composer caret following the insertion point |
-| `--dsh-claude-duration-feedback` | `120ms` | a control answering hover, press or focus: its colour, background, border, shadow, or a small turn or slide of its own parts |
-| `--dsh-claude-duration-reveal` | `120ms` | content entering the chat area: an opened row's body, and each streamed piece of the answer |
-| `--dsh-claude-duration-enter` | `320ms` | one message the reader sends growing into its row, and the same growth on the Motion tab's card |
-| `--dsh-claude-duration-surface` | `150ms` | a floating surface or a group of controls appearing: popover cards, menus, panels, the search dialog, a toast, a strip fading in |
-| `--dsh-claude-duration-exit` | `120ms` | a surface leaving on the reader's dismissal: a menu or a dialog closing, the overtime badge leaving |
-| `--dsh-claude-duration-open` | `250ms` | a surface growing out of its anchor: a menu out of its trigger, a full-window dialog out of the centre, a settings page sliding in, the overtime badge sliding onto its line |
-| `--dsh-claude-duration-swap` | `150ms` | each half of a wording swap: the old words leaving, the new ones arriving |
-| `--dsh-claude-duration-swap-gap` | `50ms` | the offset the words arriving start after the words leaving, so the two halves of a wording swap travel together |
-| `--dsh-claude-duration-clear-delay` | `50ms` | how long after a field empties the streak under its cleared words starts to rise |
-| `--dsh-claude-duration-clear-text` | `400ms` | the two halves of clearing a field: the words leaving it, and the placeholder taking their place |
-| `--dsh-claude-duration-clear` | `1000ms` | one whole clear: the words leaving, the placeholder arriving, and the streak's rise, peak and fall |
-| `--dsh-claude-duration-roll` | `160ms` | a figure's characters rolling over to new digits |
-| `--dsh-claude-duration-move` | `200ms` | something travelling along its own track: a fold's door, the reasoning slider's knob and fill |
-| `--dsh-claude-duration-count` | `220ms` | a session number counting to its new reading |
-| `--dsh-claude-duration-slide` | `240ms` | the segmented controls' sliding highlight, a sidebar icon's quarter turn, the wording box taking the width of the words arriving, and streamed content sliding up from the bottom edge |
-| `--dsh-claude-duration-fade` | `300ms` | a slow cross-fade: the theme flip, the titlebar tabs' hover reveal, the reasoning knob's glow, a placeholder handing its place to what it stood for |
-| `--dsh-claude-duration-bounce` | `350ms` | a switch's knob travelling across with its double bounce |
-| `--dsh-claude-duration-flight` | `400ms` | the sent message flying from the composer to its row |
-| `--dsh-claude-duration-step` | `500ms` | one step of the reasoning window's text rising two lines |
-| `--dsh-claude-duration-pop` | `500ms` | something popping into place: the overtime badge's own pill |
-| `--dsh-claude-duration-rise` | `500ms` | a line of the home greeting rising into place |
-| `--dsh-claude-duration-stagger` | `70ms` | how far behind the piece before it a staggered piece starts: the greeting's second line |
-| `--dsh-claude-period-dot-orbit` | `2400ms` | one turn of the waiting line's loader dots that swap corners: four quarter-turns of the two pairs, which leaves every dot where it started |
-| `--dsh-claude-period-dot-rotate` | `10s` | how long one of the waiting line's loader motions stands before another takes its place, the next one picked so a motion never follows itself |
-| `--dsh-claude-duration-reduced` | `0.01ms` | every skin animation and transition under the Reduced animation choice (D40) |
-| `--dsh-claude-period-host-sweep` | `1500ms` | one pass of the highlight band across the waiting line's words and a running process group's header |
-| `--dsh-claude-duration-host-sweep-delay` | `300ms` | how long the highlight band waits after its words appear before its first pass |
-| `--dsh-claude-period-preview-swap` | `4000ms` | one turn of the settings page's waiting-line preview: one wording standing, leaving, and standing again |
-| `--dsh-claude-period-preview-reveal` | `4000ms` | one turn of the settings page's new-text fade preview: the sample arriving character by character, then standing before the next wipe |
-| `--dsh-claude-period-preview-caret` | `4000ms` | one turn of the settings page's caret preview: the sample line typed out, then standing whole before the next turn |
-| `--dsh-claude-period-preview-enter` | `2600ms` | one turn of the Motion tab's message-entrance card: one message arriving, standing, and giving way to the next |
-| `--dsh-claude-period-wash-hue` | `4000ms` | one turn of the hue rotation the waiting line's colour wash runs through |
-| `--dsh-claude-period-wash-drift` | `5000ms` | one orbit of the colour washes around the waiting line's glyph box |
-| `--dsh-claude-period-pulse` | `1600ms` | a placeholder breathing while its numbers are computed |
-| `--dsh-claude-period-flash` | `1450ms` | one flash of the reasoning slider's top-rung matrix |
-| `--dsh-claude-period-flow` | `4000ms` | one pass of the reasoning slider's top-rung particle flow |
-| `--dsh-claude-period-blink` | `1000ms` | one blink of the composer caret |
-| `--dsh-claude-period-breathe` | `2400ms` | one breath of the sidebar's ongoing-conversation light |
-| `--dsh-claude-period-spin` | `850ms` | one turn of the sidebar's ongoing-conversation ring |
-| `--dsh-claude-period-landed` | `1400ms` | the mark on the turn the conversation navigator landed on |
-| `--dsh-claude-period-hold` | `840ms` | how long the reasoning window's text stands between two steps |
-| `--dsh-claude-period-dot-bounce` | `500ms` | one bounce of the waiting line's loader dots under the Claude brand, and the period each dot's own start is measured against |
-| `--dsh-claude-period-dot-line` | `1250ms` | one round trip of the waiting line's loader dots along their own lines, the motion the dots take while the turn is not thinking |
-| `--dsh-claude-ease-standard` | `ease` | feedback and surfaces: the default curve |
-| `--dsh-claude-ease-out` | `ease-out` | something arriving and settling: a fold's door, content entering the chat area, the landing mark |
-| `--dsh-claude-ease-enter` | `cubic-bezier(0.34, 1.3, 0.64, 1)` | a message the reader sends growing into its row: the slight overshoot as it takes its full size |
-| `--dsh-claude-ease-in-out` | `ease-in-out` | something that leaves and returns, or swaps in place: wording swaps, pulses, flashes |
-| `--dsh-claude-ease-glide` | `cubic-bezier(0.22, 0.61, 0.36, 1)` | travel along a track: the sliding highlight, the reasoning slider, the search dialog's entrance, the reasoning window's step, the wording box's width, the stream's slide |
-| `--dsh-claude-ease-roll` | `cubic-bezier(0.4, 0, 0.2, 1)` | digits rolling over: the file rows' tail and the process group header's counts |
-| `--dsh-claude-ease-spring` | `cubic-bezier(0.34, 1.45, 0.64, 1)` | a small overshoot as something lands: the overtime badge popping in, a switch's knob bouncing past its end |
-| `--dsh-claude-ease-settle` | `cubic-bezier(0.22, 1, 0.36, 1)` | a surface or a page settling into place out of its anchor: menus and dialogs opening and closing, a settings page sliding, the overtime badge sliding onto its line, the greeting's lines rising |
-| `--dsh-claude-ease-host-sweep` | `steps(48, end)` | the band across the waiting line's words and a running process group's header |
-| `--dsh-claude-ease-harmonic` | `cubic-bezier(0.37, 0, 0.63, 1)` | a loader dot walking its line from one end to the other, and its size between an end and the middle: a sine's simple harmonic, at rest at either end and fastest halfway |
-| `--dsh-claude-ease-damped-out` | `cubic-bezier(0.33, 1, 0.68, 1)` | a loader dot's fade in a hand-over that does most of its change early: a walking or swapping dot coming in, a bouncing one going out |
-| `--dsh-claude-ease-damped-in` | `cubic-bezier(0.32, 0, 0.67, 0)` | a loader dot's fade in a hand-over that does most of its change late: a walking or swapping dot going out, a bouncing one coming in |
-| `--dsh-claude-distance-nudge` | `4px` | the short offset a surface rises from, and a small row's wording swap travels |
-| `--dsh-claude-distance-travel` | `8px` | the waiting line's wording swap, a settings page's slide, the overtime badge's sideways slide, and both directions of the waiting line's loader dots: the lift off their floor and the reach along their own lines |
-| `--dsh-claude-distance-rise` | `12px` | how far below its place a line of the home greeting starts, and the overtime badge's upward slide |
-| `--dsh-claude-blur-soft` | `2px` | the blur words and badges pass through while they swap or pop in, and a placeholder passes through as it hands its place over |
-| `--dsh-claude-blur-enter` | `3px` | the blur a settings page or a line of the home greeting passes through as it slides or rises in |
-| `--dsh-claude-scale-surface` | `0.98` | the scale a surface grows from as it rises |
-| `--dsh-claude-scale-dropdown` | `0.97` | the scale a menu grows from out of its trigger |
-| `--dsh-claude-scale-dropdown-exit` | `0.99` | the scale a menu shrinks to while it fades on closing |
-| `--dsh-claude-scale-dialog` | `0.96` | the scale a full-window dialog grows from and returns to |
-| `--dsh-claude-scale-dot-mid` | `0.55` | how small a loader dot is while it crosses the middle of its line; at either end it is the dot's own size, so the line motion never draws a dot larger than the bouncing one |
-| `--dsh-claude-duration-resize` | `300ms` | a surface taking a new size: the model picker's second level following the list a query leaves |
-| `--dsh-claude-timing-resize` | `var(--dsh-claude-duration-resize) var(--dsh-claude-ease-settle)` | shorthand: a size change, written after the property in a transition |
-| `--dsh-claude-timing-feedback` | `var(--dsh-claude-duration-feedback) var(--dsh-claude-ease-standard)` | shorthand: a control's state change, written after the property in a transition |
-| `--dsh-claude-timing-surface` | `var(--dsh-claude-duration-surface) var(--dsh-claude-ease-standard)` | shorthand: a surface appearing, written after the property or the keyframes' name |
+| `--dsh-tg-duration-instant` | `80ms` | the composer caret following the insertion point |
+| `--dsh-tg-duration-feedback` | `120ms` | a control answering hover, press or focus: its colour, background, border, shadow, or a small turn or slide of its own parts |
+| `--dsh-tg-duration-reveal` | `120ms` | content entering the chat area: an opened row's body, and each streamed piece of the answer |
+| `--dsh-tg-duration-enter` | `320ms` | one message the reader sends growing into its row, and the same growth on the Motion tab's card |
+| `--dsh-tg-duration-surface` | `150ms` | a floating surface or a group of controls appearing: popover cards, menus, panels, the search dialog, a toast, a strip fading in |
+| `--dsh-tg-duration-exit` | `120ms` | a surface leaving on the reader's dismissal: a menu or a dialog closing, the overtime badge leaving |
+| `--dsh-tg-duration-open` | `250ms` | a surface growing out of its anchor: a menu out of its trigger, a full-window dialog out of the centre, a settings page sliding in, the overtime badge sliding onto its line |
+| `--dsh-tg-duration-swap` | `150ms` | each half of a wording swap: the old words leaving, the new ones arriving |
+| `--dsh-tg-duration-swap-gap` | `50ms` | the offset the words arriving start after the words leaving, so the two halves of a wording swap travel together |
+| `--dsh-tg-duration-clear-delay` | `50ms` | how long after a field empties the streak under its cleared words starts to rise |
+| `--dsh-tg-duration-clear-text` | `400ms` | the two halves of clearing a field: the words leaving it, and the placeholder taking their place |
+| `--dsh-tg-duration-clear` | `1000ms` | one whole clear: the words leaving, the placeholder arriving, and the streak's rise, peak and fall |
+| `--dsh-tg-duration-roll` | `160ms` | a figure's characters rolling over to new digits |
+| `--dsh-tg-duration-move` | `200ms` | something travelling along its own track: a fold's door, the reasoning slider's knob and fill |
+| `--dsh-tg-duration-count` | `220ms` | a session number counting to its new reading |
+| `--dsh-tg-duration-slide` | `240ms` | the segmented controls' sliding highlight, a sidebar icon's quarter turn, the wording box taking the width of the words arriving, and streamed content sliding up from the bottom edge |
+| `--dsh-tg-duration-fade` | `300ms` | a slow cross-fade: the theme flip, the titlebar tabs' hover reveal, the reasoning knob's glow, a placeholder handing its place to what it stood for |
+| `--dsh-tg-duration-bounce` | `350ms` | a switch's knob travelling across with its double bounce |
+| `--dsh-tg-duration-flight` | `400ms` | the sent message flying from the composer to its row |
+| `--dsh-tg-duration-step` | `500ms` | one step of the reasoning window's text rising two lines |
+| `--dsh-tg-duration-pop` | `500ms` | something popping into place: the overtime badge's own pill |
+| `--dsh-tg-duration-rise` | `500ms` | a line of the home greeting rising into place |
+| `--dsh-tg-duration-stagger` | `70ms` | how far behind the piece before it a staggered piece starts: the greeting's second line |
+| `--dsh-tg-period-dot-orbit` | `2400ms` | one turn of the waiting line's loader dots that swap corners: four quarter-turns of the two pairs, which leaves every dot where it started |
+| `--dsh-tg-period-dot-rotate` | `10s` | how long one of the waiting line's loader motions stands before another takes its place, the next one picked so a motion never follows itself |
+| `--dsh-tg-duration-reduced` | `0.01ms` | every skin animation and transition under the Reduced animation choice (D40) |
+| `--dsh-tg-period-host-sweep` | `1500ms` | one pass of the highlight band across the waiting line's words and a running process group's header |
+| `--dsh-tg-duration-host-sweep-delay` | `300ms` | how long the highlight band waits after its words appear before its first pass |
+| `--dsh-tg-period-preview-swap` | `4000ms` | one turn of the settings page's waiting-line preview: one wording standing, leaving, and standing again |
+| `--dsh-tg-period-preview-reveal` | `4000ms` | one turn of the settings page's new-text fade preview: the sample arriving character by character, then standing before the next wipe |
+| `--dsh-tg-period-preview-caret` | `4000ms` | one turn of the settings page's caret preview: the sample line typed out, then standing whole before the next turn |
+| `--dsh-tg-period-preview-enter` | `2600ms` | one turn of the Motion tab's message-entrance card: one message arriving, standing, and giving way to the next |
+| `--dsh-tg-period-wash-hue` | `4000ms` | one turn of the hue rotation the waiting line's colour wash runs through |
+| `--dsh-tg-period-wash-drift` | `5000ms` | one orbit of the colour washes around the waiting line's glyph box |
+| `--dsh-tg-period-pulse` | `1600ms` | a placeholder breathing while its numbers are computed |
+| `--dsh-tg-period-flash` | `1450ms` | one flash of the reasoning slider's top-rung matrix |
+| `--dsh-tg-period-flow` | `4000ms` | one pass of the reasoning slider's top-rung particle flow |
+| `--dsh-tg-period-blink` | `1000ms` | one blink of the composer caret |
+| `--dsh-tg-period-landed` | `1400ms` | the mark on the turn the conversation navigator landed on |
+| `--dsh-tg-period-hold` | `840ms` | how long the reasoning window's text stands between two steps |
+| `--dsh-tg-period-dot-bounce` | `500ms` | one bounce of the waiting line's loader dots under the skin, and the period each dot's own start is measured against |
+| `--dsh-tg-period-dot-line` | `1250ms` | one round trip of the waiting line's loader dots along their own lines, the motion the dots take while the turn is not thinking |
+| `--dsh-tg-ease-standard` | `ease` | feedback and surfaces: the default curve |
+| `--dsh-tg-ease-out` | `ease-out` | something arriving and settling: a fold's door, content entering the chat area, the landing mark |
+| `--dsh-tg-ease-enter` | `cubic-bezier(0.34, 1.3, 0.64, 1)` | a message the reader sends growing into its row: the slight overshoot as it takes its full size |
+| `--dsh-tg-ease-in-out` | `ease-in-out` | something that leaves and returns, or swaps in place: wording swaps, pulses, flashes |
+| `--dsh-tg-ease-glide` | `cubic-bezier(0.22, 0.61, 0.36, 1)` | travel along a track: the sliding highlight, the reasoning slider, the search dialog's entrance, the reasoning window's step, the wording box's width, the stream's slide |
+| `--dsh-tg-ease-roll` | `cubic-bezier(0.4, 0, 0.2, 1)` | digits rolling over: the file rows' tail and the process group header's counts |
+| `--dsh-tg-ease-spring` | `cubic-bezier(0.34, 1.45, 0.64, 1)` | a small overshoot as something lands: the overtime badge popping in, a switch's knob bouncing past its end |
+| `--dsh-tg-ease-settle` | `cubic-bezier(0.22, 1, 0.36, 1)` | a surface or a page settling into place out of its anchor: menus and dialogs opening and closing, a settings page sliding, the overtime badge sliding onto its line, the greeting's lines rising |
+| `--dsh-tg-ease-host-sweep` | `steps(48, end)` | the band across the waiting line's words and a running process group's header |
+| `--dsh-tg-ease-harmonic` | `cubic-bezier(0.37, 0, 0.63, 1)` | a loader dot walking its line from one end to the other, and its size between an end and the middle: a sine's simple harmonic, at rest at either end and fastest halfway |
+| `--dsh-tg-ease-damped-out` | `cubic-bezier(0.33, 1, 0.68, 1)` | a loader dot's fade in a hand-over that does most of its change early: a walking or swapping dot coming in, a bouncing one going out |
+| `--dsh-tg-ease-damped-in` | `cubic-bezier(0.32, 0, 0.67, 0)` | a loader dot's fade in a hand-over that does most of its change late: a walking or swapping dot going out, a bouncing one coming in |
+| `--dsh-tg-distance-nudge` | `4px` | the short offset a surface rises from, and a small row's wording swap travels |
+| `--dsh-tg-distance-travel` | `8px` | the waiting line's wording swap, a settings page's slide, the overtime badge's sideways slide, and both directions of the waiting line's loader dots: the lift off their floor and the reach along their own lines |
+| `--dsh-tg-distance-rise` | `12px` | how far below its place a line of the home greeting starts, and the overtime badge's upward slide |
+| `--dsh-tg-blur-soft` | `2px` | the blur words and badges pass through while they swap or pop in, and a placeholder passes through as it hands its place over |
+| `--dsh-tg-blur-enter` | `3px` | the blur a settings page or a line of the home greeting passes through as it slides or rises in |
+| `--dsh-tg-scale-surface` | `0.98` | the scale a surface grows from as it rises |
+| `--dsh-tg-scale-dropdown` | `0.97` | the scale a menu grows from out of its trigger |
+| `--dsh-tg-scale-dropdown-exit` | `0.99` | the scale a menu shrinks to while it fades on closing |
+| `--dsh-tg-duration-menu` | `160ms` | a dropdown menu opening from its button's corner (spec 4.10) |
+| `--dsh-tg-scale-menu` | `0.85` | the scale a menu opens from |
+| `--dsh-tg-duration-ripple` | `300ms` | a press ripple spreading (spec 4.10) |
+| `--dsh-tg-scale-dot-mid` | `0.55` | how small a loader dot is while it crosses the middle of its line; at either end it is the dot's own size, so the line motion never draws a dot larger than the bouncing one |
+| `--dsh-tg-duration-resize` | `300ms` | a surface taking a new size: the model picker's second level following the list a query leaves |
+| `--dsh-tg-timing-resize` | `var(--dsh-tg-duration-resize) var(--dsh-tg-ease-settle)` | shorthand: a size change, written after the property in a transition |
+| `--dsh-tg-timing-feedback` | `var(--dsh-tg-duration-feedback) var(--dsh-tg-ease-standard)` | shorthand: a control's state change, written after the property in a transition |
+| `--dsh-tg-timing-surface` | `var(--dsh-tg-duration-surface) var(--dsh-tg-ease-standard)` | shorthand: a surface appearing, written after the property or the keyframes' name |
+| `--dsh-tg-period-sticker-breathe` | `4000ms` | the idle sticker's breath (spec 4.6) |
+| `--dsh-tg-period-sticker-dots` | `1200ms` | the thought bubble's three dots lighting in turn |
+| `--dsh-tg-period-sticker-bounce` | `600ms` | the working bounce |
+| `--dsh-tg-period-sticker-bounce-fast` | `450ms` | the working bounce with two or more sessions at work |
+| `--dsh-tg-period-sticker-sway` | `900ms` | the sway while waiting on the reader |
+| `--dsh-tg-period-sticker-spin` | `1600ms` | the loop arrow turning while the context is compacted |
+| `--dsh-tg-duration-sticker-shake` | `300ms` | the error shake |
+| `--dsh-tg-duration-sticker-gray` | `1200ms` | the error's grey fading back |
+| `--dsh-tg-duration-sticker-wake` | `400ms` | the hop out of sleep |
+| `--dsh-tg-duration-sticker-hearts` | `900ms` | the hearts a click lets float up |
+| `--dsh-tg-duration-sticker-hop` | `500ms` | the hop a double click asks for |
 <!-- /generated:motion -->
 
 ## Layers
@@ -361,11 +384,11 @@ edit the JSON, not the table.
 <!-- generated:layers (packages/client/src/theme/tokens.json) -->
 | Token | Value | Use |
 |---|---|---|
-| `--dsh-claude-layer-control` | `10` | a control kept over the composer card's own stacked rows: the send and stop buttons, the reasoning picker's trigger |
-| `--dsh-claude-layer-picker` | `20` | a picker that hangs its card from inside the composer: the permission picker, whose card has to stand over the controls beside it |
-| `--dsh-claude-layer-chrome` | `30` | the window's title row the skin draws into: the header band's title and actions, the titlebar's view tabs, over the host's own header |
-| `--dsh-claude-layer-float` | `99999` | a floating card or menu over everything the host draws: the popover cards, the hero menu |
-| `--dsh-claude-layer-takeover` | `2147483000` | a surface that covers the whole window: the account-hold page, the sent message's stand-in in flight |
+| `--dsh-tg-layer-control` | `10` | a control kept over the composer card's own stacked rows: the send and stop buttons, the reasoning picker's trigger |
+| `--dsh-tg-layer-picker` | `20` | a picker that hangs its card from inside the composer: the permission picker, whose card has to stand over the controls beside it |
+| `--dsh-tg-layer-chrome` | `30` | the window's title row the skin draws into: the header band's title and actions, the titlebar's view tabs, over the host's own header |
+| `--dsh-tg-layer-float` | `99999` | a floating card or menu over everything the host draws: the popover cards, the hero menu |
+| `--dsh-tg-layer-takeover` | `2147483000` | a surface that covers the whole window: the account-hold page, the sent message's stand-in in flight |
 <!-- /generated:layers -->
 
 ## Text selection
@@ -459,7 +482,7 @@ the shell itself. What it carries is described under "Context popover" below.
 | padding | `2px 7px` |
 | radius | 6px |
 | text | 13px / 20px, `var(--dsw-alias-label-primary)` |
-| hover | `var(--dsh-claude-hover-bg, rgba(0, 0, 0, .08))` |
+| hover | `var(--dsh-tg-hover-bg, rgba(0, 0, 0, .08))` |
 | icon | 16px, `var(--dsw-alias-label-secondary)` |
 | two-line row | name 13px / 16px at 500; description 11px / 14px in `label-tertiary` |
 | current row | trailing `IconCheckOutline16` in `var(--dsw-alias-brand-primary)` — the accent is what marks the choice |
@@ -489,7 +512,7 @@ never the bare local name.
 
 The hero row's two pickers are that primitive, portaled to `<body>` with no
 marker of their own. `packages/client/src/features/hero-menu/hero-menu.ts` stamps the open card with
-`data-dsh-claude-hero-menu` and `features/hero-menu/hero-menu.css` restyles it; the
+`data-dsh-tg-hero-menu` and `features/hero-menu/hero-menu.css` restyles it; the
 host's other menus (sidebar row menus, the settings permission row, submenus)
 keep the host's own design on purpose. What that replaces: a 20px radius card
 with 4px padding, 40px rows at 10px radius, and 14px text.
@@ -508,7 +531,7 @@ list changed. Nothing may be painted in between: the card would fade in at the
 height and the place it is about to leave — low, then jumping up mid-fade. So
 while the account row is armed the card stays unpainted (the same armed window
 that carries its one-shot entrance), and the feature stamps
-`data-dsh-claude-account-ready` once the skin's rows are inside it and its
+`data-dsh-tg-account-ready` once the skin's rows are inside it and its
 placement has been read twice with the same value. The entrance animation hangs
 on that stamp, so it plays on the card the reader will actually see.
 
@@ -530,7 +553,7 @@ leaves the panel against the window's right margin instead of under the ring.
 `features/context-stats/stats-binding.ts` reads the meter's right edge and the
 panel's own layout width — `offsetWidth`, not its rect: the entrance scales the
 box, and a transformed rect is two per cent narrower than the one that settles —
-and writes `--dsh-claude-context-panel-left` with the mark that turns it on;
+and writes `--dsh-tg-context-panel-left` with the mark that turns it on;
 `features/composer/inline-bar.css` reads it with `!important`, which outranks the
 host's inline value. The reading is re-taken when the panel's box changes (a size
 subscription on the observation bus) and when the viewport moves (`reposition('viewport')`).
@@ -597,7 +620,7 @@ upward by the same 6px air, flipping below only when the viewport leaves no room
 above, and clamped to the 8px viewport margin (`POPOVER_MARGIN`). The host
 re-runs its own placement from its anchor geometry on every frame while the card
 is open, so the position is handed over in two custom properties on the card
-(`--dsh-claude-hero-menu-x` / `--dsh-claude-hero-menu-y`, written by the same
+(`--dsh-tg-hero-menu-x` / `--dsh-tg-hero-menu-y`, written by the same
 pass that stamps it) which `features/hero-menu/hero-menu.css` reads with
 `!important`; that declaration outranks the host's plain inline value.
 
@@ -644,7 +667,7 @@ own shortcut wears that same keycap: a 20px box with a 1px hairline, 4px radius
 and 12px secondary ink, and the `+` the host writes between the two keys goes,
 the way the box leaves it out. It is a button like the New session and Plugins
 rows below it: the pointer cursor, and on hover the same plate those rows take
-(`--dsh-claude-hover-bg`, dark `rgba(255, 255, 255, 0.08)`) laid over its
+(`--dsh-tg-hover-bg`, dark `rgba(255, 255, 255, 0.08)`) laid over its
 opaque fill. Box and brand share one grid cell and cross-fade over 0.16s, the
 timing the workspace heading and its segmented control trade places with; the
 box is excluded from the window drag region. Standalone gives the box a row of
@@ -672,27 +695,10 @@ and shows the Enter glyph; the others hide it. The card fades in and settles
 from 6px above at 98.5% scale over 0.18s; on close card and mask fade out
 together over 0.14s before the modal unmounts.
 
-## Chat / Code switch · 聊天 / 代码切换
-
-With ds-bot installed, the switch is two 28×22 options on a 2px-padded plate
-with a 7px radius, each option 5px: chat bubbles and `</>`, 16px glyphs in the
-1.3px stroke the sidebar's glyphs use. It is painted on both sides of the switch
-by whoever paints the host's tokens — the theme on the Code side, ds-bot on the
-Chat side — so the plate is a translucent tint (`rgba(20, 20, 19, 0.06)`, dark
-`rgba(255, 255, 255, 0.08)`), the options take the tertiary label at rest and
-the primary on hover, and the checked one is cut from the conversation canvas
-(`--dsw-alias-bg-base`) with a 1px `rgba(20, 20, 19, 0.10)` drop (dark: a
-`rgba(255, 255, 255, 0.14)` fill and no drop). On the desktop it stands in the
-caption row, its right edge 12px inside the sidebar column's, centred in the
-row, and leaves the screen while the column is too narrow to keep 8px clear of
-the controls at the row's left end; on the web it is a cell of the sidebar's
-first row, before the collapse toggle. It moves nothing: there is no
-transition, since the press hands the whole page to the other side.
-
 ## The waiting line · 模型正在做什么的那一行
 
 The host's running row, its divider and its live region stay as the host draws
-them. Its whale tail is DeepSeek's own character, so under the Claude brand the
+them. Its whale tail is DeepSeek's own character, so the
 skin hides it and leads the line with its own loader: three 4px dots of the
 accent in force in an 18 × 14 box, resting on the floor, and the motion they
 play follows what the turn is doing (`features/chat-wait/wait-loader.ts`). While
@@ -745,7 +751,7 @@ scrolling.
 ## Home layouts · 首页版面
 
 The new-conversation page has two arrangements. `homeLayout` (settings: Home
-layout) writes `data-dsh-claude-home-layout` onto `<body>` and
+layout) writes `data-dsh-tg-home-layout` onto `<body>` and
 `packages/client/src/features/home/home-panel.css` branches on it. Both are the host's own
 hero markup — the greeting, the workspace row, the dock and the composer card
 inside `…_composerStack …_composerHero` — so only the arrangement differs.
@@ -762,7 +768,7 @@ inside `…_composerStack …_composerHero` — so only the arrangement differs.
 The studio composer is stamped `data-composer-variant="inline"` (composer.ts's
 pass reads the same preference), so the home card is drawn by the conversation's
 single-line stylesheet. The classic tray rules in `features/composer/card.css` are scoped
-away from studio with `:not([data-dsh-claude-home-layout="studio"])`. That is
+away from studio with `:not([data-dsh-tg-home-layout="studio"])`. That is
 deliberate: they set `order: 1` / `order: 2` on the same boxes, and a competing
 rule would have to be out-specified rather than merely reordered — scoping them
 removes the contest.
@@ -773,7 +779,7 @@ and it renders only in the hero phase — the host mounts that same seat inside 
 conversation, where the todo, queue and goal bars hang on it. The seat is scoped
 to a session, so the cold start screen (no session yet, the card waiting for a
 workspace) has none; there the skin mounts the same component on a
-`display: contents` element of its own (`.dsh-claude-home-seat`) and drops it
+`display: contents` element of its own (`.dsh-tg-home-seat`) and drops it
 once the host's dock arrives. A window too short for the whole panel shrinks the
 panel, never the page: the greeting keeps the top edge, the chips and the card
 keep the bottom, and the panel scrolls between them with a 32px fade over its
@@ -863,78 +869,42 @@ stand-in rows — and the heat grid's empty cell **is** the zero step, so "no da
 and "a day with no usage" stay different things: a missing value draws a
 placeholder, a zero day draws the grid's own base tone.
 
-## The composer crab · 输入卡片上的螃蟹
+## The sticker mascot · 输入条上的贴纸桌宠
 
-Claude Code's pixel crab is the mascot under the Claude brand (or when picked in
-the Mascot row). It stands where Deepy does — the composer card's top edge on
-both home layouts, the input area or the panel that replaces its card in a
-conversation (unless Where it appears keeps it to the home page) — and follows
-the same states with the same keys. It is drawn on a 52×36 grid of cells at 2px
-a cell, crisp (`pixelated`, 104×72px): feet on the bottom row, on the edge of
-what it stands on; the right claw four cells in from the grid's right edge, so
-it stands 8px inside the card's right edge, where the 18px corner starts to
-round, and the four spare cells take a lean, a note or a sparkle. The resting
-crab — shell 16×12 cells, claws 4×4, eyes 2×2, four legs 2×4 — is 48×32px
-(columns 24–47, rows 20–35) and only it takes the pointer. The shell is the clay
-accent `#d97757` in both themes, the side-on back `#b9603f`, the eyes `#141413`;
-the props (the laptop, the thought bubble, letters, notes, the hard hat) are an
-ink mask filled with the tertiary label ink. Every frame lasts 80ms, Claude
-Code's pace. Its laptop frames are Claude Code's own routine; the rest are drawn
-by `scripts/draw-crab.py` after the same character. With the animation choice
-resolved to "reduced" each state holds its still frame; a click or a pull still
-plays its reaction.
+The mascot is one sticker image, `design-assets/sticker-source.png` exported by
+`npm run sticker` (`scripts/sticker.mjs`) to a 210×192 webp with its alpha kept.
+It is 72px tall (56px on a window narrower than 760px) and stands on the top
+edge of what it stands on, 16px in from the right and with its feet 6px over the
+edge: the input bar's card on the home page, and — in a conversation, unless
+Where it stands keeps it to the home page — the input area or the panel that
+replaces it. The Sticker mascot row in Appearance switches it off. It takes the
+pointer on its own body only; the rest of its box lets clicks through. There is
+no dragging.
 
-| State | Animation | Still frame |
+The state machine is the upstream one (`mascot-stage.ts`, `mascot-signals.ts`):
+it hands the player an act key, `sticker-acts.ts` maps the key to a state, and
+`sticker.css` draws the state with keyframes — no frames, no timer of its own
+while it plays. The state is written on the sticker as `data-dsh-tg-mascot-state`
+(and `data-dsh-tg-mascot-tempo` for the working bounce). With the animation
+choice resolved to "reduced" nothing moves: the still image and the bubble's
+marks stay, and a click still names its act.
+
+| State | Looks | When |
 |---|---|---|
-| idle, every 20–40 s a look around, a claw wave or Claude Code's whole laptop routine | `idle`, `idle-look`, `idle-wave`, `idle-laptop` | 0 |
-| the model reasons or has not answered: eyes up to a thought bubble | `thinking` | 18 |
-| the model writes or tools run: 1 / 2 / 3+ sessions at work (typing / headphones / typing in a hard hat) | `typing` / `music` / `building` | 0 / 0 / 0 |
-| subagents running: 1 / 2+ (headphones / conducting) | `music` / `conducting` | 0 / 0 |
-| a compaction runs: squashed | `compacting` | 3 |
-| an approval, a question or a plan review waits: an exclamation mark | `notification` | 0 |
-| a tool call or a turn failed (4.8 s): crossed eyes, a shake | `error` | 4 |
-| a turn or a compaction finished (5.2 s): hops, claws up | `happy` | 3 |
-| a quiet minute / the next pointer move or key | `sleeping` / `waking` | 0 / 11 |
-| a click on the left / right half, four quick clicks, a pull | `poke-left` / `poke-right`, `tickle`, `drag` | 0 |
-
-## Deepy · 小鲸鱼
-
-Under the DeepSeek brand (or when picked in the Mascot row) the mascot is
-Deepy, the pixel whale of the Deepy theme pack: a 52×52 grid of logical pixels drawn at 2px a pixel (a 104px
-square), its ground line — row 48.5, the middle of its shadow — on the top edge
-of what it stands on. Every sheet's crop box reaches 3px past that ground line,
-and the whale paints over the host's cards, so its box is lifted by those 3px:
-the sprite's last row lands on the card's top edge, and the shadow's tail stays
-off the card instead of being stamped across it. Its box is 8px in from the
-right end of the card it stands over. On the home page that is the composer card
-(both layouts); in a conversation it is the whole input area, and the panel that
-replaces the card while the reader is asked for something (those panels start
-6–8px above their card). Every frame lasts 50ms. The sheets carry five device
-pixels to a logical pixel and are scaled down smoothly, so the whale stays crisp
-from 1× to 2× screens without `image-rendering: pixelated`, which would drop
-rows on a downscale. The body is Deepy's blue `#4E6FFF` with a navy `#142660`
-outline and a white belly in both themes; on the dark canvas the outline and the
-soft shadow recede and the blue body carries the shape. Only the resting body
-(columns 12–44, rows 30–48) takes the pointer. With the animation choice
-resolved to "reduced" each state holds its still frame; a click or a pull still
-plays its reaction.
-
-| State | Animation | Still frame |
-|---|---|---|
-| idle, every 20–40 s a look around or a spout | `idle`, `idle-look`, `idle-spout` | 0 |
-| the model reasons or has not answered | `thinking` | 20 |
-| the model writes or tools run: 1 / 2 / 3+ sessions at work | `typing` / `music` / `building` | 16 / 0 / 0 |
-| subagents running: 1 / 2+ | `music` / `conducting` | 0 / 6 |
-| a compaction runs | `compacting` | 20 |
-| an approval, a question or a plan review waits | `notification` | 12 |
-| a tool call or a turn failed (4.8 s) | `error` | 24 |
-| a turn or a compaction finished (5.2 s) | `happy` | 44 |
-| a quiet minute (no work, no pointer move or key) / the next pointer move or key | `sleeping` / `waking` | 10 / 29 |
-| a click on the face / the tail, four quick clicks, a pull | `poke-left` / `poke-right`, `tickle`, `drag` | 0 |
+| `idle` | breathes, 4 s | nothing runs |
+| `thinking` | tilts, a thought bubble with three dots lighting in turn | the model reasons or has not answered |
+| `working` | bounces, 600 ms (450 ms with two or more sessions or subagents at work) | the model writes, or tools run |
+| `notification` | sways, a `!` badge | an approval, a question or a plan review waits |
+| `sweeping` | a loop arrow turns in the bubble | a compaction runs |
+| `error` | a shake, then grey fading back | a tool call or a turn failed (4.8 s) |
+| `happy` | a jump and three hearts | a turn or a compaction finished (5.2 s) |
+| `sleeping` | tilts, dimmed, `z z` in the bubble | a quiet minute |
+| `waking` | a small hop | the next pointer move or key |
+| `hearts` / `hop` | hearts float up / a hop | a click / a double click |
 
 ## Implementation notes
 
-- Every rule is scoped under `body[data-dsh-claude-style]`.
+- Every rule is scoped under `body[data-dsh-telegram-style]`.
 - Dark tokens are the base; light overrides use `:not([data-ds-dark-theme])`.
 - A surface's stylesheet sits beside its feature under `packages/client/src/features/<feature>/`;
   the look no single feature owns is in `packages/client/src/theme/`, and the parts several

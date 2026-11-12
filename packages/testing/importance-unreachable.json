@@ -4,590 +4,615 @@
     {
       "reason": "首页用量面板：临时宿主里没有用量数据，面板画的是空状态",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-matrix",
-        "body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq::before",
-        "body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq::after",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-effort-matrix-sq::before",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-effort-matrix-sq::after",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-fill",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-ticks",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-knob",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-apex] .dsh-claude-effort-value",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-effort[data-apex] .dsh-claude-effort-knob",
-        "body[data-dsh-claude-style] .dsh-claude-home-models-more",
-        "body[data-dsh-claude-style] .dsh-claude-home-panel[data-computing] .dsh-claude-home-stat[data-skeleton] .dsh-claude-home-stat-value",
-        "body[data-dsh-claude-style] .dsh-claude-home-panel[data-computing] .dsh-claude-home-models[data-skeleton] .dsh-claude-home-model-swatch",
-        "body[data-dsh-claude-style] .dsh-claude-home-heat[data-skeleton] .dsh-claude-home-heat-cell",
-        "body[data-dsh-claude-style] .dsh-claude-home-fun",
-        "body[data-dsh-claude-style] .dsh-claude-home-stat[data-skeleton] .dsh-claude-home-stat-value",
-        "body[data-dsh-claude-style] .dsh-claude-home-heat-cell[data-level=\"1\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-heat-cell[data-level=\"2\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-heat-cell[data-level=\"3\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-heat-cell[data-level=\"4\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-plot",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-tick",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-bars",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-col",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-axis",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-label",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"0\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"0\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"1\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"1\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"2\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"2\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"3\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"3\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"4\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"4\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"5\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"5\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"6\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"6\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-chart-seg[data-rank=\"7\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch[data-rank=\"7\"]",
-        "body[data-dsh-claude-style] .dsh-claude-home-models",
-        "body[data-dsh-claude-style] .dsh-claude-home-model",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-swatch",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-name",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-split",
-        "body[data-dsh-claude-style] .dsh-claude-home-model-share",
-        "body[data-dsh-claude-style] .dsh-claude-home-models-empty",
-        "body[data-dsh-claude-style] .dsh-claude-home-models[data-skeleton] .dsh-claude-home-model-name",
-        "body[data-dsh-claude-style] .dsh-claude-home-models[data-skeleton] .dsh-claude-home-model-split",
-        "body[data-dsh-claude-style] .dsh-claude-home-models[data-skeleton] .dsh-claude-home-model-share",
-        "body[data-dsh-claude-style] .dsh-claude-home-models[data-skeleton] .dsh-claude-home-model-swatch"
-      ]
-    },
-    {
-      "reason": "禁入页面：走查里宿主的语言不在被禁的那几种里",
-      "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-ban",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-settled]",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-leaving]",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-ban",
-        "body[data-dsh-claude-style] .dsh-claude-ban *",
-        "body[data-dsh-claude-style] .dsh-claude-ban svg",
-        "body[data-dsh-claude-style] .dsh-claude-ban-bar",
-        "body[data-dsh-claude-style] .dsh-claude-ban-brand",
-        "body[data-dsh-claude-style] .dsh-claude-ban-mark",
-        "body[data-dsh-claude-style] .dsh-claude-ban-word",
-        "body[data-dsh-claude-style] .dsh-claude-ban-bar-actions",
-        "body[data-dsh-claude-style] .dsh-claude-ban-signout",
-        "body[data-dsh-claude-style] .dsh-claude-ban-window",
-        "body[data-dsh-claude-style] .dsh-claude-ban-win",
-        "body[data-dsh-claude-style] .dsh-claude-ban-toast",
-        "body[data-dsh-claude-style] .dsh-claude-ban-toast-icon",
-        "body[data-dsh-claude-style] .dsh-claude-ban-toast-text",
-        "body[data-dsh-claude-style] .dsh-claude-ban-toast-close",
-        "body[data-dsh-claude-style] .dsh-claude-ban-scroll",
-        "body[data-dsh-claude-style] .dsh-claude-ban-column",
-        "body[data-dsh-claude-style] .dsh-claude-ban-lock",
-        "body[data-dsh-claude-style] .dsh-claude-ban-title",
-        "body[data-dsh-claude-style] .dsh-claude-ban-lead",
-        "body[data-dsh-claude-style] .dsh-claude-ban-lead strong",
-        "body[data-dsh-claude-style] .dsh-claude-ban-next",
-        "body[data-dsh-claude-style] .dsh-claude-ban-subtitle",
-        "body[data-dsh-claude-style] .dsh-claude-ban-card",
-        "body[data-dsh-claude-style] .dsh-claude-ban-step",
-        "body[data-dsh-claude-style] .dsh-claude-ban-step-num",
-        "body[data-dsh-claude-style] .dsh-claude-ban-step-body",
-        "body[data-dsh-claude-style] .dsh-claude-ban-step-title",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-title",
-        "body[data-dsh-claude-style] .dsh-claude-ban-step-desc",
-        "body[data-dsh-claude-style] .dsh-claude-ban-primary",
-        "body[data-dsh-claude-style] .dsh-claude-ban-actions",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action+.dsh-claude-ban-action",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-icon",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-text",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-title-danger",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action .dsh-claude-ban-action-title-danger",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-desc",
-        "body[data-dsh-claude-style] .dsh-claude-ban-action-chevron"
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-matrix",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-fill",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-ticks",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-knob",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-apex] .dsh-tg-effort-value",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-effort[data-apex] .dsh-tg-effort-knob",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models-more",
+        "body[data-dsh-telegram-style] .dsh-tg-home-panel[data-computing] .dsh-tg-home-stat[data-skeleton] .dsh-tg-home-stat-value",
+        "body[data-dsh-telegram-style] .dsh-tg-home-panel[data-computing] .dsh-tg-home-models[data-skeleton] .dsh-tg-home-model-swatch",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat[data-skeleton] .dsh-tg-home-heat-cell",
+        "body[data-dsh-telegram-style] .dsh-tg-home-fun",
+        "body[data-dsh-telegram-style] .dsh-tg-home-stat[data-skeleton] .dsh-tg-home-stat-value",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-level=\"1\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-level=\"2\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-level=\"3\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-plot",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-tick",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-bars",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-col",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-axis",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-label",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"0\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"0\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"1\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"1\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"2\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"2\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"3\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"3\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"4\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"4\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"5\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"5\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"6\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"6\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-chart-seg[data-rank=\"7\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch[data-rank=\"7\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-swatch",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-name",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-split",
+        "body[data-dsh-telegram-style] .dsh-tg-home-model-share",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models-empty",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models[data-skeleton] .dsh-tg-home-model-name",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models[data-skeleton] .dsh-tg-home-model-split",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models[data-skeleton] .dsh-tg-home-model-share",
+        "body[data-dsh-telegram-style] .dsh-tg-home-models[data-skeleton] .dsh-tg-home-model-swatch",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-tip][data-edge=start]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-tip][data-edge=end]",
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-tip][data-side=below]"
       ]
     },
     {
       "reason": "脚本回答里没有文件操作：走查那一轮不读写文件",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-file-root",
-        "body[data-dsh-claude-style] .dsh-claude-file-leading",
-        "body[data-dsh-claude-style] .dsh-claude-file-chevron",
-        "body[data-dsh-claude-style] .dsh-claude-file-title",
-        "body[data-dsh-claude-style] .dsh-claude-file-title-slot",
-        "body[data-dsh-claude-style] .dsh-claude-file-op",
-        "body[data-dsh-claude-style] .dsh-claude-file-op>*",
-        "body[data-dsh-claude-style] .dsh-claude-file-op-swapping .dsh-claude-file-op-out",
-        "body[data-dsh-claude-style] .dsh-claude-file-op-swapping .dsh-claude-file-op-in",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-file-op .dsh-claude-file-op-out",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-file-op .dsh-claude-file-op-in",
-        "body[data-dsh-claude-style] .dsh-claude-file-sep",
-        "body[data-dsh-claude-style] .dsh-claude-file-summary",
-        "body[data-dsh-claude-style] .dsh-claude-file-suffix",
-        "body[data-dsh-claude-style] .dsh-claude-file-stat",
-        "body[data-dsh-claude-style] .dsh-claude-file-add",
-        "body[data-dsh-claude-style] .dsh-claude-file-del",
-        "body[data-dsh-claude-style] [data-dsh-claude-file-merge=gone]",
-        "body[data-dsh-claude-style] .dsh-claude-file-roll",
-        "body[data-dsh-claude-style] .dsh-claude-file-roll-digit",
-        "body[data-dsh-claude-style] .dsh-claude-file-roll-out",
-        "body[data-dsh-claude-style] .dsh-claude-file-roll-moving .dsh-claude-file-roll-in",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-file-roll-out",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-file-roll .dsh-claude-file-roll-in",
-        "body[data-dsh-claude-style] .dsh-claude-file-row .dsh-claude-file-title",
-        "body[data-dsh-claude-style] .dsh-claude-file-row .dsh-claude-file-summary:not(.dsh-claude-file-error):not(.dsh-claude-file-stopped)",
-        "body[data-dsh-claude-style] .dsh-claude-file-link",
-        "body[data-dsh-claude-style] .dsh-claude-file-row .dsh-claude-file-link",
-        "body[data-dsh-claude-style] .dsh-claude-file-error",
-        "body[data-dsh-claude-style] .dsh-claude-file-stopped",
-        "body[data-dsh-claude-style] .dsh-claude-file-body",
-        "body[data-dsh-claude-style] .dsh-claude-file-diff",
-        "body[data-dsh-claude-style] .dsh-claude-file-read",
-        "body[data-dsh-claude-style] .dsh-claude-file-io",
-        "body[data-dsh-claude-style] .dsh-claude-file-io-section",
-        "body[data-dsh-claude-style] .dsh-claude-file-io-divider",
-        "body[data-dsh-claude-style] .dsh-claude-file-io-label",
-        "body[data-dsh-claude-style] .dsh-claude-file-io-text",
-        "body[data-dsh-claude-style] .dsh-claude-file-io-text[data-error]",
-        "body[data-dsh-claude-style] .dsh-claude-file-inspect",
-        "body[data-dsh-claude-style] .dsh-claude-file-root .dsh-claude-file-inspect",
-        "body[data-dsh-claude-style] .dsh-claude-file-hidden"
+        "body[data-dsh-telegram-style] .dsh-tg-file-root",
+        "body[data-dsh-telegram-style] .dsh-tg-file-leading",
+        "body[data-dsh-telegram-style] .dsh-tg-file-chevron",
+        "body[data-dsh-telegram-style] .dsh-tg-file-title",
+        "body[data-dsh-telegram-style] .dsh-tg-file-title-slot",
+        "body[data-dsh-telegram-style] .dsh-tg-file-op",
+        "body[data-dsh-telegram-style] .dsh-tg-file-op>*",
+        "body[data-dsh-telegram-style] .dsh-tg-file-op-swapping .dsh-tg-file-op-out",
+        "body[data-dsh-telegram-style] .dsh-tg-file-op-swapping .dsh-tg-file-op-in",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-file-op .dsh-tg-file-op-out",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-file-op .dsh-tg-file-op-in",
+        "body[data-dsh-telegram-style] .dsh-tg-file-sep",
+        "body[data-dsh-telegram-style] .dsh-tg-file-summary",
+        "body[data-dsh-telegram-style] .dsh-tg-file-suffix",
+        "body[data-dsh-telegram-style] .dsh-tg-file-stat",
+        "body[data-dsh-telegram-style] .dsh-tg-file-add",
+        "body[data-dsh-telegram-style] .dsh-tg-file-del",
+        "body[data-dsh-telegram-style] [data-dsh-tg-file-merge=gone]",
+        "body[data-dsh-telegram-style] .dsh-tg-file-roll",
+        "body[data-dsh-telegram-style] .dsh-tg-file-roll-digit",
+        "body[data-dsh-telegram-style] .dsh-tg-file-roll-out",
+        "body[data-dsh-telegram-style] .dsh-tg-file-roll-moving .dsh-tg-file-roll-in",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-file-roll-out",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-file-roll .dsh-tg-file-roll-in",
+        "body[data-dsh-telegram-style] .dsh-tg-file-row .dsh-tg-file-title",
+        "body[data-dsh-telegram-style] .dsh-tg-file-row .dsh-tg-file-summary:not(.dsh-tg-file-error):not(.dsh-tg-file-stopped)",
+        "body[data-dsh-telegram-style] .dsh-tg-file-link",
+        "body[data-dsh-telegram-style] .dsh-tg-file-row .dsh-tg-file-link",
+        "body[data-dsh-telegram-style] .dsh-tg-file-error",
+        "body[data-dsh-telegram-style] .dsh-tg-file-stopped",
+        "body[data-dsh-telegram-style] .dsh-tg-file-body",
+        "body[data-dsh-telegram-style] .dsh-tg-file-diff",
+        "body[data-dsh-telegram-style] .dsh-tg-file-read",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io-section",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io-divider",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io-label",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io-text",
+        "body[data-dsh-telegram-style] .dsh-tg-file-io-text[data-error]",
+        "body[data-dsh-telegram-style] .dsh-tg-file-inspect",
+        "body[data-dsh-telegram-style] .dsh-tg-file-root .dsh-tg-file-inspect",
+        "body[data-dsh-telegram-style] .dsh-tg-file-hidden"
       ]
     },
     {
       "reason": "脚本回答里没有的 markdown 材料：走查那一轮只写普通段落",
       "selectors": [
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) blockquote",
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) pre",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] h1",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] h2",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] h3",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] h4",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] :is(th,td)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll] thead th",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll] thead td",
-        "body[data-dsh-claude-style][data-ds-dark-theme] [data-dsh-claude-part~=table-scroll] thead th",
-        "body[data-dsh-claude-style][data-ds-dark-theme] [data-dsh-claude-part~=table-scroll] thead td",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll] table",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll] tr>:first-child",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=table-scroll] tr>:last-child",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] :is(h1,h2,h3)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] :is(h1,h2,h3)+:is(h1,h2,h3)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] :is(h4,h5,h6)",
-        "body[data-dsh-claude-style] blockquote",
-        "body[data-dsh-claude-style] .md-code-block",
-        "body[data-dsh-claude-style] .md-code-block pre",
-        "body[data-dsh-claude-style] .md-code-block pre code",
-        "body[data-dsh-claude-style] pre",
-        "body[data-dsh-claude-style] pre code",
-        "body[data-dsh-claude-style] code:not(pre code)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=link-icon]",
-        "body[data-dsh-claude-style] :is(code:not(pre code)>[data-dsh-claude-part~=file-mention],code:not(pre code)>a)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=markdown] :is(a,a)",
-        "body[data-dsh-claude-style] hr",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=text-mono-label]",
-        "body[data-dsh-claude-style] [data-chat-flow] code:not(pre code)",
-        "body[data-dsh-claude-style][data-dsh-window-blur] [data-chat-flow] code:not(pre code)",
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) [data-chat-flow] code:not(pre code)",
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme])[data-dsh-window-blur] [data-chat-flow] code:not(pre code)"
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) blockquote",
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) pre",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] h1",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] h2",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] h3",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] h4",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] :is(th,td)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll] thead th",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll] thead td",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] [data-dsh-tg-part~=table-scroll] thead th",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] [data-dsh-tg-part~=table-scroll] thead td",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll] table",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll] tr>:first-child",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=table-scroll] tr>:last-child",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] :is(h1,h2,h3)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] :is(h1,h2,h3)+:is(h1,h2,h3)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] :is(h4,h5,h6)",
+        "body[data-dsh-telegram-style] blockquote",
+        "body[data-dsh-telegram-style] .md-code-block",
+        "body[data-dsh-telegram-style] .md-code-block pre",
+        "body[data-dsh-telegram-style] .md-code-block pre code",
+        "body[data-dsh-telegram-style] pre",
+        "body[data-dsh-telegram-style] pre code",
+        "body[data-dsh-telegram-style] code:not(pre code)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=link-icon]",
+        "body[data-dsh-telegram-style] :is(code:not(pre code)>[data-dsh-tg-part~=file-mention],code:not(pre code)>a)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=markdown] :is(a,a)",
+        "body[data-dsh-telegram-style] hr",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=text-mono-label]",
+        "body[data-dsh-telegram-style] [data-chat-flow] code:not(pre code)",
+        "body[data-dsh-telegram-style][data-dsh-window-blur] [data-chat-flow] code:not(pre code)",
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) [data-chat-flow] code:not(pre code)",
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme])[data-dsh-window-blur] [data-chat-flow] code:not(pre code)",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) blockquote",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) :not(pre)>code",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) pre",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) table",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) thead th",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) :is(th,td)",
+        "body[data-dsh-telegram-style] [data-chat-flow-kind=assistant-step]:not([data-chat-group-part=reasoning]):not([data-step-process] *) a"
       ]
     },
     {
       "reason": "账户卡片的个别状态：头像图片加载失败、菜单项禁用，以及自定义标志配上自定义色调（走查一次只写一个标记）",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-custom-mark][data-dsh-claude-custom-tint] .dsh-claude-account-avatar",
-        "body[data-dsh-claude-style] .dsh-claude-account-photo[hidden]",
-        "body[data-dsh-claude-style] .dsh-claude-account-popover .dsh-claude-popover-item[aria-disabled=true]"
+        "body[data-dsh-telegram-style] .dsh-tg-account-photo[hidden]",
+        "body[data-dsh-telegram-style] .dsh-tg-account-popover .dsh-tg-popover-item[aria-disabled=true]"
       ]
     },
     {
       "reason": "启动器的皮肤头像：只在由启动器带着皮肤启动的实例里出现",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-account-avatar[data-dsh-claude-skin]",
-        "body[data-dsh-claude-style] .dsh-claude-account-skin"
+        "body[data-dsh-telegram-style] .dsh-tg-account-avatar[data-dsh-tg-skin]",
+        "body[data-dsh-telegram-style] .dsh-tg-account-skin"
       ]
     },
     {
       "reason": "折叠的侧栏里的账户区：走查没有折叠侧栏",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] .dsh-claude-account-btn",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] .dsh-claude-account-avatar",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] :is(.dsh-claude-account-label,.dsh-claude-account-chevron)",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] .dsh-claude-account-popover",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] [data-dsh-claude-account-menu]",
-        "body[data-dsh-claude-style][data-dsh-claude-footer-takeover] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] [data-dsh-claude-part~=foot-area] [data-dsh-claude-part~=settings-area] :is(button,[data-dsh-claude-part~=settings-trigger]):not([data-dsh-claude-account-host-row]):not([data-dsh-claude-holds~=account-row])",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=sidebar-root][data-dsh-claude-part~=sidebar-collapsed] [data-dsh-claude-account-host-row]"
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] .dsh-tg-account-btn",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] .dsh-tg-account-avatar",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] :is(.dsh-tg-account-label,.dsh-tg-account-chevron)",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] .dsh-tg-account-popover",
+        "body[data-dsh-telegram-style][data-dsh-tg-footer-takeover] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] [data-dsh-tg-part~=foot-area] [data-dsh-tg-part~=settings-area] :is(button,[data-dsh-tg-part~=settings-trigger]):not([data-dsh-tg-account-host-row]):not([data-dsh-tg-holds~=account-row])",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=sidebar-root][data-dsh-tg-part~=sidebar-collapsed] [data-dsh-tg-account-host-row]"
       ]
     },
     {
       "reason": "宿主的账户菜单与它的账户行：只在桌面外壳里出现，走查跑在网页外壳",
       "selectors": [
-        "body[data-dsh-claude-style][data-ds-dark-theme] :is([data-dsh-claude-account-menu],[data-dsh-claude-hero-menu])",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-host-row]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-host-row] img",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=foot-area] [data-dsh-claude-part~=settings-trigger][data-dsh-claude-holds~=account-row]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=foot-area] [data-dsh-claude-part~=settings-trigger] [data-dsh-claude-holds~=account-row]",
-        "body[data-dsh-claude-style] .dsh-claude-account-inject",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu]",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude] [data-dsh-claude-account-menu]",
-        "body[data-dsh-claude-style][data-dsh-claude-account-armed] div[role=menu][data-menu-material]:not([data-dsh-claude-account-ready])",
-        "body[data-dsh-claude-style][data-dsh-claude-account-armed] div[role=menu][data-menu-material][data-dsh-claude-account-ready]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] [data-dsh-claude-part~=menu-item]>[role=menuitem]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] [role=separator]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] [data-dsh-claude-part~=menu-viewport]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] [data-dsh-claude-part~=menu-footer]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] .dsh-claude-account-inject",
-        "body[data-dsh-claude-style][data-dsh-claude-footer-takeover] [data-dsh-claude-part~=foot-area]>[data-dsh-claude-part~=settings-area][data-dsh-claude-holds~=account-row]",
-        "body[data-dsh-claude-style] [data-dsh-claude-account-menu] [data-dsh-claude-part~=menu-item-selected]"
+        "body[data-dsh-telegram-style][data-ds-dark-theme] :is([data-dsh-tg-account-menu],[data-dsh-tg-hero-menu])",
+        "body[data-dsh-telegram-style][data-dsh-tg-account-armed] div[role=menu][data-menu-material]:not([data-dsh-tg-account-ready])",
+        "body[data-dsh-telegram-style] [data-dsh-tg-account-menu] [data-dsh-tg-part~=menu-footer]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-account-menu] [data-dsh-tg-part~=menu-item-selected]"
       ]
     },
     {
       "reason": "桌面端窗口独有：走查跑在浏览器里，页面没有窗口标题栏",
       "selectors": [
-        "html[data-windows-titlebar] body[data-dsh-claude-style]:not([data-we-wallpaper]) [data-dsh-claude-part~=layout-frame][data-dsh-claude-holds~=sidebar-column]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style] [data-dsh-claude-part~=layout-frame][data-dsh-claude-holds~=sidebar-column]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style]>span[style*=--dsw-specific-sidebar-fill]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style]:not([data-we-wallpaper]) [data-dsh-claude-part~=layout-frame]>[data-dsh-claude-part~=sidebar-column]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style]:not([data-we-wallpaper]) [data-dsh-claude-part~=layout-frame]>[data-dsh-claude-part~=center-column]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style] [data-dsh-claude-part~=layout-frame]>[data-side=sidebar]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style] [data-slot=sidebar] [data-dsh-claude-part~=logo-row]",
-        "html[data-windows-titlebar] body[data-dsh-claude-style] [data-dsh-claude-search-row]",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-bar",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar][data-dsh-ban-controls=left] .dsh-claude-ban-bar",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-brand",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-signout",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-window",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-scroll",
-        "body[data-dsh-claude-style] .dsh-claude-ban[data-dsh-ban-titlebar] .dsh-claude-ban-toast"
+        "html[data-windows-titlebar] body[data-dsh-telegram-style] [data-dsh-tg-part~=layout-frame][data-dsh-tg-holds~=sidebar-column]",
+        "html[data-windows-titlebar] body[data-dsh-telegram-style]>span[style*=--dsw-specific-sidebar-fill]",
+        "html[data-windows-titlebar] body[data-dsh-telegram-style] [data-slot=sidebar] [data-dsh-tg-part~=logo-row]",
+        "html[data-windows-titlebar] body[data-dsh-telegram-style] [data-dsh-tg-search-row]"
       ]
     },
     {
       "reason": "搜索面板里没有结果：走查的查询词在临时宿主里搜不到东西",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-search-style=standalone] .dsh-claude-search-bar",
-        "body[data-dsh-claude-style][data-dsh-claude-search-style=standalone][data-dsh-claude-sidebar-layout=compact] .dsh-claude-search-bar",
-        "html[data-platform=darwin] body[data-dsh-claude-style] [data-dsh-claude-search-row]",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-dialog",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-filters[data-dsh-claude-pill]",
-        "body[data-dsh-claude-style] .dsh-claude-search-filters:not([data-dsh-claude-pill]) .dsh-claude-search-filter[aria-checked=true]",
-        "body[data-dsh-claude-style] .dsh-claude-search-status",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-item[data-active]",
-        "body[data-dsh-claude-style] .dsh-claude-search-item-image",
-        "body[data-dsh-claude-style] .dsh-claude-search-item-snippet",
-        "body[data-dsh-claude-style] .dsh-claude-search-item-match",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-foot"
+        "body[data-dsh-telegram-style][data-dsh-tg-search-style=standalone] .dsh-tg-search-bar",
+        "html[data-platform=darwin] body[data-dsh-telegram-style] [data-dsh-tg-search-row]",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-dialog",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-filters[data-dsh-tg-pill]",
+        "body[data-dsh-telegram-style] .dsh-tg-search-filters:not([data-dsh-tg-pill]) .dsh-tg-search-filter[aria-checked=true]",
+        "body[data-dsh-telegram-style] .dsh-tg-search-status",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-item[data-active]",
+        "body[data-dsh-telegram-style] .dsh-tg-search-item-image",
+        "body[data-dsh-telegram-style] .dsh-tg-search-item-snippet",
+        "body[data-dsh-telegram-style] .dsh-tg-search-item-match",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-foot"
       ]
     },
     {
       "reason": "一次动画里的短暂标记：走查把页面停住，标记已经落下",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-process-summary-digit[data-dsh-claude-roll=exit]",
-        "body[data-dsh-claude-style] .dsh-claude-settings-rows[data-dsh-claude-page-leave=back]",
-        "body[data-dsh-claude-style] .dsh-claude-settings-rows[data-dsh-claude-page-enter=back]",
-        "body[data-dsh-claude-style] .dsh-claude-settings-rows[data-dsh-claude-page-leave=forward]"
+        "body[data-dsh-telegram-style] .dsh-tg-process-summary-digit[data-dsh-tg-roll=exit]",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-rows[data-dsh-tg-page-leave=back]",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-rows[data-dsh-tg-page-enter=back]",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-rows[data-dsh-tg-page-leave=forward]"
       ]
     },
     {
       "reason": "归档视图：走查没有打开它",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-archive-row",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-archive-row",
-        "body[data-dsh-claude-style] .dsh-claude-archive-row:is(,)",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-archive-row:is(,)",
-        "body[data-dsh-claude-style] .dsh-claude-archive-title",
-        "body[data-dsh-claude-style] .dsh-claude-archive-time",
-        "body[data-dsh-claude-style] .dsh-claude-archive-row .dsh-claude-archive-time",
-        "body[data-dsh-claude-style] .dsh-claude-archive-action",
-        "body[data-dsh-claude-style] .dsh-claude-archive-row .dsh-claude-archive-action",
-        "body[data-dsh-claude-style] .dsh-claude-archive-delete",
-        "body[data-dsh-claude-style] .dsh-claude-archive-restore"
+        "body[data-dsh-telegram-style] .dsh-tg-archive-row",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-archive-row",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-row:is(,)",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-archive-row:is(,)",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-title",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-time",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-row .dsh-tg-archive-time",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-action",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-row .dsh-tg-archive-action",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-delete",
+        "body[data-dsh-telegram-style] .dsh-tg-archive-restore"
       ]
     },
     {
       "reason": "模型选择器的分组与规则：临时宿主的目录里没有分组",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-model-group-section",
-        "body[data-dsh-claude-style] .dsh-claude-model-group-row",
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-model-group-row",
-        "body[data-dsh-claude-style] .dsh-claude-model-group",
-        "body[data-dsh-claude-style] .dsh-claude-model-option[data-brand=claude] .dsh-claude-model-name",
-        "body[data-dsh-claude-style] .dsh-claude-model-rule",
-        "body[data-dsh-claude-style] .dsh-claude-model-rule-name"
-      ]
-    },
-    {
-      "reason": "自定义品牌：走查一次只写一个标记，读者提供的图形与文字不在页面上",
-      "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-masked-mark",
-        "body[data-dsh-claude-style] .dsh-claude-masked-word",
-        "body[data-dsh-claude-style][data-dsh-claude-custom-mark] [data-dsh-claude-part~=hero-mark]",
-        "body[data-dsh-claude-style][data-dsh-claude-custom-mark][data-dsh-claude-custom-tint] :is([data-dsh-claude-part~=brand-mark],[data-dsh-claude-part~=rail-mark])",
-        "body[data-dsh-claude-style][data-dsh-claude-custom-mark][data-dsh-claude-custom-tint] [data-dsh-claude-part~=hero-mark]",
-        "body[data-dsh-claude-style][data-dsh-claude-custom-word=image][data-dsh-claude-custom-tint] [data-dsh-claude-part~=brand-identity]>[data-dsh-claude-part~=brand-name]",
-        "body[data-dsh-claude-style][data-dsh-claude-custom-mark] [data-dsh-claude-part~=hero-mark]>*",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-dsh-claude-accent][data-ds-dark-theme]",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-dsh-claude-brand=deepseek][data-dsh-claude-accent]"
+        "body[data-dsh-telegram-style] .dsh-tg-model-rule",
+        "body[data-dsh-telegram-style] .dsh-tg-model-rule-name"
       ]
     },
     {
       "reason": "视图页签与页头：走查没有切到另一个视图",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-titlebar-tabs] [data-dsh-view-tabs]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=center-column] [data-dsh-titlebar-tabs] [data-dsh-view-tabs]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=conversation-header][data-dsh-titlebar-tabs][data-dsh-claude-holds~=view-tabs]",
-        "body[data-dsh-claude-style] [data-dsh-header-band~=title] [data-dsh-header-title]",
-        "body[data-dsh-claude-style] [data-dsh-titlebar-tabs] [data-dsh-header-band-tabs]",
-        "body[data-dsh-claude-style] [data-dsh-header-band~=title] [data-dsh-header-row]",
-        "body[data-dsh-claude-style] [data-dsh-header-band~=title] [data-dsh-header-row] [data-dsh-claude-part~=header-label]",
-        "body[data-dsh-claude-style] [data-dsh-header-band~=actions] [data-dsh-header-actions]",
-        "body[data-dsh-claude-style] [data-dsh-header-band~=actions] [data-dsh-header-corner]"
+        "body[data-dsh-telegram-style] [data-dsh-titlebar-tabs] [data-dsh-view-tabs]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=center-column] [data-dsh-titlebar-tabs] [data-dsh-view-tabs]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=conversation-header][data-dsh-titlebar-tabs][data-dsh-tg-holds~=view-tabs]"
       ]
     },
     {
       "reason": "弹出层的个别状态：陈旧条目、徽标与状态行",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-popover-status",
-        "body[data-dsh-claude-style] .dsh-claude-popover-item-badge",
-        "body[data-dsh-claude-style] .dsh-claude-popover-item.dsh-claude-popover-item-stale .dsh-claude-popover-item-text",
-        "body[data-dsh-claude-style] .dsh-claude-popover-item.dsh-claude-popover-item-stale .dsh-claude-popover-item-badge",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=foot-area]>.dsh-claude-popover-item",
-        "body[data-dsh-claude-style] .dsh-claude-popover-embed",
-        "body[data-dsh-claude-style] .dsh-claude-popover-embed[data-clickable]",
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) .dsh-claude-popover-embed"
+        "body[data-dsh-telegram-style] .dsh-tg-popover-status",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-item-badge",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-item.dsh-tg-popover-item-stale .dsh-tg-popover-item-text",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-item.dsh-tg-popover-item-stale .dsh-tg-popover-item-badge",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=foot-area]>.dsh-tg-popover-item",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-embed",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-embed[data-clickable]",
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) .dsh-tg-popover-embed"
       ]
     },
     {
       "reason": "侧栏行的状态：菜单打开、选中、折叠的箭头",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=text-select-label]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=group-section]+[data-dsh-claude-part~=group-section]",
-        "body[data-dsh-claude-style][data-dsh-claude-sidebar-layout=compact] [data-dsh-claude-part~=group-section]+[data-dsh-claude-part~=group-section]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=session-row][data-dsh-claude-part~=row-menu-open]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=project-row][data-dsh-claude-part~=row-menu-open]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=project-row][data-dsh-claude-part~=row-selected]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=project-row][aria-expanded=false] [data-dsh-claude-part~=row-chevron]"
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=text-select-label]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=group-section]+[data-dsh-tg-part~=group-section]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=project-row][data-dsh-tg-part~=row-menu-open]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=project-row][data-dsh-tg-part~=row-selected]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=project-row][aria-expanded=false] [data-dsh-tg-part~=row-chevron]"
       ]
     },
     {
       "reason": "轮次导航：走查的会话只有一轮，导轨没有滚动，也没有未加载的标记",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-turn-rail[data-fade-top]",
-        "body[data-dsh-claude-style] .dsh-claude-turn-rail[data-fade-bottom]",
-        "body[data-dsh-claude-style] .dsh-claude-turn-rail[data-fade-top][data-fade-bottom]",
-        "body[data-dsh-claude-style] .dsh-claude-turn-rail-mark[data-unloaded]",
-        "body[data-dsh-claude-style] .dsh-claude-turn-nav-row[data-unloaded] .dsh-claude-turn-nav-dash"
+        "body[data-dsh-telegram-style] .dsh-tg-turn-rail[data-fade-top]",
+        "body[data-dsh-telegram-style] .dsh-tg-turn-rail[data-fade-bottom]",
+        "body[data-dsh-telegram-style] .dsh-tg-turn-rail[data-fade-top][data-fade-bottom]",
+        "body[data-dsh-telegram-style] .dsh-tg-turn-rail-mark[data-unloaded]",
+        "body[data-dsh-telegram-style] .dsh-tg-turn-nav-row[data-unloaded] .dsh-tg-turn-nav-dash"
       ]
     },
     {
       "reason": "推理强度选择器：走查没有拖动它，也没有停在顶档",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-effort-matrix-cell",
-        "body[data-dsh-claude-style] .dsh-claude-effort-matrix-sq",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-dragging] .dsh-claude-effort-knob",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-dragging] .dsh-claude-effort-fill",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-empty] .dsh-claude-effort-track",
-        "body[data-dsh-claude-style] .dsh-claude-effort[data-empty] .dsh-claude-effort-value"
-      ]
-    },
-    {
-      "reason": "宿主开了壁纸：临时宿主用默认外观",
-      "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-we-wallpaper]",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-ds-dark-theme][data-we-wallpaper]",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-we-wallpaper] :is([data-dsh-claude-part~=layout-frame][data-dsh-claude-holds~=sidebar-column],[data-dsh-claude-part~=center-column],[data-dsh-claude-part~=rightbar-column],[data-dsh-claude-holds~=conversation-scroll])",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-we-wallpaper] :is([data-pane=sidebar],[data-dsh-claude-part~=sidebar-column])",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-we-wallpaper] :is([data-phase=active],[data-content-phase=active]) [data-composer-seat]",
-        "body[data-dsh-claude-style][data-dsh-claude-palette=claude][data-we-wallpaper] [data-dsh-claude-part~=conversation-header][data-dsh-claude-holds~=view-tabs]"
+        "body[data-dsh-telegram-style] .dsh-tg-effort-matrix-cell",
+        "body[data-dsh-telegram-style] .dsh-tg-effort-matrix-sq",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-dragging] .dsh-tg-effort-knob",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-dragging] .dsh-tg-effort-fill",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-empty] .dsh-tg-effort-track",
+        "body[data-dsh-telegram-style] .dsh-tg-effort[data-empty] .dsh-tg-effort-value"
       ]
     },
     {
       "reason": "设置页里的个别状态：出错、按下、展开、选好图片",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-settings-error",
-        "body[data-dsh-claude-style] .dsh-claude-settings-switch[data-moved][data-on] .dsh-claude-settings-switch-knob",
-        "body[data-dsh-claude-style] .dsh-claude-settings-picker[aria-expanded=true]",
-        "body[data-dsh-claude-style] .dsh-claude-brand-image-preview>img",
-        "body[data-dsh-claude-style] .dsh-claude-brand-image-error"
+        "body[data-dsh-telegram-style] .dsh-tg-settings-error",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-switch[data-moved][data-on] .dsh-tg-settings-switch-knob",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-picker[aria-expanded=true]"
       ]
     },
     {
       "reason": "换字动画的中间帧：走查把页面停住，帧已经落下",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-status-motion=wash] .dsh-claude-chat-wait .dsh-claude-swap-shimmer",
-        "body[data-dsh-claude-style] .dsh-claude-swap-copy.is-enter-start",
-        "body[data-dsh-claude-style] .dsh-claude-swap-copy.is-exit",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-swap-copy",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-swap-label"
+        "body[data-dsh-telegram-style][data-dsh-tg-status-motion=wash] .dsh-tg-chat-wait .dsh-tg-swap-shimmer",
+        "body[data-dsh-telegram-style] .dsh-tg-swap-copy.is-enter-start",
+        "body[data-dsh-telegram-style] .dsh-tg-swap-copy.is-exit",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-swap-copy",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-swap-label"
       ],
       "either": true
     },
     {
       "reason": "宿主留空的插槽：临时宿主没有渲染它",
       "selectors": [
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) [data-slot=\"sidebar.settings\"]>:is(button,[role=button])",
-        "body[data-dsh-claude-style] [data-slot=\"sidebar.settings\"]>:is(button,[role=button])",
-        "body[data-dsh-claude-style]:not([data-dsh-claude-search-style=icon]) [data-slot=sidebar] [data-dsh-claude-part~=section-actions-hidden]"
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) [data-slot=\"sidebar.settings\"]>:is(button,[role=button])",
+        "body[data-dsh-telegram-style] [data-slot=\"sidebar.settings\"]>:is(button,[role=button])",
+        "body[data-dsh-telegram-style]:not([data-dsh-tg-search-style=icon]) [data-slot=sidebar] [data-dsh-tg-part~=section-actions-hidden]"
       ]
     },
     {
       "reason": "宿主右栏的引导：临时宿主没有渲染它",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=rightbar-column] [data-dsh-claude-part~=panel-guide]",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=rightbar-column] [data-dsh-claude-part~=panel-guide]>:first-child",
-        "body[data-dsh-claude-style] [data-dsh-claude-part~=rightbar-column] [data-dsh-claude-part~=panel-guide]>:last-child"
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=rightbar-column] [data-dsh-tg-part~=panel-guide]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=rightbar-column] [data-dsh-tg-part~=panel-guide]>:first-child",
+        "body[data-dsh-telegram-style] [data-dsh-tg-part~=rightbar-column] [data-dsh-tg-part~=panel-guide]>:last-child"
       ]
     },
     {
       "reason": "宿主品牌标志在首页上的形态：走查写品牌标记时不在首页",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-brand=deepseek] [data-dsh-claude-part~=hero-mark] svg",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-dsh-claude-part~=hero-mark]",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-dsh-claude-part~=hero-mark]+[data-dsh-claude-part~=hero-title-group]"
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-part~=hero-mark]",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-part~=hero-mark]+[data-dsh-tg-part~=hero-title-group]"
       ]
     },
     {
       "reason": "底部接管：临时宿主的页脚没有那些按钮",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-footer-takeover] [data-dsh-claude-part~=foot-area]>[data-dsh-claude-part~=footer-actions] :is([data-dsh-claude-part~=footer-buttons],>button)",
-        "body[data-dsh-claude-style][data-dsh-claude-footer-takeover] [data-dsh-claude-part~=foot-area] [data-dsh-claude-footer-hidden]",
-        "body[data-dsh-claude-style][data-dsh-claude-footer-takeover] [data-dsh-claude-part~=foot-area] [data-dsh-claude-footer-entry]:not([data-dsh-claude-footer-hidden])"
-      ]
-    },
-    {
-      "reason": "吉祥物：它只在自己的偏好打开且页面空闲时才挂载",
-      "selectors": [
-        "body[data-dsh-claude-style] :is(.dsh-claude-crab,.dsh-claude-deepy):not([data-ready])",
-        "body[data-dsh-claude-style] [data-dsh-claude-crab-anchor=panel]>.dsh-claude-crab",
-        "body[data-dsh-claude-style] [data-dsh-claude-deepy-anchor=panel]>.dsh-claude-deepy"
+        "body[data-dsh-telegram-style][data-dsh-tg-footer-takeover] [data-dsh-tg-part~=foot-area]>[data-dsh-tg-part~=footer-actions] :is([data-dsh-tg-part~=footer-buttons],>button)",
+        "body[data-dsh-telegram-style][data-dsh-tg-footer-takeover] [data-dsh-tg-part~=foot-area] [data-dsh-tg-footer-hidden]",
+        "body[data-dsh-telegram-style][data-dsh-tg-footer-takeover] [data-dsh-tg-part~=foot-area] [data-dsh-tg-footer-entry]:not([data-dsh-tg-footer-hidden])"
       ]
     },
     {
       "reason": "折叠的侧栏：走查没有折叠它",
       "selectors": [
-        "body[data-dsh-claude-style] [data-sidebar-collapsed] button[data-dsh-claude-part~=new-session]",
-        "body[data-dsh-claude-style] [data-sidebar-collapsed] button[data-dsh-claude-part~=new-session] [data-dsh-claude-part~=new-session-mask]"
+        "body[data-dsh-telegram-style] [data-sidebar-collapsed] button[data-dsh-tg-part~=new-session]",
+        "body[data-dsh-telegram-style] [data-sidebar-collapsed] button[data-dsh-tg-part~=new-session] [data-dsh-tg-part~=new-session-mask]",
+        "body[data-dsh-telegram-style]:not([data-dsh-tg-search-style=icon]) [data-sidebar-collapsed] [data-dsh-tg-holds~=rail-search]",
+        "body[data-dsh-telegram-style] [data-sidebar-collapsed] [data-dsh-tg-part~=logo-row]+.dsh-tg-search-trigger",
+        "body[data-dsh-telegram-style] [data-sidebar-collapsed] [data-dsh-tg-part~=logo-row]+.dsh-tg-search-trigger>:is(.dsh-tg-search-trigger-label,.dsh-tg-search-keys)",
+        "body[data-dsh-telegram-style][data-dsh-tg-holds~=sidebar-rail] [data-dsh-tg-account-menu]"
       ]
     },
     {
       "reason": "折叠的过程行：脚本回答的过程行不足以折叠",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-chat-fold] [data-chat-flow] :is([data-disclosure-row],[data-disclosure-header])~*:not([data-turn-process-member] *,[data-turn-trigger] *):is([data-disclosure-row]~*,[data-disclosure-header]~* *)",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-chat-flow] :is([data-disclosure-row],[data-disclosure-header])~*:not([data-turn-process-member] *,[data-turn-trigger] *):is([data-disclosure-row]~*,[data-disclosure-header]~* *)"
+        "body[data-dsh-telegram-style][data-dsh-tg-chat-fold] [data-chat-flow] :is([data-disclosure-row],[data-disclosure-header])~*:not([data-turn-process-member] *,[data-turn-trigger] *):is([data-disclosure-row]~*,[data-disclosure-header]~* *)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-chat-flow] :is([data-disclosure-row],[data-disclosure-header])~*:not([data-turn-process-member] *,[data-turn-trigger] *):is([data-disclosure-row]~*,[data-disclosure-header]~* *)"
       ]
     },
     {
       "reason": "输入光标：宿主的输入框不在走查的页面形态里",
       "selectors": [
-        "body[data-dsh-claude-style] textarea[data-dsh-claude-caret]",
-        "body[data-dsh-claude-style] [data-dsh-claude-caret-host]"
-      ]
-    },
-    {
-      "reason": "高峰费率表：宿主拿到费率档时才画这颗标，画的是哪个时段随时机而变",
-      "either": true,
-      "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-peakrate[data-period=peak]",
-        "body[data-dsh-claude-style] .dsh-claude-peakrate[data-period=campaign]",
-        "body[data-dsh-claude-style] .dsh-claude-peakrate[data-period=offPeak]"
+        "body[data-dsh-telegram-style] textarea[data-dsh-tg-caret]",
+        "body[data-dsh-telegram-style] [data-dsh-tg-caret-host]"
       ]
     },
     {
       "reason": "宿主会话行的标签：脚本回答里没有这一类行",
       "selectors": [
-        "body[data-dsh-claude-style] :is([data-dsh-claude-part~=tag-system],[data-dsh-claude-part~=tag-user],[data-dsh-claude-part~=tag-context],[data-dsh-claude-part~=tag-message],[data-dsh-claude-part~=tag-tool],[data-dsh-claude-part~=tag-subtool],[data-dsh-claude-part~=kind-tag]:not([data-dsh-claude-part~=kind-tag-icon],[data-dsh-claude-part~=kind-tag-label]),[data-dsh-claude-part~=row-tag],[data-dsh-claude-part~=option-line]>[data-dsh-claude-part~=badge],[data-dsh-claude-part~=attempt-badge],[data-dsh-claude-part~=key-badge])"
+        "body[data-dsh-telegram-style] :is([data-dsh-tg-part~=tag-system],[data-dsh-tg-part~=tag-user],[data-dsh-tg-part~=tag-context],[data-dsh-tg-part~=tag-message],[data-dsh-tg-part~=tag-tool],[data-dsh-tg-part~=tag-subtool],[data-dsh-tg-part~=kind-tag]:not([data-dsh-tg-part~=kind-tag-icon],[data-dsh-tg-part~=kind-tag-label]),[data-dsh-tg-part~=row-tag],[data-dsh-tg-part~=option-line]>[data-dsh-tg-part~=badge],[data-dsh-tg-part~=attempt-badge],[data-dsh-tg-part~=key-badge])"
       ]
     },
     {
       "reason": "工作区视图：走查没有打开它",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-claude-ws-view=archived] [data-dsh-claude-ws-tree]"
+        "body[data-dsh-telegram-style] [data-dsh-tg-ws-view=archived] [data-dsh-tg-ws-tree]"
       ]
     },
     {
       "reason": "快速服务商的弹出层：走查没有打开它",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-quick-popover"
+        "body[data-dsh-telegram-style] .dsh-tg-quick-popover"
       ]
     },
     {
       "reason": "停靠卡座：走查没有打开它",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-home-seat"
+        "body[data-dsh-telegram-style] .dsh-tg-home-seat"
       ]
     },
     {
       "reason": "设置页的提示行：走查在本机页面上跑，远端只读的提示与分页自己的提示都不在",
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-settings-notice",
-        "body[data-dsh-claude-style] .dsh-claude-settings-tab-notice",
-        "body[data-dsh-claude-style] .dsh-claude-settings-tab-notice+.dsh-claude-settings-row"
-      ]
-    },
-    {
-      "reason": "皮肤自己的归档视图与设置分区：走查没有打开归档视图，也没有走到设置页的这一项",
-      "selectors": [
-        "body[data-dsh-claude-style] button[data-dsh-section=claude-style] [data-dsh-claude-part~=nav-icon]",
-        "body[data-dsh-claude-style] button[data-dsh-section=claude-style]",
-        "body[data-dsh-claude-style]:not([data-ds-dark-theme]) button[data-dsh-section=claude-style]"
+        "body[data-dsh-telegram-style] .dsh-tg-settings-notice",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-tab-notice",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-tab-notice+.dsh-tg-settings-row"
       ]
     },
     {
       "reason": "减少动效配上等待行的状态动效：走查把动画偏好与等待行的状态动效分开走",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced][data-dsh-claude-status-motion=wash] .dsh-claude-chat-wait .dsh-claude-swap-shimmer"
-      ]
-    },
-    {
-      "reason": "减少动效配上正在进行的会话行：走查写动画偏好时那一轮已经落定，侧栏里没有正在进行的会话",
-      "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] svg[data-state=ongoing]"
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced][data-dsh-tg-status-motion=wash] .dsh-tg-chat-wait .dsh-tg-swap-shimmer"
       ]
     },
     {
       "reason": "减少动效配上加载点：走查写动画偏好时那一轮已经落定，状态行没有加载点",
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] .dsh-claude-chat-wait-lane .dsh-claude-chat-wait-dot"
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-chat-wait-lane .dsh-tg-chat-wait-dot"
       ]
     },
     {
       "reason": "减少动效配上状态行预览的换字标记：这个标记由偏好写入的那一帧落下，走查读到与否要看当时停在哪个页面形态上",
       "either": true,
       "selectors": [
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-dsh-claude-word-alt] .dsh-claude-motion-word",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-dsh-claude-word-alt] .dsh-claude-motion-word+.dsh-claude-motion-word"
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-word-alt] .dsh-tg-motion-word",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-word-alt] .dsh-tg-motion-word+.dsh-tg-motion-word"
       ]
     },
     {
       "reason": "加载点换动作的中间帧：走查把页面停住，退出中的那一列已经淡完",
       "either": true,
       "selectors": [
-        "body[data-dsh-claude-style] .dsh-claude-chat-wait-lane.is-leaving .dsh-claude-chat-wait-dot"
+        "body[data-dsh-telegram-style] .dsh-tg-chat-wait-lane.is-leaving .dsh-tg-chat-wait-dot"
       ]
     },
     {
       "reason": "消息气泡动画选「在原地长出来」：走查的发送按出厂默认飞上来，这一档不在它的轮次里",
       "selectors": [
-        "body[data-dsh-claude-style] [data-dsh-claude-message-enter]",
-        "body[data-dsh-claude-style][data-dsh-claude-motion=reduced] [data-dsh-claude-message-enter]"
+        "body[data-dsh-telegram-style] [data-dsh-tg-message-enter]",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-message-enter]"
       ]
     },
     {
       "reason": "宿主的按键提示按运行平台给出：这台浏览器上宿主没有为新建会话给出按键，newSessionShortcut 里没有 kbd",
       "either": true,
       "selectors": [
-        "body[data-dsh-claude-style] button[data-dsh-claude-part~=new-session] [data-dsh-claude-part~=new-session-shortcut] kbd[data-dsh-claude-part~=key-separator]",
-        "body[data-dsh-claude-style] button[data-dsh-claude-part~=new-session] [data-dsh-claude-part~=new-session-shortcut] kbd:not([data-dsh-claude-part~=key-separator])",
-        "body[data-dsh-claude-style][data-ds-dark-theme] button[data-dsh-claude-part~=new-session] [data-dsh-claude-part~=new-session-shortcut] kbd:not([data-dsh-claude-part~=key-separator])"
+        "body[data-dsh-telegram-style] button[data-dsh-tg-part~=new-session] [data-dsh-tg-part~=new-session-shortcut] kbd[data-dsh-tg-part~=key-separator]",
+        "body[data-dsh-telegram-style] button[data-dsh-tg-part~=new-session] [data-dsh-tg-part~=new-session-shortcut] kbd:not([data-dsh-tg-part~=key-separator])",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] button[data-dsh-tg-part~=new-session] [data-dsh-tg-part~=new-session-shortcut] kbd:not([data-dsh-tg-part~=key-separator])"
       ]
     },
     {
       "reason": "宿主的按键提示按运行平台给出：这台浏览器上宿主没有给出搜索快捷键，深色形态里没有这一行",
       "either": true,
       "selectors": [
-        "body[data-dsh-claude-style][data-ds-dark-theme] .dsh-claude-search-key"
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-search-key"
+      ]
+    },
+    {
+      "reason": "壁纸、侧栏表面、视图页签、弹出层与提示条的个别状态：走查没有同时落到这些形态",
+      "selectors": [
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) :is([data-pane=sidebar],.dshDesktopSidebarSurface)",
+        "body[data-dsh-telegram-style][data-dsh-tg-palette][data-we-wallpaper]:is([data-ds-dark-theme],:not([data-ds-dark-theme]))",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-item-icon",
+        "body[data-dsh-telegram-style] .dsh-tg-popover-item-icon svg",
+        "body[data-dsh-telegram-style] :is(.dsh-tg-popover-item,[role=menuitem],[role=menuitemradio],[role=menuitemcheckbox]):is(,,[data-highlighted])",
+        "body[data-dsh-telegram-style] [role=alert][style*=--dsh-toast-hold]",
+        "body[data-dsh-telegram-style]:not([data-we-wallpaper]) :is([data-pane=sidebar],.dshDesktopSidebarSurface)",
+        "body[data-dsh-telegram-style] :is([data-pane=sidebar],.dshDesktopSidebarSurface)",
+        "body[data-dsh-telegram-style][data-we-wallpaper] [data-dsh-tg-part~=conversation-header][data-dsh-tg-holds~=view-tabs]",
+        "body[data-dsh-telegram-style] [data-dsh-view-tabs]>[data-dsh-tg-part~=view-tab]"
+      ]
+    },
+    {
+      "reason": "减少动效下的个别规则：走查的减少动效那一轮读不到这些部件",
+      "selectors": [
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] :is(.dsh-tg-popover-card[data-open=true],[role=menu])",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-row-state=typing] .dsh-tg-row-status",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-effort-matrix-sq"
+      ]
+    },
+    {
+      "reason": "图标库里的个别图标：走查的页面没有画出这一枚",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=plane]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=pencil]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=archive]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=menu]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=search]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=check]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=clock]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=spark]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=thought]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=arrow-down]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=arrow-left]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=stop]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=file]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=file-code]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=file-image]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=moon]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=plug]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=gear]",
+        "body[data-dsh-telegram-style] .dsh-tg-icon[data-icon=info]"
+      ]
+    },
+    {
+      "reason": "点按的波纹：一闪即逝，走查读页面时已经退场",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-ripple"
+      ]
+    },
+    {
+      "reason": "会话头像的其余几种底色：走查的会话行不足以用到",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"6\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"7\"]"
+      ]
+    },
+    {
+      "reason": "侧栏行的个别状态：走查没有让会话等待、输入或打开行菜单",
+      "selectors": [
+        "body[data-dsh-telegram-style] [data-dsh-tg-row-state=waiting] .dsh-tg-row-status",
+        "body[data-dsh-telegram-style] [data-dsh-tg-session]:is(,) .dsh-tg-row-time"
+      ]
+    },
+    {
+      "reason": "走查没有出现的聊天控件：折叠长消息、排队中的引导、问题卡的输入框",
+      "selectors": [
+        "body[data-dsh-telegram-style] [data-pending-steering]",
+        "body[data-dsh-telegram-style][data-dsh-tg-chat-fold] [data-dsh-tg-message-fold=collapsed]",
+        "body[data-dsh-telegram-style] .dsh-tg-message-fold-toggle",
+        "body[data-dsh-telegram-style] textarea",
+        "body[data-dsh-telegram-style] input[data-dsh-tg-caret]"
+      ]
+    },
+    {
+      "reason": "账户按钮、账户弹出层与宿主的账户行：临时宿主没有账户入口，走查没有点开它",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-account-btn",
+        "body[data-dsh-telegram-style] .dsh-tg-account-btn[data-open=true]",
+        "body[data-dsh-telegram-style] .dsh-tg-account-avatar",
+        "body[data-dsh-telegram-style] .dsh-tg-account-label",
+        "body[data-dsh-telegram-style] .dsh-tg-account-user",
+        "body[data-dsh-telegram-style] .dsh-tg-account-chevron",
+        "body[data-dsh-telegram-style] .dsh-tg-account-btn[data-open=true] .dsh-tg-account-chevron",
+        "body[data-dsh-telegram-style] .dsh-tg-account-popover",
+        "body[data-dsh-telegram-style] .dsh-tg-account-avatar[data-dsh-tg-photo]",
+        "body[data-dsh-telegram-style] .dsh-tg-account-photo",
+        "body[data-dsh-telegram-style] .dsh-tg-account-popover .dsh-tg-popover-item",
+        "body[data-dsh-telegram-style][data-ds-dark-theme] .dsh-tg-account-popover .dsh-tg-popover-item",
+        "body[data-dsh-telegram-style] .dsh-tg-account-popover-body",
+        "body[data-dsh-telegram-style][data-dsh-tg-footer-takeover] [data-dsh-tg-part~=foot-area] [data-dsh-tg-part~=settings-trigger] :is(button,[role=button],a):not([data-dsh-tg-account-host-row])"
+      ]
+    },
+    {
+      "reason": "模型选择器的搜索框、分组、规则与头像色：临时宿主的目录里没有这些，走查没有搜索",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-clearing] .dsh-tg-model-search-mirror",
+        "body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-filled] .dsh-tg-model-search-placeholder",
+        "body[data-dsh-telegram-style] .dsh-tg-model-search-field[data-dsh-tg-field-filled] .dsh-tg-model-search-clear",
+        "body[data-dsh-telegram-style] .dsh-tg-model-search-field [data-dsh-tg-caret-layer]",
+        "body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar=\"3\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar=\"4\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar=\"5\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar=\"6\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-model-initial[data-avatar=\"7\"]",
+        "body[data-dsh-telegram-style]:not([data-ds-dark-theme]) .dsh-tg-model-rule-name"
+      ]
+    },
+    {
+      "reason": "设置页的个别状态：走查没有走到这一项",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-settings-row-title[data-experimental]",
+        "body[data-dsh-telegram-style] .dsh-tg-settings-row-tag"
+      ]
+    },
+    {
+      "reason": "贴纸待机以外的状态：走查只看到待机，其余状态由行为测试驱动（specs/behaviour/mascot）",
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=sweeping] .dsh-tg-sticker-thought>.dsh-tg-icon",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=sleeping] .dsh-tg-sticker-thought>b",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=notification] .dsh-tg-sticker-badge",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=working][data-dsh-tg-mascot-tempo=fast] .dsh-tg-sticker-body",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=notification] .dsh-tg-sticker-body",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=error] .dsh-tg-sticker-body",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=sleeping] .dsh-tg-sticker-body",
+        "body[data-dsh-telegram-style] .dsh-tg-sticker[data-dsh-tg-mascot-state=waking] .dsh-tg-sticker-body",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-sticker[data-dsh-tg-mascot-state=thinking] .dsh-tg-sticker-thought>i"
+      ]
+    },
+    {
+      "reason": "走查的结果时有时无：这些部件的出现取决于那一轮落定的时刻（动画中间帧、等待行、用量格的提示），同一份皮肤跑两次，一次匹配到、一次匹配不到",
+      "either": true,
+      "selectors": [
+        "body[data-dsh-telegram-style] .dsh-tg-home-heat-cell[data-level=\"4\"]",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-sweep-band",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-wash",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-motion-word",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-motion-word+.dsh-tg-motion-word",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-caret-piece",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-caret-sample-bar",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-reveal-piece",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-enter-bubble",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-enter-stack",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] :is(.dsh-tg-motion-card,.dsh-tg-caret-card,.dsh-tg-reveal-card,.dsh-tg-enter-card)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-motion-card .dsh-tg-sweep-band",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-motion-card .dsh-tg-sweep-glyphs",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-caret-sample-bar.dsh-tg-caret-typing",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-reveal-card[data-fade] .dsh-tg-reveal-piece:nth-last-child(1)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-reveal-card[data-fade] .dsh-tg-reveal-piece:nth-last-child(2)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-reveal-card[data-fade] .dsh-tg-reveal-piece:nth-last-child(3)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-reveal-card[data-fade] .dsh-tg-reveal-piece:nth-last-child(4)",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-enter-card[data-enter=grow] .dsh-tg-enter-bubble:not([data-standing])",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] .dsh-tg-enter-card[data-enter=flight] .dsh-tg-enter-bubble:not([data-standing])",
+        "body[data-dsh-telegram-style][data-dsh-tg-motion=reduced] [data-dsh-tg-precise] .dsh-tg-motion-word:not(:last-child)",
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"2\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"3\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"4\"]",
+        "body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar=\"5\"]"
       ]
     }
   ]

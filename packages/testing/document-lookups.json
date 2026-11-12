@@ -45,10 +45,6 @@
       "count": 2,
       "reason": "The composer's input, read when a send begins and when the flight's seat is measured."
     },
-    "packages/client/src/features/ban-screen/ban-screen.ts": {
-      "count": 1,
-      "reason": "The hold screen's own node, swept once when the screen is installed."
-    },
     "packages/client/src/features/chat-fold/process-fold.ts": {
       "count": 1,
       "reason": "The process groups already on the page, settled once right after install."
@@ -88,6 +84,10 @@
     "packages/client/src/features/permissions/stray-nodes.ts": {
       "count": 3,
       "reason": "The first pass of an install reads the control's nodes a previous generation left in the document (a client reload drops its disposals); later passes work from the nodes the feature holds."
+    },
+    "packages/client/src/features/chat-list/session-rows.ts": {
+      "count": 1,
+      "reason": "The sidebar tree's session rows, read each scheduler pass: the chat list dresses whichever rows the host has rendered and undresses the ones it has dropped, so the pass needs the current set rather than the bus registry's additions."
     }
   }
 }

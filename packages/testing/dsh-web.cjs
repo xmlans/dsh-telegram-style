@@ -140,20 +140,10 @@ async function start(options = {}) {
   const timeoutMs = options.timeoutMs ?? 120000
   fs.mkdirSync(home, { recursive: true })
   provisionHome(home)
-  // The Anthropic faces are the reader's own download and never ship in the
-  // package (D75): the lane plants this checkout's copies in the scratch home's
-  // drop point, so a capture shows the intended typography instead of falling
-  // back per face and logging a 404 for each.
-  const dropPoint = path.join(home, 'dsh-claude-style', 'fonts')
-  const faces = path.join(ROOT, 'packages', 'assets', 'src', 'fonts', 'anthropic')
-  if (fs.existsSync(faces)) {
-    fs.mkdirSync(dropPoint, { recursive: true })
-    for (const name of fs.readdirSync(faces)) fs.copyFileSync(path.join(faces, name), path.join(dropPoint, name))
-  }
   if (options.resetState === true) {
     // The usage record counts twice: the record itself, and the fold cache an
     // earlier build wrote at the path the record is migrated from
-    for (const entry of ['sessions', path.join('storages', 'session_projcache'), path.join('dsh-claude-style', 'usage.json'), path.join('cache', 'dsh-claude-style', 'usage.json')]) {
+    for (const entry of ['sessions', path.join('storages', 'session_projcache'), path.join('dsh-telegram-style', 'usage.json'), path.join('cache', 'dsh-telegram-style', 'usage.json')]) {
       fs.rmSync(path.join(home, entry), { recursive: true, force: true })
     }
     // The skin's settings page is part of the end-to-end walk, and the choices
@@ -285,7 +275,7 @@ async function sharedOn(browser, options) {
 
 /** Wait until the skin has taken the page (its build id is on `<body>`). */
 async function waitForSkin(page, timeoutMs = 30000) {
-  await page.waitForFunction(() => document.body.hasAttribute('data-dsh-claude-style'), undefined, { timeout: timeoutMs })
+  await page.waitForFunction(() => document.body.hasAttribute('data-dsh-telegram-style'), undefined, { timeout: timeoutMs })
 }
 
 /**

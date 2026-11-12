@@ -9,8 +9,8 @@
  * it already had), because a half-read table would price some settlements at
  * one rate and the rest at another.
  */
-import { CURRENCIES, PRICE_SCHEMA_VERSION, clockAt } from '@dsh-claude-style/contracts/prices'
-import type { Currency, ModelPrice, PriceDocument, PriceSchedule, PriceTier, PriceWindow } from '@dsh-claude-style/contracts/prices'
+import { CURRENCIES, PRICE_SCHEMA_VERSION, clockAt } from '@dsh-telegram-style/contracts/prices'
+import type { Currency, ModelPrice, PriceDocument, PriceSchedule, PriceTier, PriceWindow } from '@dsh-telegram-style/contracts/prices'
 import { asRecord } from './json-document.js'
 
 function asText(value: unknown): string | undefined {
@@ -51,7 +51,7 @@ function asPrice(value: unknown): ModelPrice | null {
   const peak = asTier(raw.peak)
   if (offPeak === null || peak === null) return null
   // The official scheme bills peak at twice off-peak; a table below the
-  // off-peak rate would make the tier judgement show up as a discount.
+  // off-peak price would make the tier judgement show up as a discount.
   for (const key of ['cacheHit', 'cacheMiss', 'output'] as const) {
     if (peak[key] < offPeak[key]) return null
   }

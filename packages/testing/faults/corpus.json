@@ -86,20 +86,6 @@
       "defect": "undoes: 停止按钮的方块不再偏出圆环中心"
     },
     {
-      "id": "chat-wait-c8890633",
-      "from": "history c8890633",
-      "apply": "reverse",
-      "patch": "patches/chat-wait-c8890633.patch",
-      "defect": "undoes: Claude 品牌下的扫光不再用宿主的蓝色"
-    },
-    {
-      "id": "theme-1114eab0",
-      "from": "history 1114eab0",
-      "apply": "reverse",
-      "patch": "patches/theme-1114eab0.patch",
-      "defect": "undoes: 深色弹层的边只剩边框本身"
-    },
-    {
       "id": "theme-d3aed732",
       "from": "history d3aed732",
       "apply": "reverse",
@@ -112,13 +98,6 @@
       "apply": "reverse",
       "patch": "patches/home-12d76217.patch",
       "defect": "undoes: 工作台首页的问候语与用量面板之间只留一个列间距"
-    },
-    {
-      "id": "settings-500f4558",
-      "from": "history 500f4558",
-      "apply": "reverse",
-      "patch": "patches/settings-500f4558.patch",
-      "defect": "undoes: 主题风格的两张卡片各带自己的品牌标记"
     },
     {
       "id": "search-9b098f2b",
@@ -142,13 +121,6 @@
       "defect": "undoes: 写下的设置值在宿主答复之前不再被文档盖回"
     },
     {
-      "id": "effort-032509f6",
-      "from": "history 032509f6",
-      "apply": "reverse",
-      "patch": "patches/effort-032509f6.patch",
-      "defect": "undoes: 思考强度按钮的预留宽度从模型名里出，不从整行里出"
-    },
-    {
       "id": "chat-wait-20858422",
       "from": "history 20858422",
       "apply": "reverse",
@@ -160,14 +132,7 @@
       "from": "history 8d70b272",
       "apply": "reverse",
       "patch": "patches/settings-8d70b272.patch",
-      "defect": "undoes: 设置页导航的 Claude Style 一格重新画出星芒"
-    },
-    {
-      "id": "host-3882030f",
-      "from": "history 3882030f",
-      "apply": "reverse",
-      "patch": "patches/host-3882030f.patch",
-      "defect": "undoes: 归档会话的删除接受插件生成的会话 id"
+      "defect": "undoes: 设置页导航的 Telegram Style 一格重新画出星芒"
     },
     {
       "id": "home-59db7ea1",
@@ -184,25 +149,11 @@
       "defect": "undoes: 窄窗口下模型外显名先压缩，对话区不再冒出横向滚动条"
     },
     {
-      "id": "chat-follow-962c32df",
-      "from": "history 962c32df",
-      "apply": "reverse",
-      "patch": "patches/chat-follow-962c32df.patch",
-      "defect": "undoes: 流式输出很快时跟随滑动跟上内容"
-    },
-    {
       "id": "intent-pill-ignores-zoom",
       "from": "intent",
       "apply": "forward",
       "patch": "patches/intent-pill-ignores-zoom.patch",
       "defect": "Under page zoom the segmented controls place their highlight from boxes measured in the viewport's pixels, so it stands beside the chosen segment."
-    },
-    {
-      "id": "intent-count-ignores-reduced-motion",
-      "from": "intent",
-      "apply": "forward",
-      "patch": "patches/intent-count-ignores-reduced-motion.patch",
-      "defect": "The statistics under the composer keep rolling to every new reading for a reader who asked for reduced motion."
     },
     {
       "id": "intent-focus-mirror-misses-blur",

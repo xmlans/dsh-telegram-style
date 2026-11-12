@@ -4,7 +4,7 @@
  * The audit itself is in importance-audit.cjs; this file is the walk that gives
  * it states to read — the empty page and a conversation, a draft in the
  * composer, the answer streaming, each of the skin's popovers and a host menu
- * open, the dark flip, the DeepSeek brand, the host's palette, every preference
+ * open, the dark flip, the host's palette, every preference
  * the skin marks the page with, the settings page with each of its tabs and
  * controls, and the pointer on every element a `:hover` rule waits for. One the
  * states show to change nothing fails the run, and so does a selector no state
@@ -55,11 +55,11 @@ const evidenceKey = (item) => `${item.ruleKey}|${item.prop}`
 
 /** The skin's own triggers, each opening the surface its rules paint. */
 const SURFACES = [
-  ['model picker', '.dsh-claude-model-btn'],
-  ['effort picker', '.dsh-claude-effort-btn'],
-  ['permission picker', '.dsh-claude-perm-btn'],
-  ['account card', '.dsh-claude-account-btn'],
-  ['search panel', '.dsh-claude-search-trigger'],
+  ['model picker', '.dsh-tg-model-btn'],
+  ['effort picker', '.dsh-tg-effort-btn'],
+  ['permission picker', '.dsh-tg-perm-btn'],
+  ['account card', '.dsh-tg-account-btn'],
+  ['search panel', '.dsh-tg-search-trigger'],
 ]
 
 /**
@@ -70,27 +70,18 @@ const SURFACES = [
  * surface the page does not render stays unmatched whatever the mark says.
  */
 const MARKS = [
-  ['motion reduced', 'data-dsh-claude-motion', 'reduced'],
-  ['motion full', 'data-dsh-claude-motion', 'full'],
-  ['status motion sweep', 'data-dsh-claude-status-motion', 'sweep'],
-  ['status motion wash', 'data-dsh-claude-status-motion', 'wash'],
-  ['search style icon', 'data-dsh-claude-search-style', 'icon'],
-  ['search style overlay', 'data-dsh-claude-search-style', 'overlay'],
-  ['search style standalone', 'data-dsh-claude-search-style', 'standalone'],
-  ['sidebar relaxed', 'data-dsh-claude-sidebar-layout', 'relaxed'],
-  ['sidebar compact', 'data-dsh-claude-sidebar-layout', 'compact'],
-  ['stats inline', 'data-dsh-claude-stats-position', 'inline'],
-  ['stats context', 'data-dsh-claude-stats-position', 'context'],
-  ['footer takeover', 'data-dsh-claude-footer-takeover', ''],
-  ['dock look card', 'data-dsh-claude-dock-look', 'card'],
-  ['dock look flush', 'data-dsh-claude-dock-look', 'flush'],
-  ['mascot crab', 'data-dsh-claude-mascot', 'crab'],
-  ['mascot deepy', 'data-dsh-claude-mascot', 'deepy'],
-  ['custom brand mark', 'data-dsh-claude-custom-mark', ''],
-  ['custom brand word', 'data-dsh-claude-custom-word', 'text'],
-  ['custom brand word image', 'data-dsh-claude-custom-word', 'image'],
-  ['custom brand tint', 'data-dsh-claude-custom-tint', ''],
-  ['custom brand accent', 'data-dsh-claude-accent', '#d97757'],
+  ['motion reduced', 'data-dsh-tg-motion', 'reduced'],
+  ['motion full', 'data-dsh-tg-motion', 'full'],
+  ['status motion sweep', 'data-dsh-tg-status-motion', 'sweep'],
+  ['status motion wash', 'data-dsh-tg-status-motion', 'wash'],
+  ['search style icon', 'data-dsh-tg-search-style', 'icon'],
+  ['search style overlay', 'data-dsh-tg-search-style', 'overlay'],
+  ['search style standalone', 'data-dsh-tg-search-style', 'standalone'],
+  ['stats inline', 'data-dsh-tg-stats-position', 'inline'],
+  ['stats context', 'data-dsh-tg-stats-position', 'context'],
+  ['footer takeover', 'data-dsh-tg-footer-takeover', ''],
+  ['dock look card', 'data-dsh-tg-dock-look', 'card'],
+  ['dock look flush', 'data-dsh-tg-dock-look', 'flush'],
   // The window's focus state, which the skin mirrors onto the page for the
   // selection paints: a browser the lane drives keeps the focus, so the state
   // is set as the mirror writes it.
@@ -122,7 +113,7 @@ function pointAtInPage(selectors) {
  * `!important` declarations audited across the page states the scratch host
  * reaches — the empty page and a conversation, a draft in the composer, the
  * answer streaming, each of the skin's popovers and a host menu open, the dark
- * flip, the DeepSeek brand, the host's palette, the pointer on every element
+ * flip, the host's palette, the pointer on every element
  * a `:hover` rule waits for, and the settings page with each of its tabs. One
  * the states show to change nothing fails it; so does a selector no state
  * matches an element with. The full verdict is written to
@@ -155,7 +146,7 @@ function importanceScenario(lane) {
     }
   }
   /** The host's own menus and dialogs: every visible trigger the page offers. */
-  const HOST_TRIGGERS = '[aria-haspopup="menu"]:not(:is([class^="dsh-claude"], [class*=" dsh-claude"])), button[aria-haspopup="dialog"]:not(:is([class^="dsh-claude"], [class*=" dsh-claude"]))'
+  const HOST_TRIGGERS = '[aria-haspopup="menu"]:not(:is([class^="dsh-tg"], [class*=" dsh-tg"])), button[aria-haspopup="dialog"]:not(:is([class^="dsh-tg"], [class*=" dsh-tg"]))'
   /**
    * Every control the open settings tab offers, one state each: a preference
    * that renders the skin's own markup (the studio home panel, the mascot, the
@@ -165,7 +156,7 @@ function importanceScenario(lane) {
    * rather than turn a preference on — and so are the fields that take typing.
    */
   const withControls = async (page, audit, tab) => {
-    const controls = page.locator('.dsh-claude-settings-rows button:not([disabled]):not(.dsh-claude-settings-button)')
+    const controls = page.locator('.dsh-tg-settings-rows button:not([disabled]):not(.dsh-tg-settings-button)')
     const many = await controls.count()
     for (let index = 0; index < many; index++) {
       const control = controls.nth(index)
@@ -187,7 +178,7 @@ function importanceScenario(lane) {
     await openSkinSettings(page)
     await page.waitForTimeout(600)
     await audit.state('settings')
-    const tabs = page.locator('.dsh-claude-settings-tabs [role="tab"]')
+    const tabs = page.locator('.dsh-tg-settings-tabs [role="tab"]')
     const many = await tabs.count()
     for (let at = 1; at < many; at++) {
       await tabs.nth(at).click()
@@ -261,7 +252,7 @@ function importanceScenario(lane) {
       await audit.state('streaming')
       await second
       await lane.waitForTurn(page)
-      const rail = await page.evaluate(pointAtInPage, ['.dsh-claude-turn-rail'])
+      const rail = await page.evaluate(pointAtInPage, ['.dsh-tg-turn-rail'])
       if (rail !== null) {
         await page.mouse.move(rail.x, rail.y)
         await page.waitForTimeout(400)
@@ -281,36 +272,36 @@ function importanceScenario(lane) {
       // An image waiting in the composer: the attachment rail and its card.
       const picker = page.locator('input[type="file"]').first()
       if (await picker.count() > 0) {
-        await picker.setInputFiles(path.join(ROOT, 'packages', 'assets', 'src', 'mascot', 'crab', 'idle.png'))
+        await picker.setInputFiles(path.join(ROOT, 'packages', 'assets', 'src', 'mascot', 'sticker', 'sticker-source.png'))
         await page.waitForTimeout(800)
         await audit.state('attachment')
       }
       // The document attributes the stylesheet switches on, each as the page
-      // itself carries it: the dark flip, the DeepSeek brand, and the host's own
-      // palette and typefaces.
+      // itself carries it: the dark flip, and the palettes besides the default.
       await attribute(page, 'data-ds-dark-theme', '')
       await audit.state('dark')
-      await attribute(page, 'data-dsh-claude-brand', 'deepseek')
-      await audit.state('deepseek dark')
+      for (const palette of ['glass', 'trans']) {
+        await attribute(page, 'data-dsh-tg-palette', palette)
+        await audit.state(`${palette} dark`)
+        await attribute(page, 'data-ds-dark-theme', null)
+        await audit.state(`${palette} light`)
+        await attribute(page, 'data-ds-dark-theme', '')
+      }
+      await attribute(page, 'data-dsh-tg-palette', 'telegram')
       await attribute(page, 'data-ds-dark-theme', null)
-      await audit.state('deepseek light')
-      await attribute(page, 'data-dsh-claude-brand', 'claude')
-      await attribute(page, 'data-dsh-claude-palette', 'host')
-      await attribute(page, 'data-dsh-claude-typeface', 'host')
-      await audit.state('host palette')
-      await attribute(page, 'data-dsh-claude-palette', 'claude')
-      await attribute(page, 'data-dsh-claude-typeface', 'claude')
       // The preferences the skin marks the page with, one state each.
       for (const [name, key, value] of MARKS) {
         await attribute(page, key, value)
         await audit.state(name)
+        // A search style that shows the trigger lets the walk open the panel it opens.
+        if (name.startsWith('search style')) await withOpen(page, audit, `${name} panel`, '.dsh-tg-search-trigger')
         await attribute(page, key, null)
       }
       await withSettings(page, audit)
       // The preferences the controls set render their own markup on the empty
       // page — the studio panel, the mascot, the hero menu — so the walk goes
       // back to it and audits what they put there.
-      const home = page.locator('button[data-dsh-claude-part~="new-session"]').first()
+      const home = page.locator('button[data-dsh-tg-part~="new-session"]').first()
       if (await home.count() > 0 && await home.isVisible()) {
         await home.click({ force: true })
         await page.waitForTimeout(1500)

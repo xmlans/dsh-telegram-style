@@ -23,8 +23,8 @@
  *                                authors file, copied to lib/fonts/ (buildFonts)
  *
  * What the build produces for the browser half reaches the source as one
- * generated module, `virtual:dsh-claude-style/generated` (typed in
- * packages/client/src/generated.d.ts): the stylesheet, the asset addresses, the lockups, the
+ * generated module, `virtual:dsh-telegram-style/generated` (typed in
+ * packages/client/src/generated.d.ts): the stylesheet, the asset addresses, the
  * build id.
  *
  * Before anything is written, `tsc` type-checks packages/client/src/ and the bundle's import
@@ -49,9 +49,8 @@ import path from 'node:path'
 import vm from 'node:vm'
 import { brotliCompressSync } from 'node:zlib'
 import esbuild from 'esbuild'
-import { PNG } from 'pngjs'
 import { buildHostHalf } from '../packages/host/build.mjs'
-import { buildFonts, checkClaimed, checkSheetPixels, checkSheets, planAssets, routeText, vectorizeSheet, writeAssets } from '../packages/assets/assets.mjs'
+import { buildFonts, checkClaimed, planAssets, routeText, writeAssets } from '../packages/assets/assets.mjs'
 import { openBuildCache } from './build-cache.mjs'
 import { checkContracts, checkCycles, checkDependencies, checkListed, checkManifests, checkMotionSources, checkScrollOwner, checkTypes } from './build-checks.mjs'
 import { chunkFiles, chunkModules, ownModuleIds, splitChunks } from './chunks.mjs'
@@ -60,7 +59,6 @@ import { FEATURE_SHEET_CONSTANTS } from './feature-sheets.mjs'
 import { motionValues } from './shared/motion-tokens.mjs'
 import { readSourceTree } from './source-tree.mjs'
 import { MODEL_COPY, validateModelCopy } from './model-copy.mjs'
-import { PEAKRATE_CATALOG, validatePeakCatalog } from './peakrate-catalog.mjs'
 import { PRICES_FILE, validatePrices } from './prices.mjs'
 import manifestReader from './shared/read-manifests.cjs'
 import { withLock } from './shared/verify-lock.cjs'
@@ -71,9 +69,9 @@ const ROOT = path.resolve(import.meta.dirname, '..')
 const SRC = path.join(ROOT, 'packages', 'client', 'src')
 /** The model copy: data beside the browser half's code, never bundled. */
 const DATA = path.join(ROOT, 'packages', 'client', 'data')
-/** The peak rate catalog the host half serves: data beside the host half's code, never bundled */
+/** The price snapshot the host half serves: data beside the host half's code, never bundled */
 const HOST_DATA = path.join(ROOT, 'packages', 'host', 'data')
-/** Brand marks, mascot sheets and vendor lockups; packages/assets/assets.mjs plans their delivery */
+/** The plugin mark, the wallpaper pattern, the icons and the sticker; packages/assets/assets.mjs plans their delivery */
 const ASSETS = path.join(ROOT, 'packages', 'assets', 'src')
 /** The plugin icon the manifest names, copied into lib/ as it is. */
 const BRAND_ASSETS = path.join(ASSETS, 'brand')
@@ -83,8 +81,6 @@ const LIB = path.join(ROOT, 'lib')
 const OUT = path.join(LIB, 'client.js')
 /** The slow steps' results between runs (scripts/build-cache.mjs). */
 const CACHE_DIR = path.join(ROOT, '.debug', 'build-cache')
-/** The code that checks and vectorizes a sheet: part of every vector's cache key. */
-const ASSETS_MODULE = path.join(ROOT, 'packages', 'assets', 'assets.mjs')
 
 /**
  * The plugin icon the 0.1.7 plugin manifest reads.
@@ -95,12 +91,10 @@ const ASSETS_MODULE = path.join(ROOT, 'packages', 'assets', 'assets.mjs')
  * copied like the copy document so the source of truth stays in `packages/client/src/` and
  * `lib/` remains generated output.
  *
- * The clay mark is the one that reads on both canvases: an `<img>` cannot
- * inherit `currentColor` the way the inlined brand art does, and the plain
- * mark is black — invisible on the warm-black canvas.
+ * The mark carries its own gradient, so it reads on both canvases as an <img>.
  */
-const ICON_SOURCE = 'claude-mark-clay.svg'
-const ICON_FILE = 'claude-mark.svg'
+const ICON_SOURCE = 'telegram-style-mark.svg'
+const ICON_FILE = 'telegram-style-mark.svg'
 
 /**
  * The stylesheets that belong to no feature, with their place in the
@@ -118,16 +112,17 @@ const THEME_SHEETS = [
   // wins where the two meet at the same specificity.
   { file: 'shared/motion.css', rank: 25 },
   { file: 'shared/popover.css', rank: 30 },
+  { file: 'theme/menus.css', rank: 32 },
   { file: 'shared/swapping-text.css', rank: 35 },
   { file: 'shared/segment-control.css', rank: 38 },
   { file: 'shared/sliding-pill.css', rank: 40 },
   { file: 'shared/masked.css', rank: 45 },
+  { file: 'shared/icons.css', rank: 46 },
+  { file: 'shared/ripple.css', rank: 47 },
   { file: 'theme/chrome.css', rank: 50 },
   { file: 'theme/hero.css', rank: 70 },
   { file: 'theme/sidebar.css', rank: 110 },
   { file: 'theme/third-party.css', rank: 300 },
-  // Last: the page on a wallpaper restates what the features paint on the shell
-  { file: 'theme/wallpaper.css', rank: 400 },
 ]
 
 /**
@@ -166,7 +161,7 @@ const HOST_PACKAGES = ['react', 'react-dom/client', '@deepseek-ai/dsh-client-ui-
  * automatic — a published package must carry exactly its own assets — and inert
  * in CI for the same reason.
  */
-const RETAIN_ASSETS = process.env.DSH_CLAUDE_STYLE_DEBUG === '1' && process.env.CI === undefined
+const RETAIN_ASSETS = process.env.DSH_TELEGRAM_STYLE_DEBUG === '1' && process.env.CI === undefined
 
 /**
  * The DSH profiles that run this checkout as the plugin, by profile name.
@@ -200,7 +195,7 @@ const BUILD_ID_SLOT = '%%BUILD_ID%%'
  * what the factory returns to the host.
  */
 const FACTORY_OPEN = `/**
- * Claude Style — Claude Code Desktop theme for the DeepSeek Harness web GUI.
+ * Telegram Style — Telegram Web theme for the DeepSeek Harness web GUI.
  * GENERATED FILE — do not edit. Source lives in packages/client/src/; \`npm run build\` bundles it.
  */
 window.__ModuleLoader__.load({
@@ -213,127 +208,41 @@ const FACTORY_CLOSE = `    return module.exports
 })`
 
 /**
- * Evaluate packages/client/src/constants.ts and the mascot sheet tables once (pure, DOM-free):
- * the gate attributes the stylesheets are checked against, the two sheet
- * tables, the asset scales and the preference defaults the browser half carries.
+ * Evaluate packages/client/src/constants.ts once (pure, DOM-free): the gate
+ * attributes the stylesheets are checked against and the preference defaults
+ * the browser half carries.
  */
 const CONSTANTS = (() => {
   const constantsFile = 'packages/client/src/constants.ts'
-  const sheetsFile = 'packages/client/src/features/mascot/sheets.ts'
   const constants = loadModule(constantsFile)
-  const sheets = loadModule(sheetsFile)
   const pick = (module, file, names) => Object.fromEntries(names.map((name) => {
     if (module[name] === undefined) throw new Error(`build: ${file} exports no ${name}`)
     return [name, module[name]]
   }))
-  const { BRAND_ATTR, BRAND_DEEPSEEK, COMPOSER_ATTR, PALETTE_ATTR, PALETTE_CLAUDE, PALETTE_HOST, TYPEFACE_ATTR, TYPEFACE_CLAUDE, TYPEFACE_HOST } = pick(constants, constantsFile, ['BRAND_ATTR', 'BRAND_DEEPSEEK', 'COMPOSER_ATTR', 'PALETTE_ATTR', 'PALETTE_CLAUDE', 'PALETTE_HOST', 'TYPEFACE_ATTR', 'TYPEFACE_CLAUDE', 'TYPEFACE_HOST'])
+  const { COMPOSER_ATTR, PALETTE_ATTR, PALETTES } = pick(constants, constantsFile, ['COMPOSER_ATTR', 'PALETTE_ATTR', 'PALETTES'])
   return {
-    // The gate attributes scripts/css.mjs checks, stamps and writes the token
-    // blocks under: who paints the colours and who sets the type (D30), the
-    // composer preference (D9) and the DeepSeek brand's own blocks (D30).
+    // The gate attributes scripts/css.mjs stamps and writes the token blocks
+    // under: the composer preference (D9) and the three palettes (spec 4.12).
     gates: {
       composer: COMPOSER_ATTR,
-      palette: { attribute: PALETTE_ATTR, claude: PALETTE_CLAUDE, host: PALETTE_HOST },
-      typeface: { attribute: TYPEFACE_ATTR, claude: TYPEFACE_CLAUDE, host: TYPEFACE_HOST },
-      brand: { attribute: BRAND_ATTR, deepseek: BRAND_DEEPSEEK },
+      palette: { attribute: PALETTE_ATTR, values: PALETTES },
     },
-    ...pick(sheets, sheetsFile, ['CRAB_SHEETS', 'DEEPY_SHEETS', 'DEEPY_SCALE', 'DEEPY_GUTTER']),
     featureSheets: pick(constants, constantsFile, FEATURE_SHEET_CONSTANTS),
   }
 })()
 
 /**
- * The brand marks the stylesheets paint, each as the custom property
- * `--dsh-claude-image-<name>` the token sheet declares (the skin has no asset
- * URLs: the DSH loader exposes none, so a mark is a data URI or a route
- * address, whichever the asset manifest decided).
+ * The images the stylesheets paint, each as the custom property
+ * `--dsh-tg-image-<name>` the token sheet declares, keyed by that name and
+ * naming its path under packages/assets/src/. The DSH loader exposes no asset
+ * URLs, so each is a data URI or a route address, as the asset plan decided.
  */
-const BRAND_MARKS = [
-  'claude-mark.svg',
-  'claude-word.svg',
-  'claude-mark-clay.svg',
-  // The account row's picture when no avatar is behind it, under the Claude
-  // brand: Anthropic's own mark.
-  'anthropic-mark.svg',
-  // The host's own whale mark (ui-primitives FishLogo, FISH_LOGO_PATH), in
-  // DeepSeek's brand blue: a picture where it is painted, a shape where it masks.
-  'deepseek-mark.svg',
-  // The host's own word beside that whale, taken from its frontend bundle: the
-  // settings lockup draws the reader's brand area, so it needs the word the
-  // sidebar shows there.
-  'deepseek-word.svg',
-  // GitHub's own mark, for the settings page's link to the repository.
-  'github-mark.svg',
-]
-
-/**
- * The vendored vendor lockups, keyed by brand id.
- *
- * One file per vendor, already composed from Lobe's mark and wordmark by
- * scripts/fetch-lobe-combines.py, with the vendor's own word in a
- * `data-combine-word` attribute (the word is not derivable from the brand id:
- * `moonshot` draws "MoonshotAI", `zai` draws "zai"). Markup rather than a CSS
- * data URI, because the picker stamps it into the row with `innerHTML` so the
- * mono layer inherits the row's `color`.
- *
- * @param plan - the asset plan (planAssets); the lockups are its text entries.
- * @param claimed - the paths the build read (checkClaimed).
- * @returns brand id → { svg, word }.
- */
-function loadCombines(plan, claimed) {
-  const out = {}
-  for (const [file, entry] of plan.entries) {
-    if (!file.startsWith('icons/combine/') || !file.endsWith('.svg')) continue
-    claimed.add(file)
-    const id = path.basename(file, '.svg')
-    const svg = entry.text.replace(/\r\n/g, '\n').trim()
-    if (!svg.startsWith('<svg') || !svg.includes('viewBox=')) {
-      throw new Error(`build: packages/assets/src/${file} is not a scalable SVG (needs <svg viewBox=…>)`)
-    }
-    if (svg.includes('</') && /<\/script/i.test(svg)) throw new Error(`build: packages/assets/src/${file} carries a script end tag`)
-    if (svg.includes('\n')) throw new Error(`build: packages/assets/src/${file} is multi-line; run scripts/fetch-lobe-combines.py`)
-    const word = /data-combine-word="([^"]+)"/.exec(svg)
-    if (word === null) throw new Error(`build: packages/assets/src/${file} has no data-combine-word`)
-    out[id] = { svg, word: word[1] }
-  }
-  if (Object.keys(out).length === 0) throw new Error('build: packages/assets/src/icons/combine/ holds no lockups; run scripts/fetch-lobe-combines.py')
-  return out
-}
-
-/**
- * Deepy's sheets as the vectors the browser plays
- *
- * Each PNG is decoded, held to its animation table's crop box and frame count,
- * and rebuilt as SVG over the sprite's own cell layout. The vector is what the
- * asset plan ships under the sheet's name; the PNG is an input of the build.
- *
- * A vector is cached under the PNG's bytes, its table entry, the scale, the
- * gutter and the code of packages/assets/assets.mjs: a hit stands for a sheet
- * that already passed checkSheetPixels with exactly these inputs.
- *
- * @param cache - the build cache (scripts/build-cache.mjs).
- * @returns the vectors to ship, keyed by their path under packages/assets/src/, and the
- *     PNGs they take the place of.
- */
-function vectorizeDeepySheets(cache) {
-  const dir = path.join(ASSETS, 'mascot', 'deepy')
-  const sheets = CONSTANTS.DEEPY_SHEETS
-  checkSheets('DEEPY_SHEETS', sheets, [52, 52], dir, (name) => [`${name}.png`])
-  const code = fs.readFileSync(ASSETS_MODULE)
-  const generated = new Map()
-  const replaced = new Set()
-  for (const [name, sheet] of Object.entries(sheets)) {
-    const png = fs.readFileSync(path.join(dir, `${name}.png`))
-    const shape = JSON.stringify({ sheet, scale: CONSTANTS.DEEPY_SCALE, gutter: CONSTANTS.DEEPY_GUTTER })
-    const svg = cache.get('deepy-vector', [code, png, shape], () => {
-      const image = PNG.sync.read(png)
-      checkSheetPixels('DEEPY_SHEETS', name, image, sheet, CONSTANTS.DEEPY_SCALE)
-      return Buffer.from(vectorizeSheet(image, sheet.box, CONSTANTS.DEEPY_SCALE, CONSTANTS.DEEPY_GUTTER).svg, 'utf8')
-    }).toString('utf8')
-    generated.set(`mascot/deepy/${name}.svg`, svg)
-    replaced.add(`mascot/deepy/${name}.png`)
-  }
-  return { generated, replaced }
+const ICON_NAMES = ['plane', 'pencil', 'archive', 'menu', 'search', 'check', 'check-double', 'clock', 'loop', 'spark', 'heart', 'thought', 'arrow-down', 'arrow-left', 'chevron-down', 'stop', 'file', 'file-code', 'file-image', 'moon', 'plug', 'gear', 'info']
+const IMAGES = {
+  'mark': 'brand/telegram-style-mark.svg',
+  'doodle': 'wallpaper/pattern.webp',
+  'sticker': 'mascot/sticker/sticker.webp',
+  ...Object.fromEntries(ICON_NAMES.map((name) => [`icon-${name}`, `icons/tg/${name}.svg`])),
 }
 
 async function main() {
@@ -353,39 +262,16 @@ async function main() {
   // yet: the plan is read by everything below, and a refusal anywhere in this
   // build must leave lib/ as it was.
   const cache = openBuildCache(CACHE_DIR)
-  const deepy = vectorizeDeepySheets(cache)
-  const plan = planAssets({ assetsDir: ASSETS, generated: deepy.generated, replaced: deepy.replaced })
+  const plan = planAssets({ assetsDir: ASSETS })
   const claimed = new Set()
   const images = {}
-  for (const file of BRAND_MARKS) {
-    const entry = plan.entries.get(`brand/${file}`)
-    if (entry === undefined) throw new Error(`build: each asset is claimed or fails the build; brand/${file} is missing`)
-    claimed.add(`brand/${file}`)
-    images[path.basename(file, '.svg')] = entry.url
-  }
-  const combines = loadCombines(plan, claimed)
-
-  // The crab's sheets ride the bundle: one pair of data URIs per animation.
-  const crab = {}
-  for (const name of Object.keys(CONSTANTS.CRAB_SHEETS)) {
-    const body = plan.entries.get(`mascot/crab/${name}.png`)
-    const ink = plan.entries.get(`mascot/crab/${name}-ink.png`)
-    if (body === undefined || ink === undefined) throw new Error(`build: CRAB_SHEETS["${name}"] has no sheet pair under packages/assets/src/mascot/crab/`)
-    claimed.add(body.file)
-    claimed.add(ink.file)
-    crab[name] = { body: body.url, ink: ink.url }
+  for (const [name, file] of Object.entries(IMAGES)) {
+    const entry = plan.entries.get(file)
+    if (entry === undefined) throw new Error(`build: each asset is claimed or fails the build; ${file} is missing`)
+    claimed.add(file)
+    images[name] = entry.url
   }
 
-  // Deepy's sheets are the vectors the build produced; the addresses are the
-  // route's, one per sheet, and only the played ones are ever fetched.
-  const deepyUrls = {}
-  for (const name of Object.keys(CONSTANTS.DEEPY_SHEETS)) {
-    const entry = plan.entries.get(`mascot/deepy/${name}.svg`)
-    // vectorizeDeepySheets built every one of them, so absence is a bug here.
-    if (entry === undefined) throw new Error(`build: DEEPY_SHEETS["${name}"] has no vector; the sheets and the table disagree`)
-    claimed.add(entry.file)
-    deepyUrls[name] = entry.url
-  }
   checkClaimed(plan, claimed)
 
   const tokenDoc = loadTokens(SRC)
@@ -398,13 +284,8 @@ async function main() {
   // carries the ones its own modules read.
   const generated = generatedModule({
     STYLESHEET: css.main,
-    // The surface sheets apart: they stay mounted while ds-bot's surface has the page (D74).
-    SURFACE_STYLESHEET: css.surface,
-    // Vendor lockups: one markup table plus the word each lockup stands in for.
-    COMBINE_SVGS: Object.fromEntries(Object.entries(combines).map(([id, item]) => [id, item.svg])),
-    COMBINE_WORDS: Object.fromEntries(Object.entries(combines).map(([id, item]) => [id, item.word])),
     // The build id: a hash of the bundle itself, written into it below. The
-    // skin puts it on <body data-dsh-claude-style>, so a live page can be
+    // skin puts it on <body data-dsh-telegram-style>, so a live page can be
     // matched to the lib/client.js it runs — a hot reload swaps the bundle
     // without reloading the page, so the page's load time says nothing about
     // its code.
@@ -412,8 +293,6 @@ async function main() {
     // The version this client bundle reports wherever the host asks a client
     // for its build: the account Remote carries it on every call.
     CLIENT_VERSION: PACKAGE.version,
-    CRAB_SHEET_URLS: crab,
-    DEEPY_SHEET_URLS: deepyUrls,
     // The motion tokens, by name: the browser half reads the same table the
     // generated token stylesheet carries, so a duration cannot be 200 ms in the
     // CSS and 250 ms in a Web Animations call (D9).
@@ -506,14 +385,8 @@ async function main() {
   // other half of the previous one. lib/ is not in version control (D47), so a
   // fresh clone has no directory to write into yet.
   const copy = JSON.parse(fs.readFileSync(path.join(DATA, MODEL_COPY), 'utf8'))
-  const familyRules = validateModelCopy(copy, combines)
+  const familyRules = validateModelCopy(copy)
   const copyText = JSON.stringify(copy, null, 2) + '\n'
-  // The peak rate catalog is the data source's own document, shipped as the
-  // copy a machine with no reach judges by; the host half's parser is the same
-  // one the build checks it with
-  const catalogPath = path.join(HOST_DATA, PEAKRATE_CATALOG)
-  const catalogText = fs.readFileSync(catalogPath, 'utf8')
-  const catalogProfiles = validatePeakCatalog(JSON.parse(catalogText), catalogPath)
   // The price snapshot is the repository's validated scrape, shipped as the
   // copy a machine with no reach prices by.
   const pricesPath = path.join(HOST_DATA, PRICES_FILE)
@@ -528,9 +401,6 @@ async function main() {
   fs.writeFileSync(path.join(LIB, MODEL_COPY), copyText)
   console.log(`built lib/${MODEL_COPY} (${familyRules} family rules, ${copy.tiers.length} tier rules)`)
 
-  fs.writeFileSync(path.join(LIB, PEAKRATE_CATALOG), catalogText)
-  console.log(`built lib/${PEAKRATE_CATALOG} (${catalogProfiles} profiles) from packages/host/data/${PEAKRATE_CATALOG}`)
-
   fs.writeFileSync(path.join(LIB, PRICES_FILE), pricesText)
   console.log(`built lib/${PRICES_FILE} (${pricedModels} models) from packages/host/data/${PRICES_FILE}`)
 
@@ -542,7 +412,7 @@ async function main() {
   const assets = writeAssets(LIB, plan, { retain: RETAIN_ASSETS, compress })
   console.log(`built lib/assets/ (${assets.files} routed of ${plan.entries.size} assets, ${assets.bytes} bytes) from packages/assets/src/`)
   if (assets.kept > 0) {
-    console.log(`kept ${assets.kept} asset(s) an earlier build shipped (DSH_CLAUDE_STYLE_DEBUG=1): a page running that build still asks for them`)
+    console.log(`kept ${assets.kept} asset(s) an earlier build shipped (DSH_TELEGRAM_STYLE_DEBUG=1): a page running that build still asks for them`)
   }
 
   const fonts = buildFonts({ assetsDir: ASSETS, libDir: LIB })
@@ -557,7 +427,7 @@ async function main() {
   // manifest when the page asks for them (D72).
   fs.writeFileSync(OUT, bundle)
   fs.writeFileSync(`${OUT}.map`, sourceMap)
-  console.log(`built lib/client.js (${Buffer.byteLength(bundle)} bytes, build ${buildId}) from packages/client/src/ (${bundled.size} modules + ${sheets.length} stylesheets + ${Object.keys(combines).length} lockups)`)
+  console.log(`built lib/client.js (${Buffer.byteLength(bundle)} bytes, build ${buildId}) from packages/client/src/ (${bundled.size} modules + ${sheets.length} stylesheets)`)
   for (const [id, url] of Object.entries(chunkUrls)) {
     console.log(`built the deferred feature "${id}" as ${url} (${Buffer.byteLength(plan.entries.get(`chunks/${id}.js`).text)} bytes)`)
   }
@@ -567,7 +437,7 @@ async function main() {
   if (!RETAIN_ASSETS) {
     const linked = linkedProfiles()
     if (linked.length > 0) {
-      console.log(`linked into ${linked.join(', ')}: a rebuild replaces lib/assets, and a page still running the previous bundle asks for chunks this build replaced — build with DSH_CLAUDE_STYLE_DEBUG=1 to keep them`)
+      console.log(`linked into ${linked.join(', ')}: a rebuild replaces lib/assets, and a page still running the previous bundle asks for chunks this build replaced — build with DSH_TELEGRAM_STYLE_DEBUG=1 to keep them`)
     }
   }
 }

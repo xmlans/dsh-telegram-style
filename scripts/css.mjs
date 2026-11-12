@@ -5,13 +5,9 @@
  * skin's CSS lives by are checked on the syntax tree, selectors through
  * postcss-selector-parser:
  *
- *   scope        every selector holds `body[data-dsh-claude-style]` (outside :not());
- *                a sheet whose manifest entry says `scope: 'surface'` holds
- *                `body[data-dsh-claude-surface]` instead and ships apart (D74)
+ *   scope        every selector holds `body[data-dsh-telegram-style]` (outside :not());
  *   :has()       only in its selector's last compound, at every nesting level (D9)
- *   token gates  a rule writing a host token carries the Claude palette or
- *                typeface gate, and every private token the Claude choice
- *                defines has an alias under the host's (D30)
+ *   token blocks one per palette × theme, plus the alias block
  *   composer     the rules below a sheet's `@composer-gate` comment get the
  *                composer gate stamped onto their scope compound (D9)
  *   attributes   every `data-dsh-*` attribute a selector reads is one the
@@ -24,7 +20,7 @@
  *
  * The token stylesheet is generated from packages/client/src/theme/tokens.json, and so are the
  * token, motion and layer tables in docs/STYLE.md; it also declares the brand marks' addresses
- * as `--dsh-claude-image-<name>`, the one thing in the CSS only the build knows.
+ * as `--dsh-tg-image-<name>`, the one thing in the CSS only the build knows.
  *
  * The joined sheet ships minified (scripts/shared/minify-css.cjs): comments and
  * formatting are for the source, and the checks above read the source.
@@ -43,14 +39,8 @@ import { ruleKey } from './shared/rule-key.cjs'
 const SCOPE_TAG = 'body'
 /** The element a rule painting the document has to be written on. */
 const DOCUMENT_TAG = 'html'
-const SCOPE_ATTRIBUTE = 'data-dsh-claude-style'
+const SCOPE_ATTRIBUTE = 'data-dsh-telegram-style'
 const SCOPE = `${SCOPE_TAG}[${SCOPE_ATTRIBUTE}]`
-/**
- * The scope of the sheets that stay on the page while ds-bot's surface has it
- * (D74): the theme's own scope is gone then, and these rules are the surface
- * switch's whole look.
- */
-const SURFACE_SCOPE_ATTRIBUTE = 'data-dsh-claude-surface'
 /** The comment in a gated sheet below which every rule follows the composer preference. */
 const COMPOSER_GATE_MARKER = '@composer-gate'
 /** The token stylesheet's place in the sheet list: generated, never read from disk. */
@@ -72,7 +62,7 @@ const LOCAL_LAYER = /^(?:auto|-1|[0-9])$/
 
 /**
  * A time and an easing curve as a declaration's value spells them (D9). A
- * name such as `--dsh-claude-ease-out` is no match, and neither is a digit
+ * name such as `--dsh-tg-ease-out` is no match, and neither is a digit
  * inside an identifier: the character before must not continue an identifier or
  * a number. `linear` and the step functions are mechanical timing, not a style
  * choice, and stay.
@@ -83,9 +73,9 @@ const EASE_PATTERN = /(?<![\w-])(?:ease|ease-in|ease-out|ease-in-out)(?![\w-])|c
 /** The prefix of the attributes the skin writes; the host's own are read as contracts (D3). */
 const SKIN_ATTRIBUTE_PREFIX = 'data-dsh-'
 /** The attribute carrying the skin's own names for host elements; the one host anchor a rule reads (D3). */
-const PART_ATTRIBUTE = 'data-dsh-claude-part'
+const PART_ATTRIBUTE = 'data-dsh-tg-part'
 /** The attribute carrying what an element's subtree holds; a relation the pass answers (D9). */
-const HOLDS_ATTRIBUTE = 'data-dsh-claude-holds'
+const HOLDS_ATTRIBUTE = 'data-dsh-tg-holds'
 
 /* ---------- selectors ---------- */
 
@@ -109,23 +99,18 @@ function negated(node) {
 
 /**
  * The scope compounds of one selector: each scope attribute
- * (`[data-dsh-claude-style]` unless named) on a `body` compound outside
+ * (`[data-dsh-telegram-style]` unless named) on a `body` compound outside
  * :not(), with the compound around it. A rule that paints the document
  * element reaches the scope through `html:has(…)`.
  */
-function scopeCompounds(selector, scopeAttribute = SCOPE_ATTRIBUTE) {
+function scopeCompounds(selector) {
   const found = []
   selector.walkAttributes((attribute) => {
-    if (attribute.attribute !== scopeAttribute || negated(attribute)) return
+    if (attribute.attribute !== SCOPE_ATTRIBUTE || negated(attribute)) return
     const compound = compoundOf(attribute)
     if (compound.some((node) => node.type === 'tag' && node.value === SCOPE_TAG)) found.push({ attribute, compound })
   })
   return found
-}
-
-/** Whether a selector's scope compound carries `[attribute="value"]`. */
-function carries(selector, attribute, value) {
-  return scopeCompounds(selector).some(({ compound }) => compound.some((node) => node.type === 'attribute' && node.attribute === attribute && node.value === value))
 }
 
 /**
@@ -151,7 +136,7 @@ function checkHasPlacement(where, selector) {
 /**
  * Refuse a `:has()` that asks about a mark (D9). What the argument selects on is
  * what the skin already knows — a part, a host `data-*` mark, one of the skin's
- * own markers — so the pass answers it as `data-dsh-claude-holds`
+ * own markers — so the pass answers it as `data-dsh-tg-holds`
  * (core/parts-table.ts) and the rule reads the answer. Two shapes stay: a
  * `:has()` over state the skin cannot mark (a pseudo-class, a class name), and
  * the document element's own entry into scope, where the whole gate compound
@@ -167,33 +152,6 @@ function checkHasMarks(where, selector) {
   })
 }
 
-/**
- * Hold every write of a host token to its gate (D30), and record the private
- * tokens the Claude choice defines and the host choice aliases.
- *
- * A `--dsw-font-*` declaration must sit in a rule whose every selector carries
- * the Claude typeface gate; any other `--dsw-*` one in a rule carrying the
- * Claude palette gate. Under "follow the host" those rules drop out and the
- * host's tokens (or another theme plugin's) stand.
- */
-function checkTokenGates(label, rule, selectors, gates, names) {
-  const every = (gate, value) => selectors.every((selector) => carries(selector, gate.attribute, value))
-  for (const node of rule.nodes) {
-    if (node.type !== 'decl' || !node.prop.startsWith('--')) continue
-    const name = node.prop
-    const where = `${label}:${node.source.start.line}`
-    if (name.startsWith('--dsw-font-')) {
-      if (!every(gates.typeface, gates.typeface.claude)) throw new Error(`build: ${where} writes ${name} outside the Claude typeface gate`)
-    } else if (name.startsWith('--dsw-')) {
-      if (!every(gates.palette, gates.palette.claude)) throw new Error(`build: ${where} writes ${name} outside the Claude palette gate`)
-    }
-    if (!name.startsWith('--dsh-claude-')) continue
-    const gate = name.startsWith('--dsh-claude-font-') ? gates.typeface : gates.palette
-    if (every(gate, gate.claude)) names.claude.add(name)
-    if (every(gate, gate.host)) names.host.add(name)
-  }
-}
-
 /** Whether a declaration is one of the motion properties the literal check reads. */
 function motionProperty(prop) {
   return prop.startsWith('transition') || prop.startsWith('animation') || prop.startsWith('--')
@@ -201,7 +159,7 @@ function motionProperty(prop) {
 
 /**
  * Hold every time and easing curve in a stylesheet to the token table (D9):
- * outside the token sheet itself, motion values are read as `var(--dsh-claude-…)`
+ * outside the token sheet itself, motion values are read as `var(--dsh-tg-…)`
  * and never written as literals, so one look at the token table answers what the
  * skin's motion is made of. `linear` and the step functions are timing rather
  * than a style choice, and a zero delay or duration is no motion at all, so both
@@ -222,7 +180,7 @@ function checkMotionLiterals(sheet, label, rule) {
 /**
  * Hold every z-index in a stylesheet to the layer tokens (D9): a sheet orders
  * siblings inside its own box with a literal from -1 to 9, and anything that has
- * to clear what the host draws reads `var(--dsh-claude-layer-…)`, so the
+ * to clear what the host draws reads `var(--dsh-tg-layer-…)`, so the
  * levels the skin stacks on are one table.
  */
 function checkLayerLiterals(sheet, label, rule) {
@@ -230,7 +188,7 @@ function checkLayerLiterals(sheet, label, rule) {
   for (const node of rule.nodes) {
     if (node.type !== 'decl' || node.prop !== 'z-index') continue
     const value = node.value.trim()
-    if (LOCAL_LAYER.test(value) || /^var\(--dsh-claude-layer-[a-z0-9-]+\)$/.test(value)) continue
+    if (LOCAL_LAYER.test(value) || /^var\(--dsh-tg-layer-[a-z0-9-]+\)$/.test(value)) continue
     throw new Error(`build: ${label}:${node.source.start.line} writes z-index: ${value}; above the local orders -1 to 9, read a layer from packages/client/src/${TOKEN_SHEET} (D9)`)
   }
 }
@@ -275,13 +233,9 @@ function sheetLabel(sheet) {
  * @param relations - relation name → where, for the hold-mark check (D9).
  * @returns the sheet's text, comments and formatting kept.
  */
-function processSheet(sheet, text, gates, names, read, parts, relations, keyframes) {
+function processSheet(sheet, text, gates, read, parts, relations, keyframes) {
   const label = sheetLabel(sheet)
   const root = postcss.parse(text, { from: label })
-  const surface = sheet.scope === 'surface'
-  const scopeAttribute = surface ? SURFACE_SCOPE_ATTRIBUTE : SCOPE_ATTRIBUTE
-  // The composer gate is an attribute of the theme's own scope, which a surface sheet outlives.
-  if (surface && sheet.gate === true) throw new Error(`build: ${label} is a surface sheet and cannot be composer-gated`)
   let markerEnd = null
   if (sheet.gate === true) {
     const marker = root.nodes.find((node) => node.type === 'comment' && node.text === COMPOSER_GATE_MARKER)
@@ -303,14 +257,13 @@ function processSheet(sheet, text, gates, names, read, parts, relations, keyfram
     })
     const stamp = markerEnd !== null && rule.source.start.offset > markerEnd
     for (const selector of selectors.nodes) {
-      const scopes = scopeCompounds(selector, scopeAttribute)
-      if (scopes.length === 0) throw new Error(`build: ${where} selector "${selector.toString().trim()}" is not under ${SCOPE_TAG}[${scopeAttribute}]`)
+      const scopes = scopeCompounds(selector)
+      if (scopes.length === 0) throw new Error(`build: ${where} selector "${selector.toString().trim()}" is not under ${SCOPE_TAG}[${SCOPE_ATTRIBUTE}]`)
       checkHasPlacement(where, selector)
       checkHasMarks(where, selector)
       if (!stamp) continue
       for (const { attribute } of scopes) attribute.parent.insertAfter(attribute, selectorParser.attribute({ attribute: gates.composer }))
     }
-    checkTokenGates(label, rule, selectors.nodes, gates, names)
     checkMotionLiterals(sheet, label, rule)
     checkLayerLiterals(sheet, label, rule)
     if (!stamp) return
@@ -333,11 +286,19 @@ export function loadTokens(srcDir) {
   const validate = new Ajv2020({ allErrors: true }).compile(schema)
   const doc = JSON.parse(fs.readFileSync(path.join(srcDir, TOKEN_SHEET), 'utf8'))
   if (!validate(doc)) throw new Error(`build: packages/client/src/${TOKEN_SHEET} ${validate.errors.map((error) => `${error.instancePath || '/'} ${error.message}`).join('; ')}`)
-  for (const group of ['typeface', 'apex', 'palette', 'motion', 'layer']) {
+  for (const group of ['typeface', 'apex', 'palette', 'shared', 'alias', 'motion', 'layer']) {
     const seen = new Set()
     for (const item of doc[group]) {
       if (seen.has(item.token)) throw new Error(`build: packages/client/src/${TOKEN_SHEET} names ${item.token} twice in ${group}`)
       seen.add(item.token)
+    }
+  }
+  const owners = new Map()
+  for (const group of ['typeface', 'apex', 'palette', 'shared', 'alias']) {
+    for (const item of doc[group]) {
+      const first = owners.get(item.token)
+      if (first !== undefined) throw new Error(`build: packages/client/src/${TOKEN_SHEET} declares ${item.token} in both ${first} and ${group}`)
+      owners.set(item.token, group)
     }
   }
   return doc
@@ -359,39 +320,35 @@ function declarationsOf(items, pick) {
 /**
  * The token stylesheet, in cascade order.
  *
- * Every block that writes a host token carries the Claude gate, so under
- * "follow the host" the host's own tokens stand (D30). The palette blocks name
- * `[data-ds-dark-theme]` for dark on purpose: the host's own dark block weighs
- * the same (0,1,1) as a bare `body[data-dsh-claude-style]`, so whichever sheet
- * the loader appended last would win; naming the attribute lifts these to
- * (0,2,1). The DeepSeek blocks add the brand attribute on top and only state
- * what differs from Claude's. The brand marks' addresses come first: every
- * choice paints with them. The motion and layer tokens are ungated blocks
- * beside them: the same durations, curves, distances and stacking levels under
- * every palette and typeface (D9).
+ * The palette blocks name the palette and the theme, which lifts them to
+ * (0,3,1): the host's own token blocks weigh (0,1,1) or (0,2,1), so the skin's
+ * values win whichever sheet the loader appended last. The alias block reaches
+ * the same weight through `:is()` and reads the semantic tokens with var(), so
+ * one block serves every palette. The images, motion, layers and type are the
+ * same under every palette (D9).
  *
- * @param images - brand mark name → its address (data URI or route).
+ * @param images - image name → its address (data URI or route).
  */
 function tokenSheet(doc, gates, images) {
   const dark = '[data-ds-dark-theme]'
   const light = ':not([data-ds-dark-theme])'
-  const gate = ({ attribute }, value) => `[${attribute}="${value}"]`
-  const claude = `${SCOPE}${gate(gates.palette, gates.palette.claude)}`
-  const deepseek = `${claude}${gate(gates.brand, gates.brand.deepseek)}`
+  const paletted = `${SCOPE}[${gates.palette.attribute}]`
+  const palette = (value) => `${SCOPE}[${gates.palette.attribute}="${value}"]`
   return [
     `/* Generated from packages/client/src/${TOKEN_SHEET} by scripts/css.mjs; edit the JSON. */\n`,
-    tokenBlock(SCOPE, Object.entries(images).map(([name, url]) => [`--dsh-claude-image-${name}`, `url("${url}")`])),
+    tokenBlock(SCOPE, Object.entries(images).map(([name, url]) => [`--dsh-tg-image-${name}`, `url("${url}")`])),
     tokenBlock(SCOPE, declarationsOf(doc.motion, (item) => item.value)),
     tokenBlock(SCOPE, declarationsOf(doc.layer, (item) => item.value)),
-    tokenBlock(`${SCOPE}${gate(gates.typeface, gates.typeface.claude)}`, declarationsOf(doc.typeface, (item) => item.claude)),
-    tokenBlock(`${SCOPE}${gate(gates.typeface, gates.typeface.host)}`, declarationsOf(doc.typeface, (item) => item.host)),
+    tokenBlock(paletted, declarationsOf(doc.typeface, (item) => item.value)),
     tokenBlock(`${SCOPE}${dark}`, declarationsOf(doc.apex, (item) => item.dark)),
     tokenBlock(`${SCOPE}${light}`, declarationsOf(doc.apex, (item) => item.light)),
-    tokenBlock(`${claude}${dark}`, declarationsOf(doc.palette, (item) => item.claude?.dark)),
-    tokenBlock(`${claude}${light}`, declarationsOf(doc.palette, (item) => item.claude?.light)),
-    tokenBlock(`${deepseek}${light}`, declarationsOf(doc.palette, (item) => item.deepseek?.light)),
-    tokenBlock(`${deepseek}${dark}`, declarationsOf(doc.palette, (item) => item.deepseek?.dark)),
-    tokenBlock(`${SCOPE}${gate(gates.palette, gates.palette.host)}`, declarationsOf(doc.palette, (item) => item.host)),
+    tokenBlock(`${paletted}${dark}`, declarationsOf(doc.shared, (item) => item.dark)),
+    tokenBlock(`${paletted}${light}`, declarationsOf(doc.shared, (item) => item.light)),
+    ...gates.palette.values.flatMap((value) => [
+      tokenBlock(`${palette(value)}${dark}`, declarationsOf(doc.palette, (item) => item[value].dark)),
+      tokenBlock(`${palette(value)}${light}`, declarationsOf(doc.palette, (item) => item[value].light)),
+    ]),
+    tokenBlock(`${paletted}:is(${dark}, ${light})`, declarationsOf(doc.alias, (item) => item.value)),
   ].filter((block) => block !== '').join('\n')
 }
 
@@ -405,22 +362,23 @@ function tableCell(value) {
 }
 
 /**
- * The palette as a Markdown table: each token's value in the four brand ×
- * theme cells (a DeepSeek cell shows the Claude value it keeps), its value
- * under the host palette (a host token keeps the host's own) and its use.
+ * The colour tokens as two Markdown tables: the semantic tokens and the shared
+ * ones in the six palette × theme cells, then the aliases with the one value
+ * each holds under every palette.
  */
 function tokenTable(doc) {
-  const cell = (value) => (value === undefined ? '—' : tableCell(value))
-  const rows = doc.palette.map((item) => {
-    const claudeLight = item.claude?.light
-    const claudeDark = item.claude?.dark
-    const host = item.host === undefined && item.token.startsWith('--dsw-') ? "host's own" : cell(item.host)
-    return `| \`${item.token}\` | ${cell(claudeLight)} | ${cell(item.deepseek?.light ?? claudeLight)} | ${cell(claudeDark)} | ${cell(item.deepseek?.dark ?? claudeDark)} | ${host} | ${item.use ?? ''} |`
-  })
+  const themed = doc.palette.map((item) => `| \`${item.token}\` | ${['telegram', 'glass', 'trans'].flatMap((name) => [tableCell(item[name].light), tableCell(item[name].dark)]).join(' | ')} | ${item.use} |`)
+  const shared = doc.shared.map((item) => `| \`${item.token}\` | ${[0, 1, 2].flatMap(() => [tableCell(item.light), tableCell(item.dark)]).join(' | ')} | ${item.use} |`)
+  const aliases = doc.alias.map((item) => `| \`${item.token}\` | ${tableCell(item.value)} | ${item.use} |`)
   return [
-    '| Token | Claude light | DeepSeek light | Claude dark | DeepSeek dark | Host alias | Use |',
-    '|---|---|---|---|---|---|---|',
-    ...rows,
+    '| Token | 经典 亮 | 经典 暗 | 玻璃 亮 | 玻璃 暗 | 粉色 亮 | 粉色 暗 | Use |',
+    '|---|---|---|---|---|---|---|---|',
+    ...themed,
+    ...shared,
+    '',
+    '| Alias | Value | Use |',
+    '|---|---|---|',
+    ...aliases,
   ].join('\n')
 }
 
@@ -526,7 +484,7 @@ function checkAttributes(read, sources) {
 /**
  * Hold every part name a selector reads to the table that defines it (D3).
  *
- * `[data-dsh-claude-part~="x"]` is the whole of a host anchor now, so a
+ * `[data-dsh-tg-part~="x"]` is the whole of a host anchor now, so a
  * misspelt or retired name leaves a rule that matches nothing — the failure the
  * substring selectors hid, made loud. The table is data
  * (packages/client/src/core/parts-table.ts), so the build reads the same list the
@@ -585,7 +543,7 @@ function checkHolds(relations) {
     declared.add(relation.name)
     for (const side of [relation.holder, relation.held, relation.scope]) {
       if (typeof side !== 'string') continue
-      for (const match of side.matchAll(/\[data-dsh-claude-part~="([^"]+)"\]/g)) {
+      for (const match of side.matchAll(/\[data-dsh-tg-part~="([^"]+)"\]/g)) {
         if (!known.has(match[1])) {
           throw new Error(`build: the hold relation "${relation.name}" names the part "${match[1]}", which packages/engine/src/parts-table.ts does not define`)
         }
@@ -603,18 +561,16 @@ function checkHolds(relations) {
 /**
  * Every sheet in cascade order, checked, gated and joined.
  *
- * @param options.sheets - `{ file, rank, gate?, scope? }` or `{ generated, rank }` in cascade order (TOKEN_SHEET generated).
+ * @param options.sheets - `{ file, rank, gate? }` or `{ generated, rank }` in cascade order (TOKEN_SHEET generated).
  * @param options.srcDir - the source directory.
  * @param options.sources - the browser half on its syntax tree (scripts/source-tree.mjs).
  * @param options.tokenDoc - packages/client/src/theme/tokens.json (loadTokens).
- * @param options.gates - `{ composer, palette: { attribute, claude, host }, typeface: { attribute, claude, host }, brand: { attribute, deepseek } }`.
+ * @param options.gates - `{ composer, palette: { attribute, values } }`.
  * @param options.images - brand mark name → its address, for the token sheet.
  * @param options.featureConstants - what the generated feature sheets are written from (scripts/feature-sheets.mjs).
- * @returns `{ main, surface }`: the theme's sheet and the surface sheets (D74),
- *     each minified once every check has read every sheet.
+ * @returns `{ main }`: the theme's sheet, minified once every check has read every sheet.
  */
 export function buildStylesheet({ sheets, srcDir, sources, tokenDoc, gates, images, featureConstants }) {
-  const names = { claude: new Set(), host: new Set() }
   const read = new Map()
   const parts = new Map()
   const relations = new Map()
@@ -625,12 +581,9 @@ export function buildStylesheet({ sheets, srcDir, sources, tokenDoc, gates, imag
       : sheet.generated !== undefined
         ? featureSheet(sheet.generated, featureConstants)
         : fs.readFileSync(path.join(srcDir, sheet.file), 'utf8').replace(/\r\n/g, '\n')
-    return { sheet, text: processSheet(sheet, source, gates, names, read, parts, relations, keyframes).replace(/\n+$/, '') }
+    return { sheet, text: processSheet(sheet, source, gates, read, parts, relations, keyframes).replace(/\n+$/, '') }
   })
-  const joined = (surface) => processed.filter((item) => (item.sheet.scope === 'surface') === surface).map((item) => item.text).join('\n\n')
-  for (const name of names.claude) {
-    if (!names.host.has(name)) throw new Error(`build: ${name} is defined under the Claude palette or typeface but has no alias under the host's`)
-  }
+  const joined = () => processed.map((item) => item.text).join('\n\n')
   checkAttributes(read, sources)
   checkParts(parts)
   checkHolds(relations)
@@ -641,9 +594,9 @@ export function buildStylesheet({ sheets, srcDir, sources, tokenDoc, gates, imag
     ...tokenDoc.motion.map((item) => item.value),
   ].join('\n')
   checkTokensRead(tokenDoc, readers, sources)
-  const main = minifyCss(joined(false))
+  const main = minifyCss(joined())
   checkImportance(main, srcDir)
-  return { main, surface: minifyCss(joined(true)) }
+  return { main }
 }
 
 /**

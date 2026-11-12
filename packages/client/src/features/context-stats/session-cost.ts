@@ -1,5 +1,5 @@
-import { PRICES_PATH, SESSION_COST_PATH } from '@dsh-claude-style/contracts/routes'
-import type { PriceDocument, SessionCostAnswer } from '@dsh-claude-style/contracts/prices'
+import { PRICES_PATH, SESSION_COST_PATH } from '@dsh-telegram-style/contracts/routes'
+import type { PriceDocument, SessionCostAnswer } from '@dsh-telegram-style/contracts/prices'
 
 /**
  * The price table and the current session's settled cost, both from the host

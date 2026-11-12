@@ -1,0 +1,139 @@
+/* Telegram's chat rows over the host's own session rows: the host
+   keeps the row and its title; the avatar, time, second line and badge are the
+   skin's own nodes, laid out on a grid around the title. */
+body[data-dsh-telegram-style] [data-dsh-tg-session] {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 10px;
+  align-items: center;
+  height: 48px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--dsh-tg-ink);
+}
+body[data-dsh-telegram-style] [data-dsh-tg-session]:hover {
+  background: var(--dsh-tg-hover-bg);
+}
+body[data-dsh-telegram-style] [data-dsh-tg-session]:is([data-dsh-tg-part~="row-active"], [data-dsh-tg-part~="row-selected"]) {
+  background: var(--dsh-tg-selected);
+  color: var(--dsh-tg-selected-ink);
+}
+body[data-dsh-telegram-style] .dsh-tg-row-avatar {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 500;
+  background: var(--dsh-tg-avatar-1);
+}
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="2"] { background: var(--dsh-tg-avatar-2); }
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="3"] { background: var(--dsh-tg-avatar-3); }
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="4"] { background: var(--dsh-tg-avatar-4); }
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="5"] { background: var(--dsh-tg-avatar-5); }
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="6"] { background: var(--dsh-tg-avatar-6); }
+body[data-dsh-telegram-style] .dsh-tg-row-avatar[data-avatar="7"] { background: var(--dsh-tg-avatar-7); }
+body[data-dsh-telegram-style] [data-dsh-tg-session] [data-dsh-tg-part~="row-title"] {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+}
+body[data-dsh-telegram-style] .dsh-tg-row-time {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--dsh-tg-ink-secondary);
+}
+body[data-dsh-telegram-style] .dsh-tg-row-status {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--dsh-tg-ink-secondary);
+}
+body[data-dsh-telegram-style] [data-dsh-tg-row-state="typing"] .dsh-tg-row-status,
+body[data-dsh-telegram-style] [data-dsh-tg-row-state="waiting"] .dsh-tg-row-status {
+  color: var(--dsh-tg-accent-text);
+}
+body[data-dsh-telegram-style] .dsh-tg-row-badge {
+  grid-column: 3;
+  grid-row: 2;
+  justify-self: end;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dsh-tg-on-accent);
+  background: var(--dsh-tg-accent-fill);
+}
+body[data-dsh-telegram-style] .dsh-tg-row-badge:empty {
+  display: none;
+}
+/* The selected row carries both lines in the selected ink (trans light keeps dark text on its pale fill). */
+body[data-dsh-telegram-style] [data-dsh-tg-session]:is([data-dsh-tg-part~="row-active"], [data-dsh-tg-part~="row-selected"]) :is(.dsh-tg-row-time, .dsh-tg-row-status) {
+  color: var(--dsh-tg-selected-ink);
+}
+/* The typing dots: three dots after the words, animated. */
+body[data-dsh-telegram-style] [data-dsh-tg-row-state="typing"] .dsh-tg-row-status::after {
+  content: "";
+  display: inline-block;
+  width: 1.2em;
+  text-align: start;
+  animation: dsh-tg-typing-dots var(--dsh-tg-period-dot-line) steps(4, end) infinite;
+}
+@keyframes dsh-tg-typing-dots {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75% { content: "..."; }
+}
+body[data-dsh-telegram-style][data-dsh-tg-motion="reduced"] [data-dsh-tg-row-state="typing"] .dsh-tg-row-status::after {
+  animation: none;
+}
+/* A narrow sidebar takes 32px avatars; the host's own time sits under the skin's. */
+@container (max-width: 259.98px) {
+  body[data-dsh-telegram-style] .dsh-tg-row-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+body[data-dsh-telegram-style] [data-dsh-tg-session] [data-dsh-tg-part~="row-time"] {
+  display: none;
+}
+/* The host's leading seat (its running spinner, retired by the second line's typing words) and its
+   action buttons: the seat is gone, and the buttons take the time's place while the row is pointed at. */
+body[data-dsh-telegram-style] [data-dsh-tg-session] [data-dsh-tg-part~="row-slot"] {
+  display: none;
+}
+body[data-dsh-telegram-style] [data-dsh-tg-session] [data-dsh-tg-part~="row-actions"] {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  justify-self: end;
+}
+body[data-dsh-telegram-style] [data-dsh-tg-session]:is(:hover, :focus-within) .dsh-tg-row-time {
+  visibility: hidden;
+}

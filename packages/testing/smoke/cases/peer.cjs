@@ -23,8 +23,7 @@ module.exports = {
     // The rows the ported features own, each on the tab its manifest registers it
     // on (D74, D72). The line's switch and the sent message's entrance carry
     // switches of their own beside the chat-area switch, so all five sit on the
-    // Motion tab. headerBand carries a note of its own on a page that is not the
-    // Windows desktop, so its note says nothing about the peer plugin.
+    // Motion tab.
     const ported = { motion: ['chatAnimations', 'chatWait', 'chatSend', 'caretMotion', 'chatReveal'] }
     const answers = (tab) => page(tab).answers || {}
     // The reader's own answer stays on show (the chat-area animations on, the
@@ -74,7 +73,7 @@ module.exports = {
       owner.sheet === false, JSON.stringify(owner.sheet))
     check('the theme claims no body attribute while yielded',
       owner.live === false && owner.handoff === false &&
-        !bodyAttrs.some(name => name.indexOf('data-dsh-claude') === 0),
+        !bodyAttrs.some(name => name.indexOf('data-dsh-tg') === 0 || name.indexOf('data-dsh-telegram-style') === 0),
       JSON.stringify(bodyAttrs))
     check('the settings page leaves with the theme',
       owner.settingsSeats === 0, JSON.stringify(owner.settingsSeats))

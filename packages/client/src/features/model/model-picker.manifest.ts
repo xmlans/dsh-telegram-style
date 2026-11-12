@@ -4,7 +4,7 @@ import type { FeatureManifest } from '../../core/feature'
 export default {
   id: 'model',
   order: 80,
-  reads: ['composer', 'peakrate'],
+  reads: ['composer'],
   contracts: [],
   pref: 'modelPicker',
   stylesheets: [{ file: 'model-picker.css', rank: 260 }],

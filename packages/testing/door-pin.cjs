@@ -31,8 +31,8 @@ const HOST = {
 
 /** The skin's own marks (packages/client/src/constants.ts). */
 const SKIN = {
-  rolling: '[data-dsh-claude-rolling]', // CHAT_ROLLING_ATTR
-  readerHold: '[data-dsh-claude-reader-hold]', // READER_HOLD_ATTR
+  rolling: '[data-dsh-tg-rolling]', // CHAT_ROLLING_ATTR
+  readerHold: '[data-dsh-tg-reader-hold]', // READER_HOLD_ATTR
 }
 
 /**

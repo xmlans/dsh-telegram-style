@@ -13,7 +13,7 @@
  * @risk In a window too narrow for the composer's controls, the effort button pushes the row past the card and the conversation grows a horizontal scrollbar, or the model name stays cut after the button has gone.
  */
 import { afterEach, expect, test } from 'vitest'
-import { releaseEffortRoom, reserveEffortRoom } from '@dsh-claude-style/client/pure'
+import { releaseEffortRoom, reserveEffortRoom } from '@dsh-telegram-style/client/pure'
 import { hostElement } from '../../fixtures/host-markup'
 import { surfaceSelector } from '../../fixtures/surface'
 

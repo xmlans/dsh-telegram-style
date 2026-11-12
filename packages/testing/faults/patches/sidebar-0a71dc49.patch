@@ -2,18 +2,18 @@ diff --git a/packages/client/src/theme/sidebar.css b/packages/client/src/theme/s
 index eabadbb..21eeae4 100644
 --- a/packages/client/src/theme/sidebar.css
 +++ b/packages/client/src/theme/sidebar.css
-@@ -336,14 +336,15 @@ body[data-dsh-claude-style] [data-dsh-claude-part~="project-row"] [data-dsh-clau
- body[data-dsh-claude-style] [data-dsh-claude-part~="project-row"] [data-dsh-claude-part~="row-folder"] {
+@@ -336,14 +336,15 @@ body[data-dsh-telegram-style] [data-dsh-tg-part~="project-row"] [data-dsh-clau
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="project-row"] [data-dsh-tg-part~="row-folder"] {
    display: none;
  }
 -/* Title left, dropdown arrow beside it */
 +/* Title left, dropdown arrow beside it. The label takes its content width and
 +   yields past it, which keeps the hover actions inside the column. */
- body[data-dsh-claude-style] [data-dsh-claude-part~="project-row"] {
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="project-row"] {
    display: flex;
    align-items: center;
  }
- body[data-dsh-claude-style] [data-dsh-claude-part~="project-row"] [data-dsh-claude-part~="row-project-text"] {
+ body[data-dsh-telegram-style] [data-dsh-tg-part~="project-row"] [data-dsh-tg-part~="row-project-text"] {
    order: 1;
 -  flex: 0 0 auto;
 +  flex: 0 1 auto;

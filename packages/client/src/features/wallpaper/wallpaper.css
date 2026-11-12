@@ -1,0 +1,30 @@
+/* The wallpaper: the palette's plain colour on <body>, fixed to the
+   window, and the pattern laid over it as one fixed layer under the shell, its
+   alpha used as a mask over the palette's ink colour. */
+body[data-dsh-telegram-style]:not([data-we-wallpaper]) {
+  background: var(--dsh-tg-wallpaper);
+  background-attachment: fixed;
+  /* Its own stacking context: with the document element painted (light), the body
+     background would otherwise lie over the doodle layer at z-index -1. */
+  isolation: isolate;
+}
+body[data-dsh-telegram-style][data-dsh-tg-doodle="on"]:not([data-we-wallpaper])::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--dsh-tg-doodle-ink);
+  opacity: var(--dsh-tg-doodle-opacity);
+  -webkit-mask: var(--dsh-tg-image-doodle) 0 0 / 462px 1000px repeat;
+  mask: var(--dsh-tg-image-doodle) 0 0 / 462px 1000px repeat;
+}
+/* A wallpaper plugin (dsh-plugin-wallpaper-engine marks <body> with
+   data-we-wallpaper; another plugin's marker, so it stays out of the host
+   contract table, D3) takes the window: the skin draws none, and its cards and
+   bubbles turn opaque. The weight (0,4,1) clears the palette blocks' (0,3,1). */
+body[data-dsh-telegram-style][data-dsh-tg-palette][data-we-wallpaper]:is([data-ds-dark-theme], :not([data-ds-dark-theme])) {
+  --dsh-tg-card: var(--dsh-tg-surface);
+  --dsh-tg-bubble-in: var(--dsh-tg-surface);
+  --dsh-tg-card-blur: none;
+}

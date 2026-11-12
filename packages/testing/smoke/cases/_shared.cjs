@@ -2,13 +2,13 @@
 const { MARKUP, SKIN_FACE, SKIN_HAT, same, check } = require('../shared.cjs')
 
 /** The host's highlight band, read as its window's animation and then its copy's (shared/motion.css). */
-const BAND_ANIMATION = 'dsh-claude-sweep-window, dsh-claude-sweep-glyphs'
+const BAND_ANIMATION = 'dsh-tg-sweep-window, dsh-tg-sweep-glyphs'
 
-/** WCAG contrast ratio between two `rgb(r, g, b)` readings. */
+/** WCAG contrast ratio between two readings, each `rgb(r, g, b)` (0-255) or `color(srgb r g b)` (0-1, what a colour mix reads as). */
 function contrast(a, b) {
   const luminance = (css) => {
     const channels = css.match(/[\d.]+/g).slice(0, 3).map((raw) => {
-      const c = Number(raw) / 255
+      const c = Number(raw) / (css.startsWith('color(srgb') ? 1 : 255)
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
     })
     return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
@@ -46,12 +46,6 @@ function commonChecks(r) {
     r.topUpInk !== null && r.topUpFill !== null && r.topUpInk !== r.topUpFill &&
       contrast(r.topUpInk, r.topUpFill) >= 3,
     JSON.stringify({ ink: r.topUpInk, fill: r.topUpFill }))
-  check('the idle session seat draws the status circle through the slot outlet',
-    r.seatIdle !== null && r.seatIdle.content !== 'none' && r.seatIdle.width === '6px',
-    JSON.stringify(r.seatIdle))
-  check('a seat carrying the running status dot draws no circle',
-    r.seatRunning !== null && r.seatRunning.content === 'none' && r.seatRunning.svgs > 0,
-    JSON.stringify(r.seatRunning))
   check('scheduler idle once settled (0 passes in 1 s)', r.idlePasses === 0,
     `${r.idlePasses} passes${(r.idlePassTimes ?? []).length === 0 ? '' : ` at ${r.idlePassTimes.join('ms, ')}ms`}`, 'timing')
   check('a closed popover card claims no menu role for the host\'s keyboard arbitration',
@@ -60,18 +54,20 @@ function commonChecks(r) {
     r.titlebarTabs === false, JSON.stringify(r.titlebarTabs))
   check('teardown registered with the host', r.teardownRegistered)
   check("the sheet carries this package's own module-system tags, so no sibling's bookkeeping can take it away",
-    r.sheetPlugin === 'dsh-claude-style' && r.sheetPluginCss === 'dsh-claude-style/client.css' && r.sheetClaimable === false,
+    r.sheetPlugin === 'dsh-telegram-style' && r.sheetPluginCss === 'dsh-telegram-style/client.css' && r.sheetClaimable === false,
     JSON.stringify({ plugin: r.sheetPlugin, css: r.sheetPluginCss, claimable: r.sheetClaimable }))
   check("a sibling's untagged sheet stays out of this package's bookkeeping, so no reload of this package removes it",
-    r.siblingSheetTag === 'dsh-claude-style/foreign-sheet' && r.siblingSheetClaimable === false && r.siblingSheetSurvives === true,
+    r.siblingSheetTag === 'dsh-telegram-style/foreign-sheet' && r.siblingSheetClaimable === false && r.siblingSheetSurvives === true,
     JSON.stringify({ tag: r.siblingSheetTag, claimable: r.siblingSheetClaimable, survives: r.siblingSheetSurvives }))
   check("a sibling's sheet arriving after this bundle is parked before any package can claim it",
-    r.lateSheetTag === 'dsh-claude-style/foreign-sheet' && r.lateSheetClaimable === false,
+    r.lateSheetTag === 'dsh-telegram-style/foreign-sheet' && r.lateSheetClaimable === false,
     JSON.stringify({ tag: r.lateSheetTag, claimable: r.lateSheetClaimable }))
   if (!r.teardownRegistered) return
-  check('teardown leaves no skin node, marker, body attribute or stylesheet',
-    r.leftNodes === 0 && r.leftMarkers === 0 && r.leftAttrs.length === 0 && !r.leftStylesheet,
-    `nodes ${r.leftNodes}, markers ${r.leftMarkers}, attrs ${JSON.stringify(r.leftAttrs)}, stylesheet ${r.leftStylesheet}`)
+  check('teardown leaves no skin node, sticker, marker, body attribute or stylesheet',
+    r.leftNodes === 0 && r.leftSticker === 0 && r.leftMarkers === 0 && r.leftAttrs.length === 0 && !r.leftStylesheet,
+    `nodes ${r.leftNodes}, sticker nodes ${r.leftSticker}, markers ${r.leftMarkers}, attrs ${JSON.stringify(r.leftAttrs)}, stylesheet ${r.leftStylesheet}`)
+  check("teardown hands a sibling's parked sheet back untagged, so this package leaves no mark on it",
+    r.siblingSheetTagAfter === null, JSON.stringify(r.siblingSheetTagAfter))
   check('no pass runs after teardown', r.passesAfterTeardown === 0, `${r.passesAfterTeardown} passes`)
   check("the host's own account row is handed back visible and clickable",
     !r.hostRowPresent || (r.hostRowEnd !== null && r.hostRowEnd.visibility === 'visible' &&

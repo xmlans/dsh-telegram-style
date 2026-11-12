@@ -7,17 +7,17 @@
  * once a day, and keeps it on disk. The packaged copy is what a machine with no
  * reach judges by, so the meter works on a first run with no network at all.
  *
- * The refresh follows `peakrate.ts`: a timer that starts with the first reader,
- * stands down when nobody has asked for two days, and keeps the current
- * document whenever the fetch or the parse fails. Compared with parsing the
- * official page here, this moves the fragile half into CI, where a break is one
- * red run instead of every install.
+ * The refresh keeps its own timer: it starts with the first reader, refreshes
+ * every PRICES_REFRESH_MS and stops once nobody has asked for PRICES_IDLE_MS.
+ * It keeps the current document whenever the fetch or the parse fails. Compared
+ * with parsing the official page here, this moves the fragile half into CI,
+ * where a break is one red run instead of every install.
  */
-import { PACKAGE_NAME } from '@dsh-claude-style/contracts/package'
+import { PACKAGE_NAME } from '@dsh-telegram-style/contracts/package'
 import { statSync } from 'node:fs'
 import { join } from 'node:path'
-import type { DshContext } from '@dsh-claude-style/engine/node/dsh'
-import type { PriceDocument } from '@dsh-claude-style/contracts/prices'
+import type { DshContext } from '@dsh-telegram-style/engine/node/dsh'
+import type { PriceDocument } from '@dsh-telegram-style/contracts/prices'
 import { cachePath, readJsonDocument, writeJsonDocument } from './cache-file.js'
 import { packageRoot } from './package-root.js'
 import { parsePriceDocument } from './prices-document.js'
@@ -27,8 +27,8 @@ export const PRICES_FILE = 'prices.json'
 
 /** Where the snapshot is published: the CDN first, the repository's raw file second. */
 export const PRICES_URLS = [
-  'https://cdn.jsdelivr.net/gh/Nwflower/dsh-claude-style@master/packages/host/data/prices.json',
-  'https://raw.githubusercontent.com/Nwflower/dsh-claude-style/master/packages/host/data/prices.json',
+  'https://cdn.jsdelivr.net/gh/xmlans/dsh-telegram-style@master/packages/host/data/prices.json',
+  'https://raw.githubusercontent.com/xmlans/dsh-telegram-style/master/packages/host/data/prices.json',
 ]
 
 /** How long a fetched snapshot counts as current. */

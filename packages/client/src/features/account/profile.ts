@@ -1,9 +1,9 @@
-import { CLIENT_VERSION } from 'virtual:dsh-claude-style/generated'
-import { hostRemote, hostRemoteAccount } from '@dsh-claude-style/engine/host'
+import { CLIENT_VERSION } from 'virtual:dsh-telegram-style/generated'
+import { hostRemote, hostRemoteAccount } from '@dsh-telegram-style/engine/host'
 import { setAccountIdentity } from '../../shared/identity'
 import { activeLocale } from '../../core/i18n'
-import type { HostContext, HostFiber } from '@dsh-claude-style/engine/host'
-import type { HostAccountAnswer, HostAccountClient, HostAccountFrame, HostAccountService, HostStream, HostStreamStep } from '@dsh-claude-style/contracts/services'
+import type { HostContext, HostFiber } from '@dsh-telegram-style/engine/host'
+import type { HostAccountAnswer, HostAccountClient, HostAccountFrame, HostAccountService, HostStream, HostStreamStep } from '@dsh-telegram-style/contracts/services'
 
 /**
  * The signed-in account, when the desktop has one: `remote.account.getProfile(client)`
@@ -161,7 +161,7 @@ export function createAccountProfile(ctx: HostContext, onChange: () => void) {
     const remote = hostRemote(ctx)
     if (account === null || typeof account.watch !== 'function' || typeof remote?.$stream !== 'function') return false
     const stream = remote.$stream({
-      name: 'dsh-claude-style account',
+      name: 'dsh-telegram-style account',
       open(signal: AbortSignal) { return account.watch(signal) },
       ended() { return new Error('account stream ended') }
     })
@@ -199,7 +199,7 @@ export function createAccountProfile(ctx: HostContext, onChange: () => void) {
       scope.effect(() => {
         if (!followAccount()) loadAccount()
         return stopFollowingAccount
-      }, 'dsh-claude-style: account')
+      }, 'dsh-telegram-style: account')
     })
   } else if (!followAccount()) {
     loadAccount()

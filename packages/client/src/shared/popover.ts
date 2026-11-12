@@ -1,11 +1,11 @@
-import { buildElement, setAttributeIfChanged } from '@dsh-claude-style/engine/dom'
+import { buildElement, setAttributeIfChanged } from '@dsh-telegram-style/engine/dom'
 import { inPageBox, pageViewport } from './page-zoom'
 
 /**
  * The skin's popovers: one card shell, one dwell and grace, one card on screen
  * at a time.
  *
- * Every skin card carries `dsh-claude-popover-card` (shared/popover.css) for
+ * Every skin card carries `dsh-tg-popover-card` (shared/popover.css) for
  * its look; a feature's own stylesheet adds only placement and width, so one
  * picker's change cannot reach another.
  *
@@ -102,6 +102,11 @@ export function positionAnchoredPopover(trigger: Element, pop: HTMLElement, opts
     if (pop.style.left !== leftValue) pop.style.left = leftValue
     if (pop.style.top !== topValue) pop.style.top = topValue
   }
+  // The menu opens from the corner nearest its button (spec 4.10, menus.css).
+  const anchor = space.rect
+  const opensBelow = y >= anchor.top
+  const opensRight = x + pop.offsetWidth / 2 >= anchor.left + anchor.width / 2
+  pop.style.transformOrigin = `${opensRight ? 'left' : 'right'} ${opensBelow ? 'top' : 'bottom'}`
   return { x, y }
 }
 
@@ -291,27 +296,27 @@ export interface PopoverItemOptions {
  *   not ask for is null.
  */
 export function buildPopoverItem(opts: PopoverItemOptions = {}) {
-  const row = buildElement('button', opts.className ? `dsh-claude-popover-item ${opts.className}` : 'dsh-claude-popover-item')
+  const row = buildElement('button', opts.className ? `dsh-tg-popover-item ${opts.className}` : 'dsh-tg-popover-item')
   row.type = 'button'
   if (opts.role) row.setAttribute('role', opts.role)
-  const icon = opts.icon ? buildElement('span', 'dsh-claude-popover-item-icon') : null
+  const icon = opts.icon ? buildElement('span', 'dsh-tg-popover-item-icon') : null
   if (icon !== null) row.appendChild(icon)
   let text: HTMLSpanElement
   let desc: HTMLSpanElement | null = null
   if (opts.lines === 2) {
-    const col = buildElement('div', 'dsh-claude-popover-item-col')
-    text = buildElement('span', 'dsh-claude-popover-item-text')
-    desc = buildElement('span', 'dsh-claude-popover-item-desc')
+    const col = buildElement('div', 'dsh-tg-popover-item-col')
+    text = buildElement('span', 'dsh-tg-popover-item-text')
+    desc = buildElement('span', 'dsh-tg-popover-item-desc')
     col.appendChild(text)
     col.appendChild(desc)
     row.appendChild(col)
   } else {
-    text = buildElement('span', opts.textClass || 'dsh-claude-popover-item-text')
+    text = buildElement('span', opts.textClass || 'dsh-tg-popover-item-text')
     row.appendChild(text)
   }
-  const badge = opts.badge ? buildElement('span', 'dsh-claude-popover-item-badge') : null
+  const badge = opts.badge ? buildElement('span', 'dsh-tg-popover-item-badge') : null
   if (badge !== null) row.appendChild(badge)
-  const check = opts.check ? buildElement('span', 'dsh-claude-popover-check') : null
+  const check = opts.check ? buildElement('span', 'dsh-tg-popover-check') : null
   if (check !== null) row.appendChild(check)
   return { row, icon, text, desc, badge, check }
 }

@@ -1,11 +1,11 @@
 import { motionReduced, subscribePrefs } from '../../core/prefs'
-import { buildElement } from '@dsh-claude-style/engine/dom'
+import { buildElement } from '@dsh-telegram-style/engine/dom'
 import { motionMs } from '../../shared/motion'
 
 /** One flash of a particle, in seconds: the period token the stylesheet's own shorthand runs (D9). */
-const FLASH_S = motionMs('--dsh-claude-period-flash') / 1000
+const FLASH_S = motionMs('--dsh-tg-period-flash') / 1000
 /** One pass of the particle flow, in seconds: the period token the flow animation runs (D9). */
-const FLOW_S = motionMs('--dsh-claude-period-flow') / 1000
+const FLOW_S = motionMs('--dsh-tg-period-flow') / 1000
 /** The flow's clusters across the track, and how far a row or a block may fall out of step (shares of FLOW_S). */
 const FLOW_CLUSTERS = 9
 const FLOW_ROW_SHIFT = 0.03
@@ -164,8 +164,8 @@ export function createEffortMatrix(track: HTMLElement, matrix: HTMLElement) {
     for (let r = 0; r < lay.rows; r++) {
       for (let c = 0; c < lay.cols; c++) {
         const fx = lay.cols > 1 ? c / (lay.cols - 1) : 1
-        const cell = buildElement('div', 'dsh-claude-effort-matrix-cell')
-        const sq = buildElement('div', 'dsh-claude-effort-matrix-sq')
+        const cell = buildElement('div', 'dsh-tg-effort-matrix-cell')
+        const sq = buildElement('div', 'dsh-tg-effort-matrix-sq')
         /* The plume shape is a STATIC per-block opacity: every layer on the
            block rides through it, so the layers never fight. */
         sq.style.opacity = cellFade(fx).toFixed(3)

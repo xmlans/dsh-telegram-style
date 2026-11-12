@@ -19,16 +19,6 @@ export const FLOW_BLOCK_SELECTOR = '[data-chat-flow-key]'
 /** The chat column. */
 export const CHAT_FLOW_SELECTOR = '[data-chat-flow]'
 /**
- * The node a flow item renders its one message into. The host's flow rules
- * collapse an item whose node is empty, and the sodium rewrite keeps that
- * verdict as an attribute (D78).
- */
-export const CHAT_NODE_SELECTOR = '[data-slot="conversation.chat.node"]'
-/** The slot the chat column renders its flow into; its children and the column's are what the host's flow rules space (D78). */
-export const CHAT_FLOW_SLOT_SELECTOR = '[data-slot="conversation.chat.flow"]'
-/** The answer a turn's process group closes on. */
-export const TURN_PROCESS_ANSWER_ATTRIBUTE = 'data-turn-process-answer'
-/**
  * One tool call's row. It lives inside the assistant block, so it does not
  * have to arrive as a new flow block of its own.
  */
@@ -85,7 +75,21 @@ export const COMPOSER_CARD_SELECTOR = '[data-composer-card]'
 export const COMPOSER_SCROLL_SELECTOR = '[data-input-scroll]'
 /** The echo bubble the host mounts the moment a submission goes through. */
 export const SUBMISSION_ECHO_SELECTOR = '[data-submission-echo]'
-/** The bubble the host mounts for a steering message until the turn takes it in. */
+/**
+ * The reader's own message bubble in a settled user row (spec 4.4). The host
+ * hashes the bubble's class (`cJsG2q_bubble`) and carries no attribute of its
+ * own, so the part the marking pass writes for the local name `bubble` stands
+ * for it (engine/parts-table.ts).
+ */
+export const MESSAGE_BUBBLE_SELECTOR = '[data-chat-flow-kind="user"] [data-dsh-tg-part~="message-bubble"]'
+/**
+ * The host's own time under the reader's message (its action row carries
+ * `data-clock`; the row's other child is the copy button). The bubble already
+ * wears the skin's time and ticks, so this one is the second reading of the same
+ * minute. The class is hashed, so the attribute and the button's tag stand for it.
+ */
+export const USER_ROW_CLOCK_SELECTOR = '[data-chat-flow-kind="user"] [data-clock] > :not(button), [data-submission-echo] [data-clock] > :not(button)'
+/** A steering message the turn has not taken in yet, standing as a bubble of its own. */
 export const PENDING_STEERING_SELECTOR = '[data-pending-steering]'
 /**
  * A plain text box inside the composer seat: a question card's answer box
@@ -111,8 +115,6 @@ export const FLOW_KIND_ATTRIBUTE = 'data-chat-flow-kind'
 /** The kind of an assistant step's row: its thinking or its output. */
 export const ASSISTANT_STEP_KIND = 'assistant-step'
 export const TOOL_CALL_KIND = 'tool-call'
-/** The kind of a turn's process group, which the host's widest flow gap follows (D78). */
-export const TURN_PROCESS_ROW_KIND = 'turn-process'
 /**
  * Which part of an assistant step a row holds: the host splits a step into its
  * thinking and its output and writes the part on the row.
@@ -120,8 +122,6 @@ export const TURN_PROCESS_ROW_KIND = 'turn-process'
 export const CHAT_GROUP_PART_ATTRIBUTE = 'data-chat-group-part'
 /** The part value of a step's thinking row. */
 export const CHAT_GROUP_PART_REASONING = 'reasoning'
-/** The part value of a step's output row. */
-export const CHAT_GROUP_PART_RESPONSE = 'response'
 /**
  * The words of a process group's header: the one child of the control the host
  * does not mark decorative (its icon and chevron sit in an aria-hidden span).
@@ -140,15 +140,15 @@ export const CHAT_RUNNING_TEXT_SELECTOR = `:scope > span > [${SHIMMER_ATTRIBUTE}
  * stable part of its hashed class name is matched (D3), scoped to the running
  * row so no other row's icon can be hit.
  */
-export const CHAT_RUNNING_ICON_SELECTOR = '[data-dsh-claude-part~="running-icon"]'
+export const CHAT_RUNNING_ICON_SELECTOR = '[data-dsh-tg-part~="running-icon"]'
 /**
  * The turn rail (ui-chat's TurnNavigator): a nav at the conversation's
  * right edge with one mark per turn, absent below two turns and hidden
  * when the conversation is narrow. It is the one nav in the chat frame.
  */
-export const TURN_RAIL_SELECTOR = `${CONVERSATION_SCROLL_SELECTOR} nav[data-dsh-claude-part~="rail-frame"]`
+export const TURN_RAIL_SELECTOR = `${CONVERSATION_SCROLL_SELECTOR} nav[data-dsh-tg-part~="rail-frame"]`
 /** The rail's own scroller, its first child: the marks scroll inside it. */
-export const TURN_RAIL_SCROLLER_SELECTOR = ':scope > [data-dsh-claude-part~="rail-scroller"]'
+export const TURN_RAIL_SCROLLER_SELECTOR = ':scope > [data-dsh-tg-part~="rail-scroller"]'
 /**
  * One mark: a button carrying its position in the rail's list, not its
  * turn number. The rail renders only the marks near its scroll position.
@@ -190,7 +190,7 @@ export const CONVERSATION_SESSION_ATTRIBUTE = 'data-conversation-session'
 /** The page's own phase: `hero` before a session is chosen, `active` once one is shown. */
 export const PHASE_ATTRIBUTE = 'data-phase'
 /** The composer card and the stack of cards above it. */
-export const COMPOSER_STACK_SELECTOR = '[data-dsh-claude-part~="composer-stack"]'
+export const COMPOSER_STACK_SELECTOR = '[data-dsh-tg-part~="composer-stack"]'
 /** The placeholder the host's own editor draws inside the draft. */
 export const COMPOSER_PLACEHOLDER_SELECTOR = '[data-composer-placeholder]'
 /**
@@ -221,41 +221,36 @@ export const MOBILE_PORTRAIT_SELECTOR = 'body.dsh-remote-portrait'
  * (its track circle carries none). The skin paints it with the colour the
  * occupancy fell on
  */
-export const CONTEXT_METER_FILL_SELECTOR = '[data-dsh-claude-context-meter] circle[stroke-dasharray]'
+export const CONTEXT_METER_FILL_SELECTOR = '[data-dsh-tg-context-meter] circle[stroke-dasharray]'
 /** The composer variant the host puts on the card (`hero` / `default`). */
 export const COMPOSER_VARIANT_ATTRIBUTE = 'data-composer-variant'
 /**
  * The host's own access-mode trigger inside its permission slot, skipping the
- * skin's own control: the skin's elements carry the `dsh-claude-` namespace as
+ * skin's own control: the skin's elements carry the `dsh-tg-` namespace as
  * whole class tokens, so no substring match is involved (D3).
  */
-export const PERMISSION_TRIGGER_SELECTOR = '[data-slot="conversation.input.permission"] button:not([class^="dsh-claude-"], [class*=" dsh-claude-"])'
+export const PERMISSION_TRIGGER_SELECTOR = '[data-slot="conversation.input.permission"] button:not([class^="dsh-tg-"], [class*=" dsh-tg-"])'
 /** A host button that opens a dialog: the model and effort pickers in the composer stack. */
 export const DIALOG_TRIGGER_SELECTOR = 'button[aria-haspopup="dialog"]'
 /** The sidebar footer block; the skin's account entry lives inside it. */
-export const FOOT_AREA_SELECTOR = '[data-dsh-claude-part~="foot-area"]'
+export const FOOT_AREA_SELECTOR = '[data-dsh-tg-part~="foot-area"]'
 /**
  * The host's own sidebar search: a button and an input in the workspace
  * section's header. The skin's box stands in for it, and the `icon` style
  * leaves the host's button in place with its click taken over, so both read
  * this slot.
  */
-export const SIDEBAR_SEARCH_SLOT_SELECTOR = '[data-slot="sidebar"] [data-dsh-claude-part~="search-slot"]'
+export const SIDEBAR_SEARCH_SLOT_SELECTOR = '[data-slot="sidebar"] [data-dsh-tg-part~="search-slot"]'
 /** The sidebar's own column box, whose width follows the collapse and the reader's drag. */
-export const SIDEBAR_ROOT_SELECTOR = '[data-slot="sidebar"] > [data-dsh-claude-part~="sidebar-root"]'
+export const SIDEBAR_ROOT_SELECTOR = '[data-slot="sidebar"] > [data-dsh-tg-part~="sidebar-root"]'
 /**
  * The sidebar's top row: the wide brand and the collapse toggle, and the row
  * the collapsed rail keeps as its own mark's seat. The search feature reads it
  * to give the rail a row of its own under the mark.
  */
-export const SIDEBAR_LOGO_ROW_SELECTOR = '[data-slot="sidebar"] [data-dsh-claude-part~="logo-row"]'
+export const SIDEBAR_LOGO_ROW_SELECTOR = '[data-slot="sidebar"] [data-dsh-tg-part~="logo-row"]'
 /** The wide brand in the sidebar's top row; the collapsed rail has none. */
-export const SIDEBAR_BRAND_SELECTOR = '[data-slot="sidebar"] [data-dsh-claude-part~="logo-row"] > [data-dsh-claude-part~="brand-button"]'
-/**
- * The sidebar's collapse toggle, inside the top row. The desktop shells fix it
- * into the caption strip; the web leaves it the row's last cell.
- */
-export const SIDEBAR_TOGGLE_SELECTOR = '[data-slot="sidebar"] [data-dsh-claude-part~="logo-row"] > [data-dsh-claude-part~="sidebar-toggle"]'
+export const SIDEBAR_BRAND_SELECTOR = '[data-slot="sidebar"] [data-dsh-tg-part~="logo-row"] > [data-dsh-tg-part~="brand-button"]'
 /** The host's own composer is replaced by a panel of its own choice; this is that panel's seat. */
 export const CHAIN_OVERLAY_FALLBACK_ATTRIBUTE = 'data-chain-overlay-fallback'
 /** The host's own open menus and modal dialogs: the foreground the skin must not walk over. */
@@ -271,9 +266,9 @@ export const ACCOUNT_TRIGGER_SELECTOR = '[aria-haspopup="menu"][data-signed-out]
  * (`aria-haspopup="dialog"`); the newer one puts the account menu's own trigger
  * (`aria-haspopup="menu"`), so the value is not part of the contract.
  */
-export const SETTINGS_BUTTON_SELECTOR = '[data-dsh-claude-part~="settings-area"] button[aria-haspopup]'
+export const SETTINGS_BUTTON_SELECTOR = '[data-dsh-tg-part~="settings-area"] button[aria-haspopup]'
 /** The sidebar's action list, whose entries the skin mirrors into its drawer. */
-export const FOOTER_ACTIONS_SELECTOR = '[data-dsh-claude-part~="footer-actions"]'
+export const FOOTER_ACTIONS_SELECTOR = '[data-dsh-tg-part~="footer-actions"]'
 /** A slot anchor; its children are the host's real entries. */
 export const SLOT_ANCHOR_SELECTOR = '[data-slot]'
 /**
@@ -287,53 +282,11 @@ export const CONVERSATION_HEADER_SLOT_SELECTOR = '[data-slot="conversation.heade
 export const ROOT_SLOT_SELECTOR = '[data-slot="root"]'
 /** The right sidebar's own column: the host marks it, and its docked panels are the skin's cards. */
 export const RIGHTBAR_COLUMN_SELECTOR = '[data-rightbar-col]'
-/**
- * The right panel's own collapse control, inside the chrome strip that panel
- * draws at its top-right. It exists only while that panel is open, and it hangs
- * from a transformed, clipped subtree, where a fixed box would be measured from
- * the panel and cut at its edge: the skin draws its own control in the header's
- * row and presses this one instead.
- */
-export const RIGHTBAR_TOGGLE_SELECTOR = '[data-sidebar-right-open] [data-sidebar-right-toggle]'
-
-/* ---------- the conversation header's own row ---------- */
-
-/**
- * The header's title row: the line the title cluster, the utilities and the
- * corner seat share. The band placement measures against it, because the
- * title's own box moves with the placement. Rows of the same shape sit in the
- * sidebar's panels, so a reader takes the one carrying a title or the
- * utilities rather than the first match.
- */
-export const HEADER_TITLE_ROW_SELECTOR = '[data-dsh-claude-part~="title-row"]'
-/**
- * The session title's breadcrumb nav: the words themselves, not the flex
- * cluster that lays them out (the cluster stretches, so it says nothing about
- * where the title ends).
- */
-export const HEADER_TITLE_SELECTOR = '[data-dsh-claude-part~="header-title"]'
-/** The header's utilities cluster: the workspace opener, the overflow menu, the bottom-panel toggle. */
-export const HEADER_UTILITIES_SELECTOR = '[data-dsh-claude-part~="header-utilities"]'
-/** The corner seat beside the utilities, carrying the right-sidebar toggle. */
-export const HEADER_CORNER_SELECTOR = '[data-dsh-claude-part~="header-corner"]'
-/**
- * The conversation header itself, resolved with `closest` from the title row:
- * the same substring names a dozen other bars (the sidebar's action row, the
- * background-task chip), so it is never queried document-wide.
- */
-export const CONVERSATION_HEADER_SELECTOR = '[data-dsh-claude-part~="conversation-header"]'
-/** The view-tab strip inside the header, whose box the band placement keeps clear of. */
-export const VIEW_TABS_STRIP_SELECTOR = '[data-dsh-claude-part~="view-tabs"]'
 
 /* ---------- the document, the shell and the browser API ---------- */
 
 /** The shell's window marks: the Windows caption row, the platform, and fullscreen. */
 export const WINDOWS_TITLEBAR_ATTRIBUTE = 'data-windows-titlebar'
-/**
- * The desktop shell's own seat in the Windows caption row, where its native
- * menu is drawn: the row's content starts to the right of it.
- */
-export const WINDOWS_MENU_SELECTOR = '[data-windows-menu]'
 export const PLATFORM_ATTRIBUTE = 'data-platform'
 export const FULLSCREEN_ATTRIBUTE = 'data-fullscreen'
 /** The host's declared caption-strip height, as a custom property on the document element. */
@@ -346,14 +299,6 @@ export const DARK_THEME_ATTRIBUTE = 'data-ds-dark-theme'
 export const PEER_SHEET_SELECTOR = 'style[data-plugin-css="dsh-plugin-msg-nav/style.css"]'
 /** Every untagged stylesheet in `<head>`: the host's claim sweep would otherwise take a sibling's. */
 export const UNTAGGED_SHEET_SELECTOR = 'style:not([data-plugin])'
-/**
- * Every stylesheet a plugin's module injected into `<head>`, tagged by the
- * loader with the package that owns it and the sheet's own path in that
- * package: the sodium rewrite finds the sheets its table lists by these (D78).
- */
-export const PLUGIN_SHEET_SELECTOR = 'style[data-plugin]'
-export const PLUGIN_SHEET_OWNER_ATTRIBUTE = 'data-plugin'
-export const PLUGIN_SHEET_PATH_ATTRIBUTE = 'data-plugin-css'
 
 /* ---------- ds-bot (Fei2411/DeepSeek-Bot) ---------- */
 
@@ -363,13 +308,7 @@ export const PLUGIN_SHEET_PATH_ATTRIBUTE = 'data-plugin-css'
  * shell's own interface (its Agent mode).
  */
 export const DS_BOT_SURFACE_ATTRIBUTE = 'data-bt-motion'
-/** In Agent mode, ds-bot's one control on the shell's own page: the footer button back to its Bot surface. */
-export const DS_BOT_RETURN_SELECTOR = '.bt-return'
-/** ds-bot's account button, which opens its menu on the Bot surface. */
-export const DS_BOT_ACCOUNT_SELECTOR = '.bt-account'
-/** That menu, portalled into `<body>` while open. */
-export const DS_BOT_ACCOUNT_MENU_SELECTOR = '.bt-account-menu'
-/** The menu's last group, after its last separator: the one item that switches to Agent mode. */
-export const DS_BOT_AGENT_ITEM_SELECTOR = '.bt-account-menu > .bt-menu-sep:last-of-type ~ [role="menuitem"]'
-/** The top row of ds-bot's own sidebar: its brand, search and new buttons. */
-export const DS_BOT_SIDEBAR_TOP_SELECTOR = '.bt-side-top'
+/** A row of the host's sidebar tree; the value names the row (a session's or a workspace's), checked live in task 19. */
+export const TREE_ROW_KEY_ATTRIBUTE = 'data-row-key'
+/** A host toast (checked live in task 17), drawn as Telegram's dark pill by theme/menus.css. */
+export const TOAST_SELECTOR = '[role="alert"][style*="--dsh-toast-hold"]'

@@ -1,6 +1,6 @@
-import { observeMatches, observeSize, subscribeMutations } from '@dsh-claude-style/engine/bus'
-import { PROCESS_BODY_SELECTOR, PROCESS_CONTENT_SELECTOR, PROCESS_EXPANDED_MODE_ATTRIBUTE } from '@dsh-claude-style/contracts/dom'
-import { easeScrollToEndFor, joinScrollOwner, readerHolds, releaseReader, stopScrollFor } from '@dsh-claude-style/engine/scroll-owner'
+import { observeMatches, observeSize, subscribeMutations } from '@dsh-telegram-style/engine/bus'
+import { PROCESS_BODY_SELECTOR, PROCESS_CONTENT_SELECTOR, PROCESS_EXPANDED_MODE_ATTRIBUTE } from '@dsh-telegram-style/contracts/dom'
+import { easeScrollToEndFor, joinScrollOwner, readerHolds, releaseReader, stopScrollFor } from '@dsh-telegram-style/engine/scroll-owner'
 
 /**
  * The capped process group's follow: inside it, thinking and tool output do

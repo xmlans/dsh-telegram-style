@@ -1,5 +1,5 @@
-import type { SkinSeam } from '@dsh-claude-style/engine/skin'
-import type { PartsVocabulary } from '@dsh-claude-style/engine/parts'
+import type { SkinSeam } from '@dsh-telegram-style/engine/skin'
+import type { PartsVocabulary } from '@dsh-telegram-style/engine/parts'
 
 /**
  * The vocabulary the specs hand the engine, the way a skin hands its own over

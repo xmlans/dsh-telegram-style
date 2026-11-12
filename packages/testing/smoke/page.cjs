@@ -52,7 +52,6 @@ const PROBE_PARTS = [
   'agent-desktop.js',
   'settle.js',
   'shell-pages.js',
-  'shell-band.js',
   'shell-context.js',
   'account-reads.js',
   'shell-studio.js',
@@ -60,8 +59,6 @@ const PROBE_PARTS = [
   'shell-switches.js',
   'agent-turn-nav.js',
   'shell-palette.js',
-  'brand.js',
-  'mascot.js',
   'chat-follow.js',
   'chat-caret.js',
   'chat-fold.js',
@@ -70,7 +67,6 @@ const PROBE_PARTS = [
   'chat-send.js',
   'chat-wait.js',
   'dock-cards.js',
-  'sidebar-layout.js',
   'model-meter.js',
   'peer.js',
   'teardown.js',
@@ -275,6 +271,23 @@ function page(name, tier, cases, probe = PROBE) {
   // the first past that cap so the window is read on both sides of it.
   var longReasoning = ''
   for (var long = 1; long <= 36; long += 1) longReasoning += '想得久一点第 ' + long + ' 行。' + (long < 36 ? '<br>' : '')
+  // The conversation as the host builds it for the bubbles case: a settled first turn
+  // (the fixture's closed turn 1), a running second one (turn 2) and the echo of a
+  // third message. The bubble is the host's hashed `bubble` class, the answer's
+  // output row carries a quote, a code block wider than the column and a table.
+  var bubblesArea = name === 'bubbles'
+    ? '<div data-phase="active"><div data-conversation-session="smoke-session"><div data-conversation-scroll style="width:520px">' +
+        '<div data-chat-flow id="bubblesFlow" style="display:flex;flex-direction:column;gap:8px;padding:8px">' +
+          '<div data-chat-flow-kind="user" data-chat-turn="1" id="bubblesDone"><div class="_userRow_x_1"><div class="_userStack_x_1"><div class="_bubble_x_1">first question</div></div></div></div>' +
+          '<div data-chat-flow-kind="assistant-step" data-chat-group-part="response" data-chat-turn="1" id="bubblesAnswer">' +
+            '<div class="_markdown_x_1"><p>an answer</p><blockquote>a quote</blockquote><pre><code>' + 'wide '.repeat(60) + '</code></pre>' +
+            '<table><thead><tr><th>a</th><th>b</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table></div>' +
+          '</div>' +
+          '<div data-chat-flow-kind="user" data-chat-turn="2" id="bubblesRunning"><div class="_userRow_x_1"><div class="_userStack_x_1"><div class="_bubble_x_1">second question</div></div></div></div>' +
+          '<div class="_userRow_x_1" data-submission-echo="true" id="bubblesEcho"><div class="_userStack_x_1"><div class="_bubble_x_1">third question</div></div></div>' +
+        '</div>' +
+      '</div></div></div>'
+    : ''
   var foldArea = name === 'chat-fold'
     ? '<style>[data-step-process-body][hidden] { display: none; } #debugGroupHeader { display: flex; gap: 6px; padding: 0; max-width: 100%; } #debugThinkText, #debugGrowText { line-height: 24px; } #debugThinkBody, #debugGrowBody { max-height: 400px; overflow: hidden; }</style>' +
       '<div data-variant="think" data-state="running" id="debugThink"><button type="button" id="debugThinkRow">Thinking</button>' +
@@ -371,7 +384,7 @@ function page(name, tier, cases, probe = PROBE) {
   // names every client entry before any of them runs, which is the signal
   // packages/client/src/shared/peer-plugin.ts reads first (the style element is the other one).
   var boot = name === 'peer-chat-ux'
-    ? '<script>window.__DSH_BOOT__ = { entries: [{ id: "ui-skin-claude-style", rev: "smoke" }, { id: "@alm-allen/dsh-chat-ux", rev: "smoke" }] }</script>'
+    ? '<script>window.__DSH_BOOT__ = { entries: [{ id: "ui-skin-telegram-style", rev: "smoke" }, { id: "@alm-allen/dsh-chat-ux", rev: "smoke" }] }</script>'
     : ''
   // A skin owns the page from the first frame: the skin center injects this
   // attribute into the served document, before any bundle is evaluated, which
@@ -410,6 +423,15 @@ function page(name, tier, cases, probe = PROBE) {
   var modelSeat = name === 'effort'
     ? '<div data-slot="conversation.input.model" style="display:contents"><div class="_root_m_1"><button type="button" class="_trigger_m_1">' + MODEL_SEAT_NAME + '</button></div></div>'
     : ''
+  // The sticker's card keeps its send circle in the card's own right-hand 56px,
+  // up at the card's top corner, the way the home page's hero card seats it: a
+  // sticker standing there would sit on the send button.
+  var stickerStyle = name === 'sticker'
+    ? '<style>' +
+        '[data-slot="root"] [data-composer-card][data-composer-card] { margin-inline-end: 0; padding-inline-end: 56px; }' +
+        '#send { right: 4px; top: 0; bottom: auto; }' +
+      '</style>'
+    : ''
   // The sidebar column as the host builds it: the session tree scrolls in the
   // column's room and the footer stands below it, at the column's bottom end.
   // The column's width and height are pinned so the account menu cases read
@@ -423,7 +445,41 @@ function page(name, tier, cases, probe = PROBE) {
         '._treeBody_x_1 { flex: 1 1 auto; min-height: 0; overflow-y: auto; }' +
       '</style>'
     : ''
-  var tree = name === 'desktop'
+  // The shell's frame as the host builds it (floating-cards): a grid whose
+  // first column is the sidebar's, the column holding the sidebar slot with no
+  // box of its own and the sidebar's root at the column's width. The frame is
+  // 800px tall, like the window.
+  var floating = name === 'floating-cards'
+  // The chat list's frame is the same grid, its sidebar column the width the host's grid gives it: 320px, and
+  // 240px (under the 260px the narrow avatars start at) in a phone-width window. The avatars read that column.
+  var listFrame = name === 'chat-list'
+  var framed = floating || listFrame
+  var frameStyle = floating
+    ? '<style>' +
+        'body { margin: 0; }' +
+        '._frame_x_1 { display: grid; grid-template-columns: 280px minmax(0, 1fr) 0; height: 800px; }' +
+        '._sidebarCol_x_1 { display: block; border-right: 0.5px solid; }' +
+        '._root_x_1 { display: flex; flex-direction: column; width: 280px; height: 100%; }' +
+        '._regionArea_x_1 { flex: 1; min-height: 0; }' +
+      '</style>'
+    : listFrame
+    ? '<style>' +
+        'body { margin: 0; }' +
+        '._frame_x_1 { display: grid; grid-template-columns: 320px minmax(0, 1fr) 0; }' +
+        '@media (max-width: 480px) { ._frame_x_1 { grid-template-columns: 240px minmax(0, 1fr) 0; } }' +
+        '._sidebarCol_x_1 { display: block; }' +
+        '._root_x_1 { display: flex; flex-direction: column; width: 100%; }' +
+      '</style>'
+    : ''
+  var frameOpen = framed ? '<div class="_frame_x_1"><div class="_sidebarCol_x_1">' : ''
+  var frameClose = framed ? '</div><div class="_centerCol_x_1"></div></div>' : ''
+  var tree = name === 'chat-list'
+    ? '<div class="_treeBody_x_1" role="tree">' +
+        '<div class="_sessionRow_x_1" data-row-key="session:s-run" role="treeitem"><span class="_slot_x_1"><div data-slot="sidebar.session.row.leading" style="display:contents"></div></span><span class="_title_x_1">Running chat</span><span class="_time_x_1">now</span></div>' +
+        '<div class="_sessionRow_x_1" data-row-key="session:s-ask" role="treeitem"><span class="_slot_x_1"><div data-slot="sidebar.session.row.leading" style="display:contents"></div></span><span class="_title_x_1">Needs approval</span><span class="_time_x_1">1min</span></div>' +
+        '<div class="_sessionRow_x_1" data-row-key="session:s-done" role="treeitem"><span class="_slot_x_1"><div data-slot="sidebar.session.row.leading" style="display:contents"></div></span><span class="_title_x_1">Finished chat</span><span class="_time_x_1">1h</span></div>' +
+      '</div>'
+    : name === 'desktop'
     ? '<div class="_treeBody_x_1" role="tree">' +
         '<div class="_sessionRow_x_1" role="treeitem"><span class="_slot_x_1"><div data-slot="sidebar.session.row.leading" style="display:contents"></div></span><span class="_title_x_1">idle session</span></div>' +
         '<div class="_sessionRow_x_1" role="treeitem"><span class="_slot_x_1"><svg data-state="ongoing" viewBox="0 0 16 16" width="10" height="10"></svg></span><span class="_title_x_1">running session</span></div>' +
@@ -433,14 +489,16 @@ function page(name, tier, cases, probe = PROBE) {
         '<div class="_sessionRow_x_1" role="treeitem"><span class="_slot_x_1"><svg data-state="ongoing" viewBox="0 0 16 16" width="10" height="10"></svg></span><span class="_title_x_1">running session</span></div>' +
       '</div>'
   return `<!doctype html>
-<html><head><meta charset="utf-8"><title>dsh-claude-style smoke: ${name}</title></head>
+<html><head><meta charset="utf-8"><title>dsh-telegram-style smoke: ${name}</title></head>
 <body>
 ${boot}
 ${skinOwner}
 ${motionStub}
 ${sidebarStyle}
+${frameStyle}
+${stickerStyle}
 <div data-slot="root">
-<div data-slot="sidebar">
+${frameOpen}<div data-slot="sidebar"${framed ? ' style="display:contents"' : ''}>
   <div class="_root_x_1">
     <div class="_regionArea_x_1">
 ${tree}
@@ -448,21 +506,22 @@ ${footer}
     </div>
   </div>
 </div>
+${frameClose}
 ${chatArea}
-<!-- The host keeps the composer inside its conversation scroller (the conversation's parts are marked within it, packages/engine/src/parts-table.ts), and the scroller's box reaches above the card: the transcript stands there. The stand-in has no transcript, so the padding stands for the room it takes. Without it the scroller's overflow clips the crab perched on the card's top edge, and a real press cannot reach it. -->
+<!-- The host keeps the composer inside its conversation scroller (the conversation's parts are marked within it, packages/engine/src/parts-table.ts), and the scroller's box reaches above the card: the transcript stands there. The stand-in has no transcript, so the padding stands for the room it takes. Without it the scroller's overflow clips the sticker perched on the card's top edge, and a real press cannot reach it. -->
 <div data-conversation-scroll style="padding-top: 80px">
 <div class="_composerStack_h_1">
-<div data-composer-card${name === 'automode-hero' ? ' data-phase="hero"' : ''}>
+<div data-composer-card${name === 'automode-hero' || name === 'sticker' ? ' data-phase="hero"' : ''}>
 ${heroRow}
-  ${name === 'chat-send' ? '<div data-input-scroll style="overflow:auto;max-height:120px">' : ''}
-  <div data-composer-input contenteditable="true" id="editor">/comp</div>
-  ${name === 'chat-send' ? '</div>' : ''}
+  <div data-input-scroll style="overflow:auto;max-height:120px">
+  <div data-composer-input contenteditable="true" id="editor">${name === 'input-bar' ? '' : '/comp'}</div>
+  </div>
   <div class="_row_x_1">
     <div class="_tools_x_1">
       <button class="_add_x_1" aria-label="Add files or run commands" aria-haspopup="listbox" id="commands"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 2v12M2 8h12"/></svg></button>
       <div class="_modes_x_1"><div data-slot="conversation.input.permission" style="display:contents"><button aria-label="Access mode, current: Edit">Edit</button></div></div>
     </div>
-    <div class="_trailing_x_1">${modelSeat}<button class="_primary_x_1" aria-label="Send message" id="send"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M8 1v14"/></svg></button></div>
+    <div class="_trailing_x_1">${modelSeat}<button class="_primary_x_1" aria-label="Send message" id="send"${name === 'input-bar' ? ' disabled' : ''}><svg viewBox="0 0 16 16" width="16" height="16"><path d="M8 1v14"/></svg></button></div>
   </div>
 </div>
 ${dock}
@@ -474,6 +533,7 @@ ${caretArea}
 ${chatSubmit}
 ${dockArea}
 ${foldArea}
+${bubblesArea}
 </div>
 <script>window.SMOKE_CASE = ${JSON.stringify(name)}; window.SMOKE_GROUPS = ${JSON.stringify(cases)}; window.SMOKE_TIER = ${JSON.stringify(tier)}; window.SMOKE_MARKUP = ${JSON.stringify(MARKUP)}; window.SMOKE_PNG = ${JSON.stringify(PNG_1PX)}</script>
 <script>${STAND_IN}</script>

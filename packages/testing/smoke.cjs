@@ -36,10 +36,8 @@
  *                as text, never as markup;
  *   - isolation  a host API that breaks one feature — at install or at sync —
  *                retires only that feature and hands its surface back (D12);
- *   - deepy      the DeepSeek brand: the whale stands on the home card and on
- *                the conversation's input area (or the panel replacing its
- *                card), follows the session's state and moments, changes
- *                frames without waking a pass, and leaves with the page;
+ *   - sticker    the sticker mascot takes itself in and out cleanly; its looks
+ *                are judged by the behaviour spec (specs/behaviour/mascot);
  *   - teardown   dispose leaves no skin node, marker, body attribute or
  *                stylesheet behind, and no pass runs afterwards.
  *

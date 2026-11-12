@@ -1,7 +1,7 @@
 import { MODEL_COPY_FALLBACK_LOCALE, MODEL_COPY_ROUTE } from './copy-fallbacks'
-import { createHostResource } from '@dsh-claude-style/engine/resource'
+import { createHostResource } from '@dsh-telegram-style/engine/resource'
 import { textOf } from '../../shared/format'
-import type { HostAnswer } from '@dsh-claude-style/engine/resource'
+import type { HostAnswer } from '@dsh-telegram-style/engine/resource'
 
 /** One `{ locale: text }` pair of the copy document. */
 export type CopyPair = Record<string, string>
@@ -12,7 +12,7 @@ export interface CopyRule {
   text?: CopyPair
 }
 
-/** A brand rule: a pattern tried against a model's id and then its display name (D79), and the vendored lockup it claims. */
+/** A brand rule: a pattern tried against a model's id and then its display name (D79), and the vendor it claims. */
 export interface BrandRule {
   re: RegExp
   brand: string
@@ -157,9 +157,9 @@ export function resolveModelCopy(index: ModelCopyIndex | null, groupId: unknown,
 }
 
 /**
- * The vendored lockup's id for one catalog model, or null when no rule claims
+ * The vendor id for one catalog model, or null when no rule claims
  * it. The provider route is deliberately no candidate here: a reseller's own
- * lockup on a model it did not make reads as a wrong answer rather than a
+ * avatar on a model it did not make reads as a wrong answer rather than a
  * missing one (D79).
  */
 export function resolveModelBrand(index: ModelCopyIndex | null, modelId: unknown, modelName: unknown) {
