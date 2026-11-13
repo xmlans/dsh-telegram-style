@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "assets": {
+    "be2a6e14c525.webp": {
+      "type": "image/webp",
+      "encoding": null,
+      "bytes": 18902
+    },
+    "2510fbe7044d.webp": {
+      "type": "image/webp",
+      "encoding": null,
+      "bytes": 130752
+    },
+    "675eb532fcd5.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 11388
+    },
+    "db7c17bb382e.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 47664
+    },
+    "0789d53f7baa.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 30584
+    },
+    "2037643ec583.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 175904
+    },
+    "777f8d7a0f69.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 19855
+    },
+    "d9a5d43dd3e9.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 75305
+    },
+    "4447fd6d583e.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 8261
+    },
+    "82d4c526dd8f.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 34722
+    },
+    "427e78a89cb9.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 21258
+    },
+    "29a6de143036.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 135219
+    },
+    "f6560dec3a6b.js": {
+      "type": "text/javascript; charset=utf-8",
+      "encoding": "br",
+      "bytes": 24059
+    },
+    "7f770fede8b9.js.map": {
+      "type": "application/json; charset=utf-8",
+      "encoding": "br",
+      "bytes": 103040
+    }
+  }
+}

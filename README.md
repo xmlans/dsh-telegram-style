@@ -35,13 +35,17 @@ DeepSeek Harness 的 Telegram 网页版风格主题：墙纸上的浮动聊天�
 
 ## 安装
 
+最简单的是在 dsh-market 插件市场的"主题"页一键安装。也可以用命令行从 npm 安装（包名 `dsh-telegram-style`）：
+
 WebUI：
 
-    dsh plugin --profile web add <dsh-telegram-style-0.1.0.tgz 的路径>
+    dsh plugin --profile web add dsh-telegram-style
 
 桌面版：用桌面版自带的 dsh，路径在 `%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`：
 
-    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add <tgz 路径>
+    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add dsh-telegram-style
+
+把包名换成 `github:xmlans/dsh-telegram-style` 就是从 GitHub 仓库安装，仓库里带着构建好的 `lib/`，不需要自己构建。
 
 装好后在 DeepSeek Harness 的皮肤中心启用"Telegram Style"。和 dsh-claude-style 可以同时安装，同一时刻启用一个。
 

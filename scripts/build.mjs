@@ -382,8 +382,8 @@ async function main() {
 
   // Everything is validated before anything is written: a refusal anywhere in
   // this build must not leave lib/ holding one half of a new build beside the
-  // other half of the previous one. lib/ is not in version control (D47), so a
-  // fresh clone has no directory to write into yet.
+  // other half of the previous one. lib/ is committed (D47), but a checkout that
+  // removed it still has no directory to write into yet.
   const copy = JSON.parse(fs.readFileSync(path.join(DATA, MODEL_COPY), 'utf8'))
   const familyRules = validateModelCopy(copy)
   const copyText = JSON.stringify(copy, null, 2) + '\n'

@@ -68,7 +68,7 @@ const argOf = (flag) => {
  * workflow itself. A push holding only these still runs the checks, which need
  * no build, and leaves the lanes that read a built page alone.
  */
-const UNREAD = [/^docs\//, /^locale\//, /^\.github\//, /\.md$/, /^LICENSE$/, /^THIRD_PARTY_NOTICES\.txt$/]
+const UNREAD = [/^lib\//, /^docs\//, /^locale\//, /^\.github\//, /\.md$/, /^LICENSE$/, /^THIRD_PARTY_NOTICES\.txt$/]
 
 /**
  * The snapshot whose change stands for the pages themselves, and the files

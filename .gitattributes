@@ -2,3 +2,7 @@
 
 # Fonts are binary; line-ending policy and any diff rendering must not touch them.
 fonts/*.ttf binary
+
+# lib/ is build output, committed for GitHub installs (D47): no diffs, and
+# folded away in GitHub's change view.
+lib/** -diff linguist-generated=true

@@ -35,13 +35,17 @@ Every palette has a light and a dark side that follow DeepSeek Harness's own lig
 
 ## Install
 
+The easiest way is one click on the Themes tab of the dsh-market plugin market. From the command line, install it from npm (package `dsh-telegram-style`):
+
 WebUI:
 
-    dsh plugin --profile web add <path to dsh-telegram-style-0.1.0.tgz>
+    dsh plugin --profile web add dsh-telegram-style
 
 Desktop: use the dsh that ships with the desktop app, at `%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd`:
 
-    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add <path to the tgz>
+    "%LOCALAPPDATA%\Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd" plugin --profile desktop add dsh-telegram-style
+
+Replace the package name with `github:xmlans/dsh-telegram-style` to install from the GitHub repository; it carries the built `lib/`, so nothing needs building.
 
 Then enable "Telegram Style" in DeepSeek Harness's skin centre. It can be installed next to dsh-claude-style; one is enabled at a time.
 

@@ -14,7 +14,7 @@
 | [D36](D36-modules-and-bundling.md) | TypeScript、esbuild 与零运行时依赖 | D1 |
 | [D40](D40-observation-bus.md) | 页面级资源各有唯一拥有者 | D6、D41、D26 |
 | [D43](D43-overlay-and-upstream.md) | 依附宿主表面与宿主数据 | D2、D17 |
-| [D47](D47-build-output.md) | 构建产物不进主分支 |  |
+| [D47](D47-build-output.md) | 构建产物随主分支提交 |  |
 | [D48](D48-documentation.md) | 文档分层 |  |
 | [D70](D70-clause-from-reasoning.md) | 从推理正文里读出的从句 |  |
 | [D71](D71-stream-follow-slide.md) | 流式输出的跟随由宿主写位置，皮肤只画位移 |  |
